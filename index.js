@@ -1,13 +1,18 @@
 const express = require("express");
 const dotenv = require("dotenv");
 const {MongoClient} = require("mongodb");
-
+const measurementsRouter = require("./routes/measurements");
+const observationsRouter = require("./routes/observations");
+const devicesRouter = require("./routes/devices");
 
 const app = express();
 const PORT = 8383;
 
-
 app.use(express.json());
+app.use(measurementsRouter);
+app.use(observationsRouter);
+app.use(devicesRouter);
+
 dotenv.config()
 
 //https://www.mongodb.com/resources/languages/express-mongodb-rest-api-tutorial
