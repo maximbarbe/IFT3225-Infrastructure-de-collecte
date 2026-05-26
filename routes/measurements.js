@@ -1,6 +1,8 @@
 const express = require('express');
-const router = express.Router();
+const measurementSchema = require("../modeles/measurementSchema");
 
+
+const router = express.Router();
 
 router.post("/measurements", (req, res) => {
     res.send("Measurements received");
