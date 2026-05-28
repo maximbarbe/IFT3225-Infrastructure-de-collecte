@@ -1,9 +1,8 @@
 const express = require("express");
-const {MongoClient} = require("mongodb");
 const measurementsRouter = require("./src/routes/measurements");
 const observationsRouter = require("./src/routes/observations");
 const devicesRouter = require("./src/routes/devices");
-const connectDB = require("./db")
+const {connectDB} = require("./db")
 
 
 const app = express();
@@ -20,8 +19,11 @@ connectDB().catch(err => console.log(err));
 
 
 
-app.listen(port, () => {
+app.listen(PORT, () => {
     console.log(`Serveur démarré : http://localhost:${PORT}`);
 });
 
 
+app.get("/", (req, res) => {
+    res.send("hello world");
+})

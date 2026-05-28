@@ -3,10 +3,11 @@ const mongoose = require("mongoose");
 
 //https://www.mongodb.com/resources/languages/express-mongodb-rest-api-tutorial
 
+dotenv.config()
 
 async function connectDB() {
     const CONNECTION = process.env.ATLAS_URI || "";
     await mongoose.connect(CONNECTION);
 }
 
-module.exports(connectDB);
+module.exports = {connectDB};
