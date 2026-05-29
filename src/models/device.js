@@ -19,3 +19,10 @@ const deviceSchema = new mongoose.Schema({
     }
     
 });
+
+
+deviceSchema.methods.toJSON = function() {
+    const device = this.toObject();
+    delete device.apiKey;
+    return device;
+};
