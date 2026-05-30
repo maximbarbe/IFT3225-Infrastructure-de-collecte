@@ -8,6 +8,7 @@ Pour éxécuter:
 2.3) npm install mongodb
 2.4) npm install dotenv
 2.5) npm install mongoose
+2.6) npm install bcrypt
 3) Créer un fichier .env et y ajouter un ATLAS_URI pour la connection avec mongo_db (exemple: ATLAS_URI=mongodb.mongodb+srv:/)
 3.1) Donc il devrait y avoir un fichier .env avec la seule ligne étant ATLAS_URI=...
 4) Pour lancer le serveur, run node index.js

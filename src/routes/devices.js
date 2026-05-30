@@ -1,16 +1,20 @@
 const express = require('express');
 const Device = require("../models/device")
-
+const {generateAPIKey} = require("../middleware/auth");
 
 const router = express.Router();
 
 
 
+
+
 router.post("/devices", async (req, res) => {
-    const device = new Device(req.body);
+    const apiKey = await generateAPIKey();
+    const device = new Device({...req.body, apiKey:apiKey});
+    
     try {
         await device.save();
-        res.status(201).json({message: "Device créé avec succès!"})
+        res.status(201).json({id:device._id, apiKey:apiKey});
     } catch (e) {
         res.status(400).json({error: e.message});
     }
@@ -19,7 +23,7 @@ router.post("/devices", async (req, res) => {
 router.get("/devices", async (req, res) => {
     try {
         const allDevices = await Device.find({});
-        res.send(allDevices);
+        res.status(200).json(allDevices);
     } catch (e) {
         res.status(500).json({error: e.message});
     }
