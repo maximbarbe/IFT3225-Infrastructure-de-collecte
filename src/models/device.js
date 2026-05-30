@@ -1,10 +1,7 @@
 const mongoose = require("mongoose");
 
 const deviceSchema = new mongoose.Schema({
-    id: {
-        type: Number,
-        required: true
-    },
+
     apiKey: {
         type: String,
         required: true
@@ -23,6 +20,14 @@ const deviceSchema = new mongoose.Schema({
 
 deviceSchema.methods.toJSON = function() {
     const device = this.toObject();
+    device.id = device._id;
     delete device.apiKey;
+    delete device.__v;
+    delete device._id;
     return device;
 };
+
+
+const Device = mongoose.model('Device', deviceSchema);
+
+module.exports = Device;
