@@ -10,7 +10,6 @@ Pour éxécuter:
 2.5) npm install mongoose
 2.6) npm install bcrypt
 2.7) npm install ajv
-2.8) npm install ajv-formats 
 4) Créer un fichier .env et y ajouter un ATLAS_URI pour la connection avec mongo_db (exemple: ATLAS_URI=mongodb.mongodb+srv:/)
 3.1) Donc il devrait y avoir un fichier .env avec la seule ligne étant ATLAS_URI=...
 5) Pour lancer le serveur, run node index.js
