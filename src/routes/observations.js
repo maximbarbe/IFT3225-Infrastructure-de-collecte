@@ -4,7 +4,7 @@ const validate = require("../middleware/validate");
 const Observation = require("../models/observation");
 
 
-router.post("/observations", validate(observation), (req, res) => {
+router.post("/observations", validate(Observation), (req, res) => {
     res.send("Observations received");
 });
 
