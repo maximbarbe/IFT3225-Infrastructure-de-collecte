@@ -17,13 +17,15 @@ app.use(devicesRouter);
 
 connectDB().catch(err => console.log(err));
 
-
+app.use((req, res) => {
+    return res.status(404).json({
+        error: "La ressource demandée n'existe pas!",
+        details: []
+    })
+})
 
 app.listen(PORT, () => {
     console.log(`Serveur démarré : http://localhost:${PORT}`);
 });
 
 
-app.get("/", (req, res) => {
-    res.send("hello world");
-})

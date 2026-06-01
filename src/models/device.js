@@ -27,8 +27,8 @@ deviceDbSchema.methods.toJSON = function() {
     return device;
 };
 
-
-const Device = mongoose.model('Device', deviceDbSchema);
+// https://stackoverflow.com/questions/74750496/overwritemodelerror-cannot-overwrite-user-model-once-compiled-at-mongoose-mo
+const Device = mongoose.models.Device || mongoose.model('Device', deviceDbSchema);
 
 
 
