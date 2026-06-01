@@ -11,7 +11,7 @@ const router = express.Router();
 
 
 
-router.post("/devices", validate (Device), async (req, res) => {
+router.post("/devices", validate(Device), async (req, res) => {
     const apiKey = await generateAPIKey();
     const device = new Device({...req.body, apiKey:apiKey});
     
