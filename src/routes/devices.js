@@ -19,7 +19,7 @@ router.post("/devices", validate(DevicePostSchema), async (req, res) => {
         await device.save();
         res.status(201).json({id:device._id, apiKey:apiKey});
     } catch (e) {
-        res.status(400).json({error: e.message});
+        res.status(500).json({error: e.message, details: []});
     }
 });
 
@@ -28,7 +28,7 @@ router.get("/devices", async (req, res) => {
         const allDevices = await Device.find({});
         res.status(200).json(allDevices);
     } catch (e) {
-        res.status(500).json({error: e.message});
+        res.status(500).json({error: e.message, details: []});
     }
 });
 

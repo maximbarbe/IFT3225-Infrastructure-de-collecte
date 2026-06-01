@@ -20,7 +20,15 @@ const observationDbSchema = new mongoose.Schema({
     
 });
 
-const Observation = mongoose.model("Observation", observationDbSchema);
+observationDbSchema.methods.toJSON = function() {
+    const observation = this.toObject();
+    delete observation.__v;
+    delete observation._id;
+    return observation;
+}
+
+// https://stackoverflow.com/questions/74750496/overwritemodelerror-cannot-overwrite-user-model-once-compiled-at-mongoose-mo
+const Observation = mongoose.models.Observation || mongoose.model("Observation", observationDbSchema);
 
 const ObservationPostSchema = {
     type: "object",

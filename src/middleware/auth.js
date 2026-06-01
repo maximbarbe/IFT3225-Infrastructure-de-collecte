@@ -7,6 +7,9 @@ async function generateAPIKey() {
     return bcrypt.hash(crypto.randomUUID(), 10);
 };
 
+
+
+
 function authenticate(Device) {
     return async (req, res, next) => {
         if (!req.headers["x-api-key"]) {

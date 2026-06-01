@@ -1,7 +1,10 @@
 const express = require("express");
+
 const measurementsRouter = require("./src/routes/measurements");
 const observationsRouter = require("./src/routes/observations");
 const devicesRouter = require("./src/routes/devices");
+const locationsRouter = require("./src/routes/locations");
+
 const {connectDB} = require("./db")
 
 
@@ -12,7 +15,7 @@ app.use(express.json());
 app.use(measurementsRouter);
 app.use(observationsRouter);
 app.use(devicesRouter);
-
+app.use(locationsRouter);
 
 
 connectDB().catch(err => console.log(err));

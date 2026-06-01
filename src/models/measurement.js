@@ -21,7 +21,15 @@ const measurementDbSchema = new mongoose.Schema({
     
 });
 
-const Measurement = mongoose.model('Measurement', measurementDbSchema);
+
+measurementDbSchema.methods.toJSON = function() {
+    const measurement = this.toObject();
+    delete measurement.__v;
+    delete measurement._id;
+    return measurement;
+}
+
+const Measurement = mongoose.models.Measurement || mongoose.model('Measurement', measurementDbSchema);
 
 const MeasurementPostSchema = {
     type: "object",
