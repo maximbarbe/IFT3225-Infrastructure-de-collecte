@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const observationSchema = new mongoose.Schema({
+const observationDbSchema = new mongoose.Schema({
     location: {
         type: String,
         required: true
@@ -15,7 +15,39 @@ const observationSchema = new mongoose.Schema({
     },
     notes: {
         type: String,
-        required: false
+        required: true
     }
     
 });
+
+const Observation = mongoose.model("Observation", observationDbSchema);
+
+const ObservationPostSchema = {
+    type: "object",
+    properties: {
+        location: {
+            type: "string",
+            minLength: 1
+        },
+        proximity: {
+            type: "string",
+            minLength: 1
+        },
+        vibe: {
+            type: "string",
+            minLength: 1
+        },
+        notes: {
+            type: "string"
+        }
+    },
+    required: [
+        "location",
+        "proximity",
+        "vibe"
+    ],
+    additionalProperties: false
+};
+
+
+module.exports = {Observation, ObservationPostSchema};

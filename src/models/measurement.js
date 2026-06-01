@@ -1,13 +1,13 @@
-const { Double, Schema } = require("mongoose");
+const mongoose = require("mongoose");
 
 
-const measurementSchema = new Schema({
+const measurementDbSchema = new mongoose.Schema({
     type: {
         type: String,
         required: true
     },
     value: {
-        type: Double,
+        type: Number,
         required: true
     },
     location: {
@@ -20,3 +20,35 @@ const measurementSchema = new Schema({
     }
     
 });
+
+const Measurement = mongoose.model('Measurement', measurementDbSchema);
+
+const MeasurementPostSchema = {
+    type: "object",
+    properties : {
+        type: {
+            type: "string",
+            minLength: 1
+        },
+        value: {
+            type: "number"
+        },
+        location: {
+            type: "string",
+            minLength: 1
+        },
+        timestamp: {
+            type: "string",
+            format: "timestamp"
+        }
+    },
+    required: [
+        "type",
+        "value",
+        "location",
+        "timestamp"
+    ]
+}
+
+
+module.exports = {Measurement, MeasurementPostSchema};

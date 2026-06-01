@@ -2,12 +2,12 @@ const express = require('express');
 
 const validate = require("../middleware/validate");
 
-const Measurment = require("../models/measurment");
+const {Measurement, MeasurementPostSchema} = require("../models/measurement");
 
 
 const router = express.Router();
 
-router.post("/measurements", validate(Measurment),(req, res) => {
+router.post("/measurements", validate(MeasurementPostSchema), (req, res) => {
     res.send("Measurements received");
 });
 

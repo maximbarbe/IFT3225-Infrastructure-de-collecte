@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const deviceSchema = new mongoose.Schema({
+const deviceDbSchema = new mongoose.Schema({
 
     apiKey: {
         type: String,
@@ -18,7 +18,7 @@ const deviceSchema = new mongoose.Schema({
 });
 
 
-deviceSchema.methods.toJSON = function() {
+deviceDbSchema.methods.toJSON = function() {
     const device = this.toObject();
     device.id = device._id;
     delete device.apiKey;
@@ -28,6 +28,31 @@ deviceSchema.methods.toJSON = function() {
 };
 
 
-const Device = mongoose.model('Device', deviceSchema);
+const Device = mongoose.model('Device', deviceDbSchema);
 
-module.exports = Device;
+
+
+const DevicePostSchema = {
+    type: "object",
+    properties: {
+        name: {
+            type: "string",
+            minLength: 1
+        },
+        location: {
+            type: "string",
+            minLength: 1
+        }
+    },
+    required: [
+        "name",
+        "location"
+    ],
+    additionalProperties: false
+};
+
+
+
+
+
+module.exports = {Device,  DevicePostSchema};

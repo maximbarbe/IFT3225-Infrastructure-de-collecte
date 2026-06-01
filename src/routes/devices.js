@@ -1,5 +1,5 @@
 const express = require('express');
-const Device = require("../models/device")
+const {Device, DevicePostSchema} = require("../models/device")
 const {generateAPIKey} = require("../middleware/auth");
 
 const validate = require("../middleware/validate");
@@ -11,7 +11,7 @@ const router = express.Router();
 
 
 
-router.post("/devices", validate(Device), async (req, res) => {
+router.post("/devices", validate(DevicePostSchema), async (req, res) => {
     const apiKey = await generateAPIKey();
     const device = new Device({...req.body, apiKey:apiKey});
     
