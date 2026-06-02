@@ -1,6 +1,6 @@
 const express = require("express");
 
-const validate = require("../middleware/validate");
+const {validate} = require("../middleware/validate");
 const {authenticate} = require("../middleware/auth");
 
 const {Location, LocationPostSchema} = require("../models/location");
@@ -18,14 +18,14 @@ router.get("/locations", async (req, res) => {
 });
 
 router.post("/locations", [authenticate(Device), validate(LocationPostSchema)], async (req, res) => {
-    const loc = await Location.findOne({location: req.body["location"]});
+    const loc = await Location.findOne({location: req.body["location"].toLowerCase()});
     if (loc) {
         return res.status(400).json({error: "La location existe déjà.", details: []});
     } 
-    const location = new Location({location: req.body["location"]});
+    const location = new Location({location: req.body["location"].toLowerCase()});
     try {
         await location.save();
-        res.status(201).json({location: req.body["location"]});
+        res.status(201).json({location: req.body["location"].toLowerCase()});
     } catch (e) {
         res.status(500).json({error: e.message, details: []});
     }   

@@ -35,6 +35,7 @@ function validate(schema) {
 
         next();
     };
-}
+};
 
-module.exports = validate;
+
+module.exports = {validate};

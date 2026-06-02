@@ -1,5 +1,5 @@
 const express = require('express');
-const validate = require("../middleware/validate");
+const {validate} = require("../middleware/validate");
 const {Observation, ObservationPostSchema} = require("../models/observation");
 const {Device} = require("../models/Device");
 const {authenticate} = require("../middleware/auth");

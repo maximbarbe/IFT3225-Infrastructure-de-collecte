@@ -2,7 +2,7 @@ const express = require('express');
 const {Device, DevicePostSchema} = require("../models/device")
 const {generateAPIKey} = require("../middleware/auth");
 
-const validate = require("../middleware/validate");
+const {validate} = require("../middleware/validate");
 
 const router = express.Router();
 
