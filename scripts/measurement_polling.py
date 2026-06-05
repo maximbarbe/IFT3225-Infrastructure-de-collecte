@@ -5,9 +5,9 @@ import time
 PHYPHOX_URL = "http://172.20.10.1/"
 API_URL = "http://localhost:8383"
 
-NO_MINUTES = 1
+NO_MINUTES = 20
 
-
+# À modifier
 MEASUREMENT_TYPE = "audio"
 LOCATION = "hello"
 
