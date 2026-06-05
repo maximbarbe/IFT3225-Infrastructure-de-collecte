@@ -3,6 +3,7 @@ First draft (va falloir changer)
 Pour éxécuter:
 1) Clone le repo
 2) Être dans le folder avec index.js et éxécuter:
+(S'assurer d'avoir une version récente de Node)
 2.1) npm init -y
 2.2) npm install express
 2.3) npm install mongodb
