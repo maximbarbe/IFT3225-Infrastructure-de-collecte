@@ -8,6 +8,7 @@ API_URL = "http://localhost:8383"
 NO_MINUTES = 20
 
 # À modifier
+CALIBRATION=100
 MEASUREMENT_TYPE = "audio"
 LOCATION = "hello"
 
@@ -18,6 +19,16 @@ start_time = datetime.datetime.now()
 while (start_time + datetime.timedelta(minutes=NO_MINUTES) > datetime.datetime.now()):
     # https://phyphox.org/wiki/index.php/Remote-interface_communication
     # https://phyphox.org/forums/showthread.php?tid=60
+    try:
+        res = requests.get(url=PHYPHOX_URL + f"control?cmd=set&buffer=calibration&value={CALIBRATION}")
+        if res.status_code != 200:
+            print("Could not calibrate trial")
+            exit(1)
+    except:
+        print("Could not calibrate trial")
+        exit(1)
+
+
     try:
         res = requests.get(url=PHYPHOX_URL + "control?cmd=start")
         if res.status_code != 200:

@@ -8,11 +8,10 @@ API_URL = "http://localhost:8383"
 NO_MINUTES = 20
 
 # À modifier
+CALIBRATION = 100
 LOCATION = "hello"
-
-
-SEUIL_ELEVE = ...
-SEUIL_BAS = ...
+SEUIL_ELEVE = 75
+SEUIL_BAS = 40
 
 start_time = datetime.datetime.now()
 
@@ -20,6 +19,16 @@ start_time = datetime.datetime.now()
 while (start_time + datetime.timedelta(minutes=NO_MINUTES) > datetime.datetime.now()):
     # https://phyphox.org/wiki/index.php/Remote-interface_communication
     # https://phyphox.org/forums/showthread.php?tid=60
+
+    
+    try:
+        res = requests.get(url=PHYPHOX_URL + f"control?cmd=set&buffer=calibration&value={CALIBRATION}")
+        if res.status_code != 200:
+            print("Could not calibrate trial")
+            exit(1)
+    except:
+        print("Could not calibrate trial")
+        exit(1)
     try:
         res = requests.get(url=PHYPHOX_URL + "control?cmd=start")
         if res.status_code != 200:
@@ -40,7 +49,7 @@ while (start_time + datetime.timedelta(minutes=NO_MINUTES) > datetime.datetime.n
     if res.status_code != 200:
         continue
     data = res.json()["buffer"]["dB"]["buffer"]
-    print(f"SENDING {len(data)} measurements")
+    print(f"SENDING {len(data)} observations")
     for measurement in data:
         if float(measurement) > SEUIL_ELEVE:
             vibe = "BRUYANT"
@@ -55,13 +64,13 @@ while (start_time + datetime.timedelta(minutes=NO_MINUTES) > datetime.datetime.n
         payload = {
             "location": LOCATION,
             "vibe": vibe,
-            "proximite": proximite,
-            "notes": f"Timestamp: {temps_collecte}"
+            "proximity": proximite,
+            "notes": f"Timestamp: {temps_collecte}, Db: {data}"
         }
         try:
-            res = requests.post(API_URL + "/measurements", json=payload, headers={"x-api-key": "test"})
+            res = requests.post(API_URL + "/observations", json=payload, headers={"x-api-key": "test"})
         except:
-            print("Could not send measurement")
+            print("Could not send observation.")
             print(res.text)
             exit(1)
         if res.status_code != 201:
