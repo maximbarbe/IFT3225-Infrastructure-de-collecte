@@ -4,64 +4,159 @@ const { Observation } = require("../models/Observation");
 
 const router = express.Router();
 
+// Seuils de classification du niveau sonore en decibels dB
+// Centralises ici pour que les trois routes utilisent les memes valeurs
+const QUIET_THRESHOLD = 35;
+const MODERATE_THRESHOLD = 65;
+
+// Traduit une moyenne de dB en categorie. Memes libelles que la route existante
+function classifyNoise(avgDb) {
+    if (avgDb === null || avgDb === undefined) return "unknown";
+    if (avgDb < QUIET_THRESHOLD) return "quiet";
+    if (avgDb < MODERATE_THRESHOLD) return "moderate";
+    return "loud";
+}
+
+// Convertit une fenetre comme "3h", "30m", "1d" en millisecondes.
+// Renvoie null si le format est invalide.
+function parseWindow(value) {
+    if (!value) return null;
+    const match = String(value).match(/^(\d+)\s*([smhd])$/);
+    if (!match) return null;
+    const factors = { s: 1000, m: 60000, h: 3600000, d: 86400000 };
+    return parseInt(match[1], 10) * factors[match[2]];
+}
+
+// GET /ambiance/:location
+// Vue d'ensemble actuelle: niveau sonore moyen + derniere observation
 router.get("/ambiance/:location", async (req, res) => {
-
     try {
-
         const location = req.params.location.toLowerCase();
-
         const measurements = await Measurement.find({ location });
         const observations = await Observation.find({ location });
 
         if (measurements.length === 0 && observations.length === 0) {
-            return res.status(404).json({
-                error: "Location not found"
-            });
+            return res.status(404).json({ error: "Location not found" });
         }
 
-        const averageNoise =
-            measurements.length > 0
-                ? measurements.reduce(
-                    (sum, measurement) => sum + measurement.value,
-                    0
-                ) / measurements.length
-                : null;
+        const averageNoise = measurements.length > 0
+            ? measurements.reduce((sum, m) => sum + m.value, 0) / measurements.length
+            : null;
 
-        let noiseLevel = "unknown";
-
-        if (averageNoise !== null) {
-            if (averageNoise < 35) {
-                noiseLevel = "quiet";
-            } else if (averageNoise < 65) {
-                noiseLevel = "moderate";
-            } else {
-                noiseLevel = "loud";
-            }
-        }
-
-        const latestObservation =
-            observations.length > 0
-                ? observations[observations.length - 1]
-                : null;
+        const latestObservation = observations.length > 0
+            ? observations[observations.length - 1]
+            : null;
 
         res.status(200).json({
             location,
-            noiseLevel,
+            noiseLevel: classifyNoise(averageNoise),
             averageNoise,
             vibe: latestObservation?.vibe ?? null,
             proximity: latestObservation?.proximity ?? null,
             measurementsCount: measurements.length,
             observationsCount: observations.length
         });
-
     } catch (e) {
-
-        res.status(500).json({
-            error: e.message
-        });
-
+        res.status(500).json({ error: e.message });
     }
+});
 
+// GET /ambiance/:location/quiet-hours
+// Question concrete: a quelles heures ce lieu est-il typiquement calme ?
+// Vue derivee: on n'ecrit rien, on agrege les mesures brutes a la volee
+router.get("/ambiance/:location/quiet-hours", async (req, res) => {
+    try {
+        const location = req.params.location.toLowerCase();
+
+        const byHour = await Measurement.aggregate([
+            // 1. On ne garde que les mesures de ce lieu.
+            { $match: { location } },
+            // 2. On regroupe par heure locale (les timestamps sont en UTC,
+            //    mais "heure calme" n'a de sens qu'en heure de Montreal)
+            {
+                $group: {
+                    _id: { $hour: { date: "$timestamp", timezone: "America/Montreal" } },
+                    averageNoise: { $avg: "$value" },
+                    sampleCount: { $sum: 1 }
+                }
+            },
+            // 3. Mise en forme + tri par heure croissante (0 a 23).
+            {
+                $project: {
+                    _id: 0,
+                    hour: "$_id",
+                    averageNoise: { $round: ["$averageNoise", 1] },
+                    sampleCount: 1
+                }
+            },
+            { $sort: { hour: 1 } }
+        ]);
+
+        if (byHour.length === 0) {
+            return res.status(404).json({ error: "Aucune mesure pour ce lieu.", details: [] });
+        }
+
+        // On ajoute la classification cote serveur (plus lisible que dans le pipeline).
+        const hours = byHour.map(h => ({
+            hour: h.hour,
+            averageNoise: h.averageNoise,
+            noiseLevel: classifyNoise(h.averageNoise),
+            sampleCount: h.sampleCount
+        }));
+
+        res.status(200).json({ location, hours });
+    } catch (e) {
+        res.status(500).json({ error: e.message, details: [] });
+    }
+});
+
+// GET /ambiance/:location/history?last=3h
+// Question concrete: comment l'ambiance a-t-elle evolue recemment ?
+// On decoupe le temps en tranches egales et on moyenne le dB par tranche.
+router.get("/ambiance/:location/history", async (req, res) => {
+    try {
+        const location = req.params.location.toLowerCase();
+
+        // Fenetre demandee (ex: "3h"). Defaut: 3 heures si absent ou invalide.
+        const windowMs = parseWindow(req.query.last) ?? (3 * 60 * 60 * 1000);
+        const since = new Date(Date.now() - windowMs);
+        const bucketMinutes = 15; // taille des tranches
+
+        const buckets = await Measurement.aggregate([
+            // 1. Ce lieu, et seulement les mesures depuis "since".
+            { $match: { location, timestamp: { $gte: since } } },
+            // 2. On arrondit chaque timestamp au debut de sa tranche.
+            //    $dateTrunc (MongoDB 5.0+) cree des bacs de temps reguliers.
+            {
+                $group: {
+                    _id: { $dateTrunc: { date: "$timestamp", unit: "minute", binSize: bucketMinutes } },
+                    averageNoise: { $avg: "$value" },
+                    sampleCount: { $sum: 1 }
+                }
+            },
+            // 3. Mise en forme + tri chronologique.
+            {
+                $project: {
+                    _id: 0,
+                    bucketStart: "$_id",
+                    averageNoise: { $round: ["$averageNoise", 1] },
+                    sampleCount: 1
+                }
+            },
+            { $sort: { bucketStart: 1 } }
+        ]);
+
+        const series = buckets.map(b => ({
+            bucketStart: b.bucketStart,
+            averageNoise: b.averageNoise,
+            noiseLevel: classifyNoise(b.averageNoise),
+            sampleCount: b.sampleCount
+        }));
+
+        res.status(200).json({ location, window: req.query.last || "3h", bucketMinutes, series });
+    } catch (e) {
+        res.status(500).json({ error: e.message, details: [] });
+    }
 });
 
 module.exports = router;
