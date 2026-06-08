@@ -1,5 +1,5 @@
 const express = require('express');
-const {Device, DevicePostSchema} = require("../models/device")
+const {Device, DevicePostSchema} = require("../models/Device")
 const {generateAPIKey} = require("../middleware/auth");
 
 const {validate} = require("../middleware/validate");

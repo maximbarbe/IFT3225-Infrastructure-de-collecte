@@ -1,6 +1,6 @@
 const express = require("express");
-const { Measurement } = require("../models/measurement");
-const Observation = require("../models/observation");
+const { Measurement } = require("../models/Measurement");
+const { Observation } = require("../models/Observation");
 
 const router = express.Router();
 
@@ -8,7 +8,7 @@ router.get("/ambiance/:location", async (req, res) => {
 
     try {
 
-        const { location } = req.params;
+        const location = req.params.location.toLowerCase();
 
         const measurements = await Measurement.find({ location });
         const observations = await Observation.find({ location });

@@ -3,8 +3,8 @@ const express = require("express");
 const {validate} = require("../middleware/validate");
 const {authenticate} = require("../middleware/auth");
 
-const {Location, LocationPostSchema} = require("../models/location");
-const {Device} = require("../models/device");
+const {Location, LocationPostSchema} = require("../models/Location");
+const {Device} = require("../models/Device");
 
 const router = express.Router();
 

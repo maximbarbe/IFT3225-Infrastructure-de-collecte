@@ -1,8 +1,8 @@
 const express = require('express');
 const {validate} = require("../middleware/validate");
-const {Observation, ObservationPostSchema} = require("../models/observation");
+const {Observation, ObservationPostSchema} = require("../models/Observation");
 const {Device} = require("../models/Device");
-const {Location} = require("../models/location")
+const {Location} = require("../models/Location")
 const {authenticate} = require("../middleware/auth");
 
 const router = express.Router();

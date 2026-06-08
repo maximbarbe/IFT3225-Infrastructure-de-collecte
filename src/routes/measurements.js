@@ -3,9 +3,9 @@ const express = require('express');
 const {validate} = require("../middleware/validate");
 const {authenticate} = require("../middleware/auth");
 
-const {Measurement, MeasurementPostSchema} = require("../models/measurement");
-const {Device} = require("../models/device");
-const {Location} = require("../models/location");
+const {Measurement, MeasurementPostSchema} = require("../models/Measurement");
+const {Device} = require("../models/Device");
+const {Location} = require("../models/Location");
 
 const router = express.Router();
 

@@ -4,6 +4,7 @@ const measurementsRouter = require("./src/routes/measurements");
 const observationsRouter = require("./src/routes/observations");
 const devicesRouter = require("./src/routes/devices");
 const locationsRouter = require("./src/routes/locations");
+const ambianceRouter = require("./src/routes/ambiance");
 
 const {connectDB} = require("./db")
 
@@ -16,6 +17,7 @@ app.use(measurementsRouter);
 app.use(observationsRouter);
 app.use(devicesRouter);
 app.use(locationsRouter);
+app.use(ambianceRouter);
 
 
 connectDB().catch(err => console.log(err));
