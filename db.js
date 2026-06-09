@@ -7,7 +7,9 @@ dotenv.config()
 
 async function connectDB() {
     const CONNECTION = process.env.ATLAS_URI || "";
-    await mongoose.connect(CONNECTION);
+    await mongoose.connect(CONNECTION,
+        {dbName: "IFT3225"}
+    );
 }
 
 module.exports = {connectDB};
