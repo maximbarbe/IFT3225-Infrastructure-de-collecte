@@ -6,8 +6,8 @@ const router = express.Router();
 
 // Seuils de classification du niveau sonore en decibels dB
 // Centralises ici pour que les trois routes utilisent les memes valeurs
-const QUIET_THRESHOLD = 35;
-const MODERATE_THRESHOLD = 65;
+const QUIET_THRESHOLD = 48;
+const MODERATE_THRESHOLD = 60;
 
 // Traduit une moyenne de dB en categorie. Memes libelles que la route existante
 function classifyNoise(avgDb) {
