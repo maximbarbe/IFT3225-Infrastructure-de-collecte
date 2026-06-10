@@ -1,0 +1,65 @@
+{
+  "info": {
+    "name": "IFT3225 - Infrastructure de collecte",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:8383" },
+    { "key": "api_key", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "1. POST device (genere la cle)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const res = pm.response.json();",
+              "if (res.apiKey) { pm.collectionVariables.set('api_key', res.apiKey); }"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [ { "key": "Content-Type", "value": "application/json" } ],
+        "body": { "mode": "raw", "raw": "{\"name\":\"phone-collecte\",\"location\":\"test-cafe\"}", "options": { "raw": { "language": "json" } } },
+        "url": "{{base_url}}/devices"
+      }
+    },
+    { "name": "2. GET devices", "request": { "method": "GET", "header": [], "url": "{{base_url}}/devices" } },
+    {
+      "name": "3. POST location (auth)",
+      "request": {
+        "method": "POST",
+        "header": [ { "key": "Content-Type", "value": "application/json" }, { "key": "x-api-key", "value": "{{api_key}}" } ],
+        "body": { "mode": "raw", "raw": "{\"location\":\"test-cafe\"}", "options": { "raw": { "language": "json" } } },
+        "url": "{{base_url}}/locations"
+      }
+    },
+    { "name": "4. GET locations", "request": { "method": "GET", "header": [], "url": "{{base_url}}/locations" } },
+    {
+      "name": "5. POST measurement (auth)",
+      "request": {
+        "method": "POST",
+        "header": [ { "key": "Content-Type", "value": "application/json" }, { "key": "x-api-key", "value": "{{api_key}}" } ],
+        "body": { "mode": "raw", "raw": "{\"type\":\"audio\",\"value\":52.5,\"location\":\"test-cafe\",\"timestamp\":\"{{$isoTimestamp}}\"}", "options": { "raw": { "language": "json" } } },
+        "url": "{{base_url}}/measurements"
+      }
+    },
+    {
+      "name": "6. POST observation (auth)",
+      "request": {
+        "method": "POST",
+        "header": [ { "key": "Content-Type", "value": "application/json" }, { "key": "x-api-key", "value": "{{api_key}}" } ],
+        "body": { "mode": "raw", "raw": "{\"location\":\"test-cafe\",\"vibe\":\"CALME\",\"proximity\":\"LOIN\",\"notes\":\"test\"}", "options": { "raw": { "language": "json" } } },
+        "url": "{{base_url}}/observations"
+      }
+    },
+    { "name": "7. GET ambiance (resume)", "request": { "method": "GET", "header": [], "url": "{{base_url}}/ambiance/test-cafe" } },
+    { "name": "8. GET ambiance quiet-hours", "request": { "method": "GET", "header": [], "url": "{{base_url}}/ambiance/test-cafe/quiet-hours" } },
+    { "name": "9. GET ambiance history", "request": { "method": "GET", "header": [], "url": "{{base_url}}/ambiance/test-cafe/history?last=3h" } }
+  ]
+}
