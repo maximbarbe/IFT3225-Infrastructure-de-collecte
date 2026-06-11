@@ -5,7 +5,7 @@ import observationsRouter from "./routes/observations.js";
 import devicesRouter from "./routes/devices.js";
 import locationsRouter from "./routes/locations.js";
 import ambianceRouter from "./routes/ambiance.js";
-import connectDB from "../db.js";
+import connectDB from "./data/db.js";
 
 const app = express();
 app.use(express.json());
