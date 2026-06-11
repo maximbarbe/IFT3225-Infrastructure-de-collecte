@@ -24,4 +24,4 @@ router.post("/measurements", [authenticate(Device), validate(MeasurementPostSche
 });
 
 
-module.exports = router;
+export default router;

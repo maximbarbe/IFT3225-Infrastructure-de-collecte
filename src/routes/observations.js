@@ -22,4 +22,4 @@ router.post("/observations", [authenticate(Device), validate(ObservationPostSche
 });
 
 
-module.exports = router;
+export default router;

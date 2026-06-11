@@ -55,4 +55,4 @@ const DevicePostSchema = {
 
 
 
-module.exports = {Device,  DevicePostSchema};
+export {Device,  DevicePostSchema};

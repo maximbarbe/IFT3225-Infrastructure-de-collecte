@@ -33,7 +33,7 @@ const LocationPostSchema = {
 
 
 
-module.exports = {
+export {
     Location,
     LocationPostSchema
 };

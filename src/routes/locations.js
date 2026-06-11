@@ -32,4 +32,4 @@ router.post("/locations", [authenticate(Device), validate(LocationPostSchema)], 
 
 });
 
-module.exports = router;
+export default router;

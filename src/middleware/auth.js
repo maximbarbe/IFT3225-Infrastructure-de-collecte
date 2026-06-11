@@ -23,7 +23,7 @@ function authenticate(Device) {
     }
 }
 
-module.exports = {
+export {
     generateAPIKey,
     authenticate
 };

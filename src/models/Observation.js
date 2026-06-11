@@ -58,4 +58,4 @@ const ObservationPostSchema = {
 };
 
 
-module.exports = {Observation, ObservationPostSchema};
+export {Observation, ObservationPostSchema};

@@ -1,5 +1,5 @@
-const dotenv = require("dotenv");
-const mongoose = require("mongoose");
+import dotenv from "dotenv";
+import mongoose from "mongoose";
 
 //https://www.mongodb.com/resources/languages/express-mongodb-rest-api-tutorial
 
@@ -12,4 +12,4 @@ async function connectDB() {
     );
 }
 
-module.exports = {connectDB};
+export default connectDB;

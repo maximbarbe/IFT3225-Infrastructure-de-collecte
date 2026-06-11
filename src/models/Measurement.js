@@ -59,4 +59,4 @@ const MeasurementPostSchema = {
 }
 
 
-module.exports = {Measurement, MeasurementPostSchema};
+export {Measurement, MeasurementPostSchema};
