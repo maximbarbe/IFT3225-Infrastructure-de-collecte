@@ -1,6 +1,6 @@
 <h1>Infrastructure de collecte</h1>
 <h2>Description du projet</h2>
-<p>Ce projet consiste à construire un pipeline bout à bout afin d'acheminer des données obtenues à partir des capteurs de son téléphone à un API REST basé sur Express que l'on peut interroger en utilisant HTTP. Cela inclut l'authentification, la persistance des données avec MongoDB, ainsi que les scripts nécessaires bridge nécessaires pour le cheminement des données.</p>
+<p>Ce projet consiste à construire un pipeline bout à bout afin d'acheminer des données obtenues à partir des capteurs de son téléphone à un API REST basé sur Express que l'on peut interroger en utilisant HTTP. Cela inclut l'authentification, la persistance des données avec MongoDB, ainsi que les scripts bridge nécessaires pour le cheminement des données.</p>
 
 <h2>Prérequis</h2>
 Voici les prérequis nécessaires pour lancer le projet:
