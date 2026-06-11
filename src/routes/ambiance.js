@@ -30,7 +30,7 @@ function parseWindow(value) {
 
 // GET /ambiance/:location
 // Vue d'ensemble actuelle: niveau sonore moyen + derniere observation
-router.get("/ambiance/:location", async (req, res) => {
+router.get("/:location", async (req, res) => {
     try {
         const location = req.params.location.toLowerCase();
         const measurements = await Measurement.find({ location });
@@ -65,7 +65,7 @@ router.get("/ambiance/:location", async (req, res) => {
 // GET /ambiance/:location/quiet-hours
 // Question concrete: a quelles heures ce lieu est-il typiquement calme ?
 // Vue derivee: on n'ecrit rien, on agrege les mesures brutes a la volee
-router.get("/ambiance/:location/quiet-hours", async (req, res) => {
+router.get("/:location/quiet-hours", async (req, res) => {
     try {
         const location = req.params.location.toLowerCase();
 
@@ -114,7 +114,7 @@ router.get("/ambiance/:location/quiet-hours", async (req, res) => {
 // GET /ambiance/:location/history?last=3h
 // Question concrete: comment l'ambiance a-t-elle evolue recemment ?
 // On decoupe le temps en tranches egales et on moyenne le dB par tranche.
-router.get("/ambiance/:location/history", async (req, res) => {
+router.get("/:location/history", async (req, res) => {
     try {
         const location = req.params.location.toLowerCase();
 

@@ -9,7 +9,7 @@ const router = express.Router();
 
 
 
-router.post("/devices", validate(DevicePostSchema), async (req, res) => {
+router.post("/", validate(DevicePostSchema), async (req, res) => {
     const apiKey = await generateAPIKey();
     const device = new Device({...req.body, apiKey:apiKey});
     
@@ -21,7 +21,7 @@ router.post("/devices", validate(DevicePostSchema), async (req, res) => {
     }
 });
 
-router.get("/devices", async (req, res) => {
+router.get("/", async (req, res) => {
     try {
         const allDevices = await Device.find({});
         res.status(200).json(allDevices);

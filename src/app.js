@@ -11,11 +11,11 @@ const app = express();
 app.use(express.json());
 
 
-app.use(measurementsRouter);
-app.use(observationsRouter);
-app.use(devicesRouter);
-app.use(locationsRouter);
-app.use(ambianceRouter);
+app.use("/measurements", measurementsRouter);
+app.use("/observations", observationsRouter);
+app.use("/devices", devicesRouter);
+app.use("/locations", locationsRouter);
+app.use("/ambiance", ambianceRouter);
 
 try {
     await connectDB();
