@@ -8,6 +8,7 @@ Voici les prérequis nécessaires pour lancer le projet:
     <li>NodeJS</li>
     <li>MongoDB</li>
     <li>Phyphox</li>
+    <li>Python</li>
 </ul>
 <h2>
    Installation et lancement
@@ -20,6 +21,10 @@ Voici les prérequis nécessaires pour lancer le projet:
         <li>Éxécuter la commande <code>npm install</code></li>
         <li>À la source du projet, créer un fichier <code>.env</code> et y ajouter une ligne <code>ATLAS_URI</code> tel que montré dans <code>.env.example</code></li>
         <li>Éxécuter la commande <code>npm start</code></li>
+        Les prochaines étapes sont pour les scripts bridge et pour populer la base de donnée.
+        <li>Éxécuter la commande <code>python -m venv venv</code></li>
+        <li>Éxécuter les commandes <code>cd venv</code>, <code>cd Scripts</code> et <code>activate</code></li>
+        <li>Revenir à la source du projet et éxécuter la commande <code>pip install -r requirements.txt</code></li>
     </ol> 
 </p>
 <h2>Table des endpoints</h2>
