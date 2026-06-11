@@ -1,11 +1,11 @@
-const express = require('express');
+import express from "express";
 
-const {validate} = require("../middleware/validate");
-const {authenticate} = require("../middleware/auth");
+import { validate } from "../middleware/validate.js";
+import { authenticate } from "../middleware/auth.js";
 
-const {Measurement, MeasurementPostSchema} = require("../models/Measurement");
-const {Device} = require("../models/Device");
-const {Location} = require("../models/Location");
+import {Measurement, MeasurementPostSchema} from "../models/Measurement.js";
+import {Device} from "../models/Device.js";
+import {Location} from "../models/Location.js";
 
 const router = express.Router();
 

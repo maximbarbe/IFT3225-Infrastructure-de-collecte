@@ -1,5 +1,5 @@
-const Ajv = require("ajv");
-const addFormats = require("ajv-formats");
+import Ajv from "ajv";
+import addFormats from "ajv-formats";
 
 
 const ajv = new Ajv();

@@ -1,12 +1,10 @@
-const express = require('express');
-const {Device, DevicePostSchema} = require("../models/Device")
-const {generateAPIKey} = require("../middleware/auth");
+import express from "express";
+import { Device, DevicePostSchema } from "../models/Device.js";
+import { generateAPIKey } from "../middleware/auth.js";
+import { validate } from "../middleware/validate.js";
 
-const {validate} = require("../middleware/validate");
 
 const router = express.Router();
-
-
 
 
 

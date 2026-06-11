@@ -1,6 +1,7 @@
-const express = require("express");
-const { Measurement } = require("../models/Measurement");
-const { Observation } = require("../models/Observation");
+import express from "express";
+import { Measurement } from "../models/Measurement.js";
+import { Observation } from "../models/Observation.js";
+
 
 const router = express.Router();
 

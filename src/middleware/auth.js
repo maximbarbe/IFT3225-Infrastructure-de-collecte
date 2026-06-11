@@ -1,10 +1,10 @@
-const crypto = require("crypto");
-const bcrypt = require("bcrypt");
+import crypto from "crypto";
+import bcrypt from "bcrypt";
 
 
 //https://stackoverflow.com/a/69936899
 async function generateAPIKey() {
-    return bcrypt.hash(crypto.randomUUID(), 10);
+    return crypto.randomUUID();
 };
 
 

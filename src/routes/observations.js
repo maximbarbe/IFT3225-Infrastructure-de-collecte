@@ -1,9 +1,9 @@
-const express = require('express');
-const {validate} = require("../middleware/validate");
-const {Observation, ObservationPostSchema} = require("../models/Observation");
-const {Device} = require("../models/Device");
-const {Location} = require("../models/Location")
-const {authenticate} = require("../middleware/auth");
+import express from 'express';
+import {validate} from "../middleware/validate.js";
+import {Observation, ObservationPostSchema} from "../models/Observation.js";
+import {Device} from "../models/Device.js";
+import {Location} from "../models/Location.js";
+import {authenticate} from "../middleware/auth.js";
 
 const router = express.Router();
 
