@@ -1,5 +1,5 @@
 import express from 'express';
-import {validate} from "../middleware/validate.js";
+import validate from "../middleware/validate.js";
 import {Observation, ObservationPostSchema} from "../models/Observation.js";
 import {Device} from "../models/Device.js";
 import {Location} from "../models/Location.js";

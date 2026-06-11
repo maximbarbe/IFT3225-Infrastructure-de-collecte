@@ -1,7 +1,7 @@
 import express from "express";
 import { Device, DevicePostSchema } from "../models/Device.js";
 import { generateAPIKey } from "../middleware/auth.js";
-import { validate } from "../middleware/validate.js";
+import validate from "../middleware/validate.js";
 
 
 const router = express.Router();

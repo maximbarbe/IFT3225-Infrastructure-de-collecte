@@ -1,6 +1,6 @@
 import express from "express";
 
-import { validate } from "../middleware/validate.js";
+import validate from "../middleware/validate.js";
 import { authenticate } from "../middleware/auth.js";
 
 import {Measurement, MeasurementPostSchema} from "../models/Measurement.js";
