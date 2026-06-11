@@ -10,9 +10,10 @@ Voici les prérequis nécessaires pour lancer le projet:
     <li>Phyphox</li>
 </ul>
 <h2>
-    Les étapes suivantes vont vous guider pour l'installation et le lancement de l'application:
+   Installation et lancement
 
 </h2>
+ Les étapes suivantes vont vous guider pour l'installation et le lancement de l'application:
 <p>
     <ol>
         <li>Clone le repo</li>
