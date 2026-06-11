@@ -10,7 +10,14 @@ import {Location} from "../models/Location.js";
 const router = express.Router();
 
 router.post("/", [authenticate(Device), validate(MeasurementPostSchema)], async (req, res) => {
-    const location = await Location.findOne({location: req.body["location"].toLowerCase()});
+    try {
+        const location = await Location.findOne({location: req.body["location"].toLowerCase()});
+    } catch (e) {
+        return res.status(500).json({
+            error: "SERVER_ERROR",
+            message: e.message
+        });
+    }
     if (!location) {
         return res.status(400).json({
             error: "INVALID_REQUEST", 

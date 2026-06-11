@@ -21,7 +21,15 @@ router.get("/", async (req, res) => {
 });
 
 router.post("/", [authenticate(Device), validate(LocationPostSchema)], async (req, res) => {
-    const loc = await Location.findOne({location: req.body["location"].toLowerCase()});
+    try {
+        const loc = await Location.findOne({location: req.body["location"].toLowerCase()});
+    } catch (e) {
+        return res.status(500).json({
+            error: "SERVER_ERROR",
+            message: e.message
+        });
+    }
+    
     if (loc) {
         return res.status(201).json({location: req.body["location"].toLowerCase()});
     } 

@@ -18,13 +18,21 @@ function authenticate(Device) {
                 message: "La clé API doit être présente dans les en-têtes sous l'en-tête x-api-key."
             });
         }
-        const device = await Device.findOne({apiKey: req.headers["x-api-key"]});
-        if (!device) {
-            return res.status(403).json({
-                error: "INVALID_KEY", 
-                message: "Il n'existe pas de device avec cette clé API."
+        try {
+            const device = await Device.findOne({apiKey: req.headers["x-api-key"]});
+            if (!device) {
+                return res.status(403).json({
+                    error: "INVALID_KEY", 
+                    message: "Il n'existe pas de device avec cette clé API."
+                });
+            }
+        } catch (e) {
+            return res.status(500).json({
+                error: "SERVER_ERROR",
+                message: e.message
             });
         }
+
         next();
     }
 }
