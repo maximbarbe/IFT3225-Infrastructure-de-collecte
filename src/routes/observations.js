@@ -10,14 +10,20 @@ const router = express.Router();
 router.post("/", [authenticate(Device), validate(ObservationPostSchema)], async (req, res) => {
     const location = await Location.findOne({location: req.body["location"].toLowerCase()});
     if (!location) {
-        return res.status(400).json({error: "La location n'existe pas, veuillez la créer en utilisant /locations.", details:[]});
+        return res.status(400).json({
+            error: "INVALID_REQUEST", 
+            message: "La location n'existe pas, veuillez la créer en utilisant /locations."
+        });
     }
     const observation = new Observation({...req.body, location: req.body["location"].toLowerCase(), notes: req.body["notes"] || "No notes."});
     try {
         await observation.save();
-        res.status(201).json(observation);
+        return res.status(201).json(observation);
     } catch (e) {
-        res.status(500).json({error: e.message, details: []});
+        return res.status(500).json({ 
+            error: "SERVER_ERROR", 
+            message: e.message
+         });
     }   
 });
 

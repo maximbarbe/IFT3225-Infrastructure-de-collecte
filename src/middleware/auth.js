@@ -13,11 +13,17 @@ async function generateAPIKey() {
 function authenticate(Device) {
     return async (req, res, next) => {
         if (!req.headers["x-api-key"]) {
-            return res.status(401).json({error: "En-tête d'authentification x-api-key absent.", details: []});
+            return res.status(401).json({
+                error: "MISSING_HEADER", 
+                message: "La clé API doit être présente dans les en-têtes sous l'en-tête x-api-key."
+            });
         }
         const device = await Device.findOne({apiKey: req.headers["x-api-key"]});
         if (!device) {
-            return res.status(403).json({error: "Clé invalide.", details: []});
+            return res.status(403).json({
+                error: "INVALID_KEY", 
+                message: "Il n'existe pas de device avec cette clé API."
+            });
         }
         next();
     }

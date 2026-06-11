@@ -28,10 +28,10 @@ function validate(schema) {
         if (!valid) {
             
             return res.status(400).json({
-                error: "Validation failed",
-                details: validator.errors
+                error: "VALIDATION_FAILED",
+                message: "Le schéma utilisé est invalide."
             });
-        }
+        };
 
         next();
     };

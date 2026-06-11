@@ -37,7 +37,10 @@ router.get("/:location", async (req, res) => {
         const observations = await Observation.find({ location });
 
         if (measurements.length === 0 && observations.length === 0) {
-            return res.status(404).json({ error: "Location not found" });
+            return res.status(404).json({ 
+                error: "NOT_FOUND",
+                message: "La location n'existe pas."
+             });
         }
 
         const averageNoise = measurements.length > 0
@@ -48,7 +51,7 @@ router.get("/:location", async (req, res) => {
             ? observations[observations.length - 1]
             : null;
 
-        res.status(200).json({
+        return res.status(200).json({
             location,
             noiseLevel: classifyNoise(averageNoise),
             averageNoise,
@@ -58,7 +61,10 @@ router.get("/:location", async (req, res) => {
             observationsCount: observations.length
         });
     } catch (e) {
-        res.status(500).json({ error: e.message });
+        return res.status(500).json({ 
+            error: "SERVER ERROR",
+            message: e.message
+        });
     }
 });
 
@@ -93,9 +99,6 @@ router.get("/:location/quiet-hours", async (req, res) => {
             { $sort: { hour: 1 } }
         ]);
 
-        if (byHour.length === 0) {
-            return res.status(404).json({ error: "Aucune mesure pour ce lieu.", details: [] });
-        }
 
         // On ajoute la classification cote serveur (plus lisible que dans le pipeline).
         const hours = byHour.map(h => ({
@@ -105,9 +108,12 @@ router.get("/:location/quiet-hours", async (req, res) => {
             sampleCount: h.sampleCount
         }));
 
-        res.status(200).json({ location, hours });
+        return res.status(200).json({ location, hours });
     } catch (e) {
-        res.status(500).json({ error: e.message, details: [] });
+        return res.status(500).json({ 
+            error: "SERVER_ERROR", 
+            message: e.message
+         });
     }
 });
 
@@ -154,9 +160,12 @@ router.get("/:location/history", async (req, res) => {
             sampleCount: b.sampleCount
         }));
 
-        res.status(200).json({ location, window: req.query.last || "3h", bucketMinutes, series });
+        return res.status(200).json({ location, window: req.query.last || "3h", bucketMinutes, series });
     } catch (e) {
-        res.status(500).json({ error: e.message, details: [] });
+        return res.status(500).json({ 
+            error: "SERVER_ERROR", 
+            message: e.message
+         });
     }
 });
 

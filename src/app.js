@@ -25,8 +25,8 @@ try {
 
 app.use((req, res) => {
     return res.status(404).json({
-        error: "La ressource demandée n'existe pas!",
-        details: []
+        error: "NOT_FOUND",
+        message: "La ressource demandée n'existe pas!"
     })
 })
 
