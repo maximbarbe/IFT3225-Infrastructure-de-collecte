@@ -11,8 +11,9 @@ const router = express.Router();
 
 
 router.post("/", validate(DevicePostSchema), async (req, res) => {
+    let loc;
     try {
-        const loc = await Location.findOne({location: req.body["location"].toLowerCase()});
+        loc = await Location.findOne({location: req.body["location"].toLowerCase()});
         if (!loc) {
             return res.status(400).json({
                 error: "INVALID_REQUEST", 

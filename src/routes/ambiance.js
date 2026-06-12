@@ -53,8 +53,8 @@ router.get("/:location", async (req, res) => {
 
         return res.status(200).json({
             location,
-            noiseLevel: classifyNoise(averageNoise),
             averageNoise,
+            noiseLevel: classifyNoise(averageNoise),
             vibe: latestObservation?.vibe ?? null,
             proximity: latestObservation?.proximity ?? null,
             measurementsCount: measurements.length,

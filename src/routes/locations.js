@@ -21,8 +21,9 @@ router.get("/", async (req, res) => {
 });
 
 router.post("/", [authenticate(Device), validate(LocationPostSchema)], async (req, res) => {
+    let loc;
     try {
-        const loc = await Location.findOne({location: req.body["location"].toLowerCase()});
+        loc = await Location.findOne({location: req.body["location"].toLowerCase()});
     } catch (e) {
         return res.status(500).json({
             error: "SERVER_ERROR",

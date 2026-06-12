@@ -8,8 +8,9 @@ import {authenticate} from "../middleware/auth.js";
 const router = express.Router();
 
 router.post("/", [authenticate(Device), validate(ObservationPostSchema)], async (req, res) => {
+    let location;
     try {
-        const location = await Location.findOne({location: req.body["location"].toLowerCase()});
+        location = await Location.findOne({location: req.body["location"].toLowerCase()});
     } catch (e) {
         return res.status(500).json({
             error: "SERVER_ERROR",

@@ -10,8 +10,11 @@ import {Location} from "../models/Location.js";
 const router = express.Router();
 
 router.post("/", [authenticate(Device), validate(MeasurementPostSchema)], async (req, res) => {
+    const time = new Date(req.body.timestamp);
+    time.setHours(time.getHours() - 4);
+    let location;
     try {
-        const location = await Location.findOne({location: req.body["location"].toLowerCase()});
+        location = await Location.findOne({location: req.body["location"].toLowerCase()});
     } catch (e) {
         return res.status(500).json({
             error: "SERVER_ERROR",
@@ -24,7 +27,7 @@ router.post("/", [authenticate(Device), validate(MeasurementPostSchema)], async 
             message: "La location n'existe pas, veuillez la créer en utilisant /locations."
         });
     }
-    const measurement = new Measurement({...req.body, location:req.body["location"].toLowerCase()});
+    const measurement = new Measurement({...req.body, timestamp: time, location:req.body["location"].toLowerCase()});
     try {
         await measurement.save();
         return res.status(201).json(measurement);
