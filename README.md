@@ -29,17 +29,17 @@ Voici les prérequis nécessaires pour lancer le projet:
 </p>
 <h2>Table des endpoints</h2>
 
-| Méthode | Chemin | Corps | Réponse | Nécessite authentification? |
-| :--- | :--- | :--- | :--- | :--- |
-| `POST` | `/measurements` | `{type, value, location, timestamp}` | `201` + document créé | Oui |
-| `POST` | `/observations` | `{location, proximity, vibe, notes}` | `201` + document créé | Oui |
-| `POST` | `/devices` | `{name, location}` | `201` + `{id, apiKey}` |  Oui |
-| `GET` | `/devices` | - | `200` + tableau | Non | 
-| `POST` | `/locations` | `{location}` | `201` + `{location}` | Non |
-| `GET` | `/locations` | - | `200` + tableau | Non |
-| `GET` | `/ambiance/:location/history[?last=3h]` | - | `200` + `{location, window, bucketMinutes, series}` | Non |
-| `GET` | `/ambiance/:location/quiet-hours` | - | `200` + `{location, hours}` | Non |
-| `GET` | `/ambiance/:location` | - | `200` + `{location, averageNoise, noiseLevel, vibe, proximity, measurementsCount, observationsCount}` | Non |
+| Méthode | Chemin | Corps | Réponse | Nécessite authentification? | Description | 
+| :--- | :--- | :--- | :--- | :--- | :----:|
+| `POST` | `/measurements` | `{type, value, location, timestamp}` | `201` + document créé | Oui | Permet de créer une nouvelle mesure.|
+| `POST` | `/observations` | `{location, proximity, vibe, notes}` | `201` + document créé | Oui | Permet de créer une nouvelle observation.|
+| `POST` | `/devices` | `{name, location}` | `201` + `{id, apiKey}` |  Oui | Permet d'enregistrer un nouveau device pour la récolte |
+| `GET` | `/devices` | - | `200` + tableau | Non | Retourne une liste de tous les devices existants |
+| `POST` | `/locations` | `{location}` | `201` + `{location}` | Non | Permet de créer une nouvelle location (nécessaire pour effectuer la collecte) |
+| `GET` | `/locations` | - | `200` + tableau | Non | Retourne la liste des locations existantes |
+| `GET` | `/ambiance/:location/history[?last=3h]` | - | `200` + `{location, window, bucketMinutes, series}` | Non | Retourne l'évolution de l'ambiance d'un endroit selon une certaine durée (défaut 3h) |
+| `GET` | `/ambiance/:location/quiet-hours` | - | `200` + `{location, hours}` | Non | Retourne les heures typiquement calmes d'un lieu |
+| `GET` | `/ambiance/:location` | - | `200` + `{location, averageNoise, noiseLevel, vibe, proximity, measurementsCount, observationsCount}` | Non | Retourne les informations générales d'un lieu, niveau sonore moyen + dernière observation
 
 Les [] signifient que la partie est facultative.
 <h2>Tests</h2>
