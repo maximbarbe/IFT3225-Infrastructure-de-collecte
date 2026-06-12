@@ -21,7 +21,7 @@ Voici les prérequis nécessaires pour lancer le projet:
         <li>Éxécuter la commande <code>npm install</code></li>
         <li>À la source du projet, créer un fichier <code>.env</code> et y ajouter une ligne <code>ATLAS_URI</code> tel que montré dans <code>.env.example</code></li>
         <li>Éxécuter la commande <code>npm start</code></li>
-        Les prochaines étapes sont pour les scripts bridge et pour populer la base de donnée.
+        <h3>Les prochaines étapes sont pour les scripts bridge et pour populer la base de donnée.</h3>
         <li>Éxécuter la commande <code>python -m venv venv</code></li>
         <li>Éxécuter les commandes <code>cd venv</code>, <code>cd Scripts</code> et <code>activate</code></li>
         <li>Revenir à la source du projet et éxécuter la commande <code>pip install -r requirements.txt</code></li>
