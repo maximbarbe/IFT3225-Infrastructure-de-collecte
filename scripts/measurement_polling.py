@@ -1,6 +1,8 @@
 import requests
 import datetime
 import time
+import pandas as pd
+import os
 
 PHYPHOX_URL = "http://172.20.10.1/"
 API_URL = "http://localhost:8383"
@@ -15,6 +17,7 @@ LOCATION = "hello"
 
 start_time = datetime.datetime.now()
 
+mes = []
 
 while (start_time + datetime.timedelta(minutes=NO_MINUTES) > datetime.datetime.now()):
     # https://phyphox.org/wiki/index.php/Remote-interface_communication
@@ -57,6 +60,7 @@ while (start_time + datetime.timedelta(minutes=NO_MINUTES) > datetime.datetime.n
             "location": LOCATION,
             "timestamp": temps_collecte
         }
+        mes.append(payload)
         try:
             res = requests.post(API_URL + "/measurements", json=payload, headers={"x-api-key": "test"})
         except:
@@ -75,3 +79,6 @@ while (start_time + datetime.timedelta(minutes=NO_MINUTES) > datetime.datetime.n
     except:
         print("Could not stop trial")
         exit(1)
+
+df = pd.DataFrame(mes)
+df.to_csv(os.path.join(os.path.dirname(__file__), f"../src/data/measurements.csv"), index=False)
