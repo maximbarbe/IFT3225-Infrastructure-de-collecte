@@ -6,22 +6,29 @@ import os
 
 PHYPHOX_URL = "http://172.20.10.1/"
 API_URL = "http://localhost:8383"
+API_KEY = "seed-key-1"
 
 NO_MINUTES = 20
 
 # À modifier
 CALIBRATION=100
 MEASUREMENT_TYPE = "audio"
-LOCATION = "hello"
-
+LOCATION = "IGA Marché Tellier Sainte Dorothee"
+SEUIL_ELEVE = 60
+SEUIL_BAS = 48
 
 start_time = datetime.datetime.now()
 
 mes = []
-
+obs = []
 while (start_time + datetime.timedelta(minutes=NO_MINUTES) > datetime.datetime.now()):
     # https://phyphox.org/wiki/index.php/Remote-interface_communication
     # https://phyphox.org/forums/showthread.php?tid=60
+    try:
+        res = requests.post(url=API_URL+f"/locations", headers={"x-api-key": f"{API_KEY}"}, json={"location": LOCATION})
+    except:
+        print("Could not create location")
+        exit(1)
     try:
         res = requests.get(url=PHYPHOX_URL + f"control?cmd=set&buffer=calibration&value={CALIBRATION}")
         if res.status_code != 200:
@@ -42,7 +49,7 @@ while (start_time + datetime.timedelta(minutes=NO_MINUTES) > datetime.datetime.n
         exit(1)
         
     temps_collecte = datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
-    time.sleep(5)
+    time.sleep(2)
     try:
         res = requests.get(url=PHYPHOX_URL+"get?dB=full")
         
@@ -52,7 +59,7 @@ while (start_time + datetime.timedelta(minutes=NO_MINUTES) > datetime.datetime.n
     if res.status_code != 200:
         continue
     data = res.json()["buffer"]["dB"]["buffer"]
-    print(f"SENDING {len(data)} measurements")
+    print(f"SENDING {len(data)} measurements and observations")
     for measurement in data:
         payload = {
             "type": MEASUREMENT_TYPE,
@@ -62,15 +69,46 @@ while (start_time + datetime.timedelta(minutes=NO_MINUTES) > datetime.datetime.n
         }
         mes.append(payload)
         try:
-            res = requests.post(API_URL + "/measurements", json=payload, headers={"x-api-key": "test"})
+            res = requests.post(API_URL + "/measurements", json=payload, headers={"x-api-key": f"{API_KEY}"})
         except:
             print("Could not send measurement")
             print(res.text)
-            exit(1)
+            continue
         if res.status_code != 201:
             print(res.text)
             print("Could not send data")
-            exit(1)
+            continue
+
+        if float(measurement) > SEUIL_ELEVE:
+            vibe = "BRUYANT"
+            proximite = "PROCHE"
+        elif float(measurement) < SEUIL_BAS:
+            vibe = "CALME"
+            proximite = "LOIN"
+        else:
+            vibe = "NORMAL"
+            proximite = "MOYENNE"
+
+        observation = {
+            "location": LOCATION,
+            "vibe": vibe,
+            "proximity": proximite,
+            "notes": f"Timestamp: {temps_collecte}, Db: {measurement}"
+        }
+        obs.append(observation)
+        try:
+            res = requests.post(API_URL + "/observations", json=observation, headers={"x-api-key": f"{API_KEY}"})
+        except:
+            print("Could not send observation.")
+            print(res.text)
+            continue
+        if res.status_code != 201:
+            print(res.text)
+            print("Could not send data")
+            continue
+
+
+
     print("BATCH SENT!")
     try:
         res = requests.get(url=PHYPHOX_URL + "control?cmd=clear")
@@ -79,6 +117,11 @@ while (start_time + datetime.timedelta(minutes=NO_MINUTES) > datetime.datetime.n
     except:
         print("Could not stop trial")
         exit(1)
+    time.sleep(2)
 
 df = pd.DataFrame(mes)
-df.to_csv(os.path.join(os.path.dirname(__file__), f"../src/data/measurements.csv"), index=False)
+df.to_csv(os.path.join(os.path.dirname(__file__), f"../src/data/measurements-1.csv"), index=False)
+
+
+df = pd.DataFrame(obs)
+df.to_csv(os.path.join(os.path.dirname(__file__), f"../src/data/observations-1.csv"), index=False)
