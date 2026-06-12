@@ -28,6 +28,20 @@ Voici les prérequis nécessaires pour lancer le projet:
     </ol> 
 </p>
 <h2>Table des endpoints</h2>
+
+| Méthode | Chemin | Corps | Réponse | Nécessite authentification? |
+| :--- | :--- | :--- | :--- | :--- |
+| `POST` | `/measurements` | `{type, value, location, timestamp}` | `201` + document créé | Oui |
+| `POST` | `/observations` | `{location, proximity, vibe, notes}` | `201` + document créé | Oui |
+| `POST` | `/devices` | `{name, location}` | `201` + `{id, apiKey}` |  Oui |
+| `GET` | `/devices` | - | `200` + tableau | Non | 
+| `POST` | `/locations` | `{location}` | `201` + `{location}` | Non |
+| `GET` | `/locations` | - | `200` + tableau | Non |
+| `GET` | `/ambiance/:location/history[?last=3h]` | - | `200` + `{location, window, bucketMinutes, series}` | Non |
+| `GET` | `/ambiance/:location/quiet-hours` | - | `200` + `{location, hours}` | Non |
+| `GET` | `/ambiance/:location` | - | `200` + `{location, averageNoise, noiseLevel, vibe, proximity, measurementsCount, observationsCount}` | Non |
+
+Les [] signifient que la partie est facultative.
 <h2>Tests</h2>
 <h2>Fichier <code>.env.example</code></h2>
 <p>Le fichier <code>.env.example</code> donne un example de ce que le fichier <code>.env</code> doit avoir l'air. Pour créer un fichier <code>.env</code> valide, on peut tout simplement changer le nom du fichier et mettre les bonnes valeurs aux variables d'environnement.</p>
