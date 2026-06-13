@@ -14,7 +14,7 @@ locationDbSchema.methods.toJSON = function() {
     return location;
 }
 
-// https://stackoverflow.com/questions/74750496/overwritemodelerror-cannot-overwrite-user-model-once-compiled-at-mongoose-mo
+// (Ipizzinidev, 2022)
 const Location = mongoose.models.Location || mongoose.model("Location", locationDbSchema);
 
 const LocationPostSchema = {

@@ -22,8 +22,8 @@ start_time = datetime.datetime.now()
 mes = []
 obs = []
 while (start_time + datetime.timedelta(minutes=NO_MINUTES) > datetime.datetime.now()):
-    # https://phyphox.org/wiki/index.php/Remote-interface_communication
-    # https://phyphox.org/forums/showthread.php?tid=60
+    # (Phyphox, 2024)
+    # (jbshute, 2018)
     try:
         res = requests.post(url=API_URL+f"/locations", headers={"x-api-key": f"{API_KEY}"}, json={"location": LOCATION})
     except:

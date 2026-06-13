@@ -1,7 +1,7 @@
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 
-//https://www.mongodb.com/resources/languages/express-mongodb-rest-api-tutorial
+// (MongoDB, s. d.)
 
 dotenv.config()
 

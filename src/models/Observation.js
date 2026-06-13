@@ -27,7 +27,7 @@ observationDbSchema.methods.toJSON = function() {
     return observation;
 }
 
-// https://stackoverflow.com/questions/74750496/overwritemodelerror-cannot-overwrite-user-model-once-compiled-at-mongoose-mo
+// (Ipizzinidev, 2022)
 const Observation = mongoose.models.Observation || mongoose.model("Observation", observationDbSchema);
 
 const ObservationPostSchema = {

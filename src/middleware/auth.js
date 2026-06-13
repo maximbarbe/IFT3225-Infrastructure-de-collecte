@@ -2,7 +2,7 @@ import crypto from "crypto";
 import bcrypt from "bcrypt";
 
 
-//https://stackoverflow.com/a/69936899
+// (Adel, 2021)
 async function generateAPIKey() {
     return crypto.randomUUID();
 };

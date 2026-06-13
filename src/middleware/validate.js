@@ -7,8 +7,8 @@ const ajv = new Ajv();
 addFormats(ajv);
 // Format YYYY-MM-DDTHH:MM:SSZ
 // Date en UTC
-// https://ajv.js.org/guide/formats.html#user-defined-formats
-// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions
+// (ajv, s. d.)
+// (Klyne et Newman, 2002)
 ajv.addFormat("timestamp", {
     type: "string",
     validate: (x) => {
@@ -16,8 +16,6 @@ ajv.addFormat("timestamp", {
     }
 });
 
-
-// https://expressjs.com/en/guide/writing-middleware/
 function validate(schema) {
 
     const validator = ajv.compile(schema);
