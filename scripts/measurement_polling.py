@@ -120,8 +120,8 @@ while (start_time + datetime.timedelta(minutes=NO_MINUTES) > datetime.datetime.n
     time.sleep(2)
 
 df = pd.DataFrame(mes)
-df.to_csv(os.path.join(os.path.dirname(__file__), f"../src/data/measurements-1.csv"), index=False)
+df.to_csv(os.path.join(os.path.dirname(__file__), f"../src/data/measurements-2.csv"), index=False)
 
 
 df = pd.DataFrame(obs)
-df.to_csv(os.path.join(os.path.dirname(__file__), f"../src/data/observations-1.csv"), index=False)
+df.to_csv(os.path.join(os.path.dirname(__file__), f"../src/data/observations-2.csv"), index=False)
