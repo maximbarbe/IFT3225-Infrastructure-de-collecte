@@ -23,8 +23,7 @@ Voici les prérequis nécessaires pour lancer le projet:
         <li>Éxécuter la commande <code>npm start</code></li>
         <h3>Les prochaines étapes sont pour les scripts bridge et pour populer la base de donnée.</h3>
         <li>Éxécuter la commande <code>python -m venv venv</code></li>
-        <li>Éxécuter les commandes <code>cd venv</code>, <code>cd Scripts</code> et <code>activate</code></li>
-        <li>Revenir à la source du projet et éxécuter la commande <code>pip install -r requirements.txt</code></li>
+      <li>Peupler la base de données avec des données de démonstration : <code>python scripts/db_fill.py</code></li>
     </ol> 
 </p>
 <h2>Table des endpoints</h2>
@@ -43,5 +42,16 @@ Voici les prérequis nécessaires pour lancer le projet:
 
 Les [] signifient que la partie est facultative.
 <h2>Tests</h2>
+<p>
+Une collection Postman (<code>postman_collection.json</code>) est disponible à la source du projet. Elle contient une séquence complète qui exerce tous les endpoints de bout en bout.
+</p>
+<p>
+    <ol>
+        <li>Importer <code>postman_collection.json</code> dans Postman (menu File, Import).</li>
+        <li>La variable <code>base_url</code> est déjà réglée sur <code>http://localhost:8383</code>.</li>
+        <li>Exécuter les requêtes dans l'ordre numéroté : la requête <code>POST /devices</code> capture automatiquement la clé API dans la variable <code>api_key</code>, réutilisée par les requêtes protégées (<code>POST /locations</code>, <code>POST /measurements</code>, <code>POST /observations</code>).</li>
+        <li>Pour des résultats plus riches sur les endpoints <code>/ambiance</code>, peupler d'abord la base avec <code>python scripts/db_fill.py</code>.</li>
+    </ol>
+</p>
 <h2>Fichier <code>.env.example</code></h2>
 <p>Le fichier <code>.env.example</code> donne un example de ce que le fichier <code>.env</code> doit avoir l'air. Pour créer un fichier <code>.env</code> valide, on peut tout simplement changer le nom du fichier et mettre les bonnes valeurs aux variables d'environnement.</p>
