@@ -23,6 +23,8 @@ Voici les prérequis nécessaires pour lancer le projet:
         <li>Éxécuter la commande <code>npm start</code></li>
         <h3>Les prochaines étapes sont pour les scripts bridge et pour populer la base de donnée.</h3>
         <li>Éxécuter la commande <code>python -m venv venv</code></li>
+        <li>Activer l'environnement virtuel avec le script <code>Activate</code> dans <code>./venv/scripts/Activate</code></li>
+        <li>Revenir à la source et effectuer <code>pip install -r requirements.txt</code></li>
       <li>Peupler la base de données avec des données de démonstration : <code>python scripts/db_fill.py</code></li>
     </ol> 
 </p>
