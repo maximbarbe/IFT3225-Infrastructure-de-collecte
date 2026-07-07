@@ -4,6 +4,14 @@ const locationDbSchema = new mongoose.Schema({
     location: {
         type: String,
         required: true
+    },
+    lat: {
+        type: Number,
+        required: true
+    },
+    lon: {
+        type: Number,
+        required: true
     }
 });
 
@@ -23,10 +31,18 @@ const LocationPostSchema = {
         location: {
             type: "string",
             minLength: 1
+        },
+        lat: {
+            type: "number"
+        },
+        lon: {
+            type: "number"
         }
     },
     required: [
-        "location"
+        "location",
+        "lat",
+        "lon"
     ]
 };
 

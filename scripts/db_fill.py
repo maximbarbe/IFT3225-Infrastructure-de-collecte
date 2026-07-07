@@ -8,7 +8,11 @@ client = MongoClient(os.getenv("ATLAS_URI"))
 database = client["IFT3225"]
 
 
-locations = ["IGA Marché Tellier Sainte Dorothee"]
+locations = [{
+    "location": "IGA Marché Tellier Sainte Dorothee",
+    "lat": 45.525277982924315,
+    "lon": -73.78364623818311
+}]
 
 
 # --- Clés
@@ -16,8 +20,8 @@ coll = database["locations"]
 coll.drop()
 print("Debut generation des locations")
 for loc in locations:
-    if coll.find_one({"location": loc}) is None:
-        coll.insert_one({"location": loc})
+    if coll.find_one({"location": loc["location"]}) is None:
+        coll.insert_one({"location": loc["location"], "lat": loc["lat"], "lon": loc["lon"]})
 print("Fin generation des locations")
 
 # --- Devices
