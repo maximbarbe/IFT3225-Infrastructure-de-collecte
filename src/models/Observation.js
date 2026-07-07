@@ -16,6 +16,10 @@ const observationDbSchema = new mongoose.Schema({
     notes: {
         type: String,
         required: true
+    },
+    deviceId: {
+        type: String,
+        required: true
     }
     
 });

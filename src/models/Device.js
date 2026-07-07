@@ -13,6 +13,10 @@ const deviceDbSchema = new mongoose.Schema({
     location: {
         type: String,
         required: true
+    },
+    userId: {
+        type: String,
+        required: true
     }
     
 });
@@ -42,11 +46,16 @@ const DevicePostSchema = {
         location: {
             type: "string",
             minLength: 1
+        },
+        userId: {
+            type: "string",
+            minLength: 1
         }
     },
     required: [
         "name",
-        "location"
+        "location",
+        "userId"
     ],
     additionalProperties: false
 };

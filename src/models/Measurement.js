@@ -17,8 +17,11 @@ const measurementDbSchema = new mongoose.Schema({
     timestamp: {
         type: Date,
         required: true
+    },
+    deviceId: {
+        type: String,
+        required: true
     }
-    
 });
 
 
@@ -49,7 +52,7 @@ const MeasurementPostSchema = {
         timestamp: {
             type: "string",
             format: "timestamp"
-        }
+        },
     },
     required: [
         "type",
