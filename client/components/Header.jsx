@@ -4,9 +4,10 @@ import Form from 'react-bootstrap/Form';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
-
+import { Link } from 'react-router-dom';
 
 // https://react-bootstrap.netlify.app/docs/components/navbar/
+// https://stackoverflow.com/a/54843616
 export default function Header() {
   return (
     <Navbar collapseOnSelect expand="lg" className="bg-body-tertiary" sticky="top">
@@ -15,12 +16,12 @@ export default function Header() {
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="me-auto">
-            <Nav.Link to="/">Carte</Nav.Link>
-            <Nav.Link to="/observation">Ajouter une observation</Nav.Link>
+            <Nav.Link as={Link} to="/" className="btn btn-primary">Carte</Nav.Link>
+            <Nav.Link as={Link} to="/observation" className="btn btn-primary">Ajouter une observation</Nav.Link>
           </Nav>
           <Nav>
-            <Nav.Link to="/connection">Se Connecter</Nav.Link>
-            <Nav.Link to="/compte">
+            <Nav.Link as={Link} to="/connection" className="btn btn-primary">Se Connecter</Nav.Link>
+            <Nav.Link as={Link} to="/compte" className="btn btn-primary">
               Créer un compte
             </Nav.Link>
           </Nav>
