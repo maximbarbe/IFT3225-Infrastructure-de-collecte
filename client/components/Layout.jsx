@@ -4,7 +4,7 @@ export default function Layout({ children }) {
     return (
         <>
             <Header />
-            <main> {children} </main>
+            <main className="d-flex"> {children} </main>
         </>
     )
 }
