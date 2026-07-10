@@ -35,7 +35,7 @@ const User = mongoose.models.User || mongoose.model('User', userDbSchema);
 
 
 
-const UserPostSchema = {
+const UserRegisterSchema = {
     type: "object",
     properties: {
         firstName: {
@@ -47,11 +47,12 @@ const UserPostSchema = {
             minLength: 1
         },
         email: {
-            type: "email",
+            type: "string",
+            format: "email"
         },
         password: {
             type: "string",
-            minLength: 1
+            minLength: 6
         }
     },
     required: [
@@ -63,8 +64,27 @@ const UserPostSchema = {
     additionalProperties: false
 };
 
+const UserLoginSchema = {
+    type: "object",
+    properties: {
+        email: {
+            type: "string",
+            format: "email"
+        },
+        password: {
+            type: "string",
+            minLength: 1
+        }
+    },
+    required: [
+        "email",
+        "password"
+    ],
+    additionalProperties: false
+};
 
-
-
-
-export {User,  UserPostSchema};
+export {
+    User,
+    UserRegisterSchema,
+    UserLoginSchema
+};
