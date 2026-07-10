@@ -10,3 +10,94 @@ import {
 } from "../models/User.js";
 
 const router = express.Router();
+
+router.post(
+    "/register",
+    validate(UserRegisterSchema),
+    async (req, res) => {
+
+        try {
+
+            const alreadyExists = await User.findOne({
+                email: req.body.email.toLowerCase()
+            });
+
+            if (alreadyExists) {
+                return res.status(400).json({
+                    error: "EMAIL_ALREADY_EXISTS",
+                    message: "Cet utilisateur existe déjà."
+                });
+            }
+
+            const hash = await bcrypt.hash(req.body.password, 10);
+
+            const user = new User({
+                firstName: req.body.firstName,
+                lastName: req.body.lastName,
+                email: req.body.email.toLowerCase(),
+                password: hash
+            });
+
+            await user.save();
+
+            return res.status(201).json(user);
+
+        }
+        catch (e) {
+
+            return res.status(500).json({
+                error: "SERVER_ERROR",
+                message: e.message
+            });
+
+        }
+
+    }
+);
+
+router.post(
+    "/login",
+    validate(UserLoginSchema),
+    async (req, res) => {
+
+        try {
+
+            const user = await User.findOne({
+                email: req.body.email.toLowerCase()
+            });
+
+            if (!user) {
+                return res.status(401).json({
+                    error: "INVALID_CREDENTIALS",
+                    message: "Courriel ou mot de passe invalide."
+                });
+            }
+
+            const ok = await bcrypt.compare(
+                req.body.password,
+                user.password
+            );
+
+            if (!ok) {
+                return res.status(401).json({
+                    error: "INVALID_CREDENTIALS",
+                    message: "Courriel ou mot de passe invalide."
+                });
+            }
+
+            return res.status(200).json(user);
+
+        }
+        catch (e) {
+
+            return res.status(500).json({
+                error: "SERVER_ERROR",
+                message: e.message
+            });
+
+        }
+
+    }
+);
+
+export default router;
