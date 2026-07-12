@@ -2,6 +2,7 @@ import express from "express";
 import bcrypt from "bcrypt";
 
 import validate from "../middleware/validate.js";
+import { generateToken } from "../middleware/auth.js";
 
 import {
     User,
@@ -40,7 +41,10 @@ router.post(
 
             await user.save();
 
-            return res.status(201).json(user);
+            // Cree et assigne un jeton JWT au nouvel utilisateur
+            const token = generateToken(user);
+
+            return res.status(201).json({ token, user });
 
         }
         catch (e) {
@@ -85,7 +89,10 @@ router.post(
                 });
             }
 
-            return res.status(200).json(user);
+            // Cree et assigne un jeton JWT a l'utilisateur connecte
+            const token = generateToken(user);
+
+            return res.status(200).json({ token, user });
 
         }
         catch (e) {

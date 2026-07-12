@@ -1,10 +1,21 @@
 import crypto from "crypto";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 
 // (Adel, 2021)
 async function generateAPIKey() {
     return crypto.randomUUID();
+};
+
+
+// Genere un jeton JWT pour l'utilisateur authentifie
+function generateToken(user) {
+    return jwt.sign(
+        { id: user.id, email: user.email },
+        process.env.JWT_SECRET,
+        { expiresIn: "24h" }
+    );
 };
 
 
@@ -39,5 +50,6 @@ function authenticate(Device) {
 
 export {
     generateAPIKey,
+    generateToken,
     authenticate
 };
