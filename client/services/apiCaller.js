@@ -1,5 +1,5 @@
-export default async function callApi(method, headers, body=null) {
-    const response = await fetch(URL, {
+export default async function callApi(url, method, headers, body=null) {
+    const response = await fetch(url, {
         method: method,
         headers: headers,
         body: body
