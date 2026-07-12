@@ -1,12 +1,25 @@
 import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
+const [error, setError] = useState("");
 
 function submitForm(event) {
+
     event.preventDefault();
-    event.stopPropagation();
+
     const data = new FormData(event.target);
-    console.log(data);
+
+    if (data.get("password") !== data.get("passwordConfirmed")) {
+
+        setError("Les mots de passe ne correspondent pas.");
+
+        return;
+
+    }
+
+    setError("");
+
+    console.log(Object.fromEntries(data));
 }
 
 // https://react-bootstrap.netlify.app/docs/forms/overview/
@@ -41,6 +54,11 @@ export default function AccountCreation() {
         <Form.Group className="mb-3" controlId="formBasicCheckbox">
             <Form.Check type="checkbox" label="Voir mot de passe" onClick={() => {setType(prev => (prev === "password" ? "text" : "password"))}}/>
         </Form.Group>
+        {error && (
+    <p className="text-danger">
+        {error}
+    </p>
+)}
         <Button variant="primary" type="submit">
             Se connecter
         </Button>
