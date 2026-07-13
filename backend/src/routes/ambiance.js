@@ -35,11 +35,17 @@ router.get("/:location", async (req, res) => {
         const location = req.params.location.toLowerCase();
         const measurements = await Measurement.find({ location });
         const observations = await Observation.find({ location });
-
+        
+        if (!measurements || !observations) {
+            return res.status(404).json({ 
+                error: "NOT_FOUND",
+                message: "La location n'existe pas"
+             });
+        }
         if (measurements.length === 0 && observations.length === 0) {
             return res.status(404).json({ 
                 error: "NOT_FOUND",
-                message: "La location n'existe pas."
+                message: "Il n'y a pas de données pour ces locations."
              });
         }
 

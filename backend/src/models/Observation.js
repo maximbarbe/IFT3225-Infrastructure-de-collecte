@@ -17,7 +17,7 @@ const observationDbSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    deviceId: {
+    userId: {
         type: String,
         required: true
     }
@@ -51,12 +51,17 @@ const ObservationPostSchema = {
         },
         notes: {
             type: "string"
+        },
+        userId: {
+            type: "string",
+            minLength: 1
         }
     },
     required: [
         "location",
         "proximity",
-        "vibe"
+        "vibe",
+        "userId"
     ],
     additionalProperties: false
 };

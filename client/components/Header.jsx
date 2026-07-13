@@ -26,8 +26,9 @@ export default function Header() {
           </Nav>
           <Nav>
 
-            {!user && <Nav.Link as={Link} to="/connection" className="btn btn-primary">Se Connecter</Nav.Link>}
+            {!user && <Nav.Link as={Link} to="/connection" className="btn btn-primary">Se connecter</Nav.Link>}
             {!user && <Nav.Link as={Link} to="/register" className="btn btn-primary"> Créer un compte</Nav.Link>}
+            {user && <Nav.Link as={Link} to="/" className="btn btn-primary"> Mon compte</Nav.Link>}
             {user && <Nav.Link as={Link} to="/" className="btn btn-primary" onClick={() => setUser(null)}> Se déconnecter</Nav.Link>}
           </Nav>
         </Navbar.Collapse>

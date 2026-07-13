@@ -1,7 +1,10 @@
 import crypto from "crypto";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+import { User } from "../models/User.js";
 
+dotenv.config()
 
 // (Adel, 2021)
 async function generateAPIKey() {
@@ -12,11 +15,28 @@ async function generateAPIKey() {
 // Genere un jeton JWT pour l'utilisateur authentifie
 function generateToken(user) {
     return jwt.sign(
-        { id: user.id, email: user.email },
-        process.env.JWT_SECRET,
-        { expiresIn: "24h" }
+        { id: user._id, email: user.email },
+        process.env.JWT_SECRET
     );
 };
+
+// Tiré de la démo 4 et adapté à nos fins.
+const authenticateToken = async (req, res, next) => {
+        const authToken = req.header("Authorization").replace("Bearer ", "");
+        try {
+            
+            const decodedToken = jwt.verify(authToken, process.env.JWT_SECRET);
+            const user = await User.findOne({_id: decodedToken.id})
+            req.user = user;
+        } catch (e) {
+            return res.status(401).json({
+                error: "INVALID_TOKEN",
+                message: "Vous n'avez pas les permissions nécessaires"
+            })
+        }
+        next()
+        
+}
 
 
 
@@ -51,5 +71,6 @@ function authenticate(Device) {
 export {
     generateAPIKey,
     generateToken,
-    authenticate
+    authenticate,
+    authenticateToken
 };

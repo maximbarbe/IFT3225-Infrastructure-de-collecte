@@ -16,6 +16,9 @@ const userDbSchema = new mongoose.Schema({
     password: {
         type: String,
         required: true
+    },
+    token: {
+        type: String,
     }
     
 
@@ -25,10 +28,7 @@ const userDbSchema = new mongoose.Schema({
 userDbSchema.methods.toJSON = function() {
     const user = this.toObject();
     user.id = user._id;
-    delete user.__v;
-    delete user._id;
     delete user.password
-    delete user.id
     return user;
 };
 
