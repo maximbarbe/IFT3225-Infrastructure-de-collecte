@@ -8,7 +8,7 @@ import "leaflet/dist/leaflet.css";
 
 export default function Map() {
     // Recupere les locations directement depuis le backend
-    const { data } = useApi(getLocations);
+    const { data , loading, error} = useApi(getLocations);
     const locations = data || [];
     return (
     <MapContainer 

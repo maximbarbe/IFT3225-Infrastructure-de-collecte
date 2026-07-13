@@ -53,13 +53,18 @@ const UserRegisterSchema = {
         password: {
             type: "string",
             minLength: 6
+        },
+        confirmedPassword: {
+            type: "string",
+            minLength: 6
         }
     },
     required: [
         "firstName",
         "lastName",
         "email",
-        "password"
+        "password",
+        "confirmedPassword"
     ],
     additionalProperties: false
 };

@@ -52,7 +52,7 @@ export default function AccountCreation() {
     </p>
 )}
         <Button variant="primary" type="submit">
-            Se connecter
+            Créer un compte
         </Button>
     </Form>
     )
