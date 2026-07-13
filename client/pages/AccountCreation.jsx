@@ -19,9 +19,10 @@ export default function AccountCreation() {
         setError("");
         try {
             const response = await postNewUser(Object.fromEntries(data.entries()));
-            
+            setError("")
             setSuccess("Le compte a été créé avec succès!")
         } catch (e) {
+            setSuccess("")
             setError(e.message)
         }
         

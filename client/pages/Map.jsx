@@ -22,7 +22,7 @@ export default function Map() {
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         {locations.map((loc, index) => (
-            <Location key={index} lat={loc.lat} lon={loc.lon} desc={loc.location} />
+            <Location key={index} lat={loc.lat} lon={loc.lon} loc={loc.location} />
         ))}
 
 

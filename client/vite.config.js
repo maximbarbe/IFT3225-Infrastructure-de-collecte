@@ -10,7 +10,8 @@ export default defineConfig({
   server: {
     proxy: {
       "/locations": BACKEND_URL,
-      "/users/register": BACKEND_URL
+      "/users": BACKEND_URL,
+      "/ambiance": BACKEND_URL
     }
   }
 })
