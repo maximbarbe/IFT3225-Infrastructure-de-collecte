@@ -39,6 +39,9 @@ userRouter.post(
             });
 
             await user.save();
+            return res.status(201).json({
+                message: "User created with success!"
+            })
 
         }
         catch (e) {

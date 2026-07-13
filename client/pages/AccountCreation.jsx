@@ -6,6 +6,7 @@ import { postNewUser } from '../services/users';
 export default function AccountCreation() {
     const [type, setType] = useState("password")
     const [error, setError] = useState("")
+    const [disabled, setDisabled] = useState(false)
     const [success, setSuccess] = useState("")
 
     // Les hooks doivent etre appeles dans le composant, pas au niveau du module
@@ -18,12 +19,17 @@ export default function AccountCreation() {
         }
         setError("");
         try {
+            setDisabled(true);
+            console.log("hey")
             const response = await postNewUser(Object.fromEntries(data.entries()));
+            console.log("hey")
             setError("")
             setSuccess("Le compte a été créé avec succès!")
         } catch (e) {
             setSuccess("")
             setError(e.message)
+        } finally {
+            setDisabled(false)
         }
         
     }
@@ -65,7 +71,7 @@ export default function AccountCreation() {
         {success}
     </p>
 )}
-        <Button variant="primary" type="submit">
+        <Button variant="primary" disabled={disabled} type="submit">
             Créer un compte
         </Button>
     </Form>
