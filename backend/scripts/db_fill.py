@@ -2,6 +2,9 @@ import dotenv
 import os
 from pymongo import MongoClient
 import pandas as pd
+from datetime import datetime
+
+
 
 dotenv.load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), "../.env"))
 client = MongoClient(os.getenv("ATLAS_URI"))
@@ -50,7 +53,12 @@ coll = database["measurements"]
 coll.drop()
 print("Génération des mesures")
 for idx, row in measurements.iterrows():
-    coll.insert_one({"type": row["type"], "value": row["value"], "location": row["location"].lower(), "timestamp": row["timestamp"]})
+    date = row["timestamp"].split("T")[0]
+    time = row["timestamp"].split("T")[1]
+    year, month, date = map(int, date.split("-"))
+    hour, minute, second = map(int, time[:-1].split(":"))
+    hour -= 4
+    coll.insert_one({"type": row["type"], "value": row["value"], "location": row["location"].lower(), "timestamp": datetime(year, month, date, hour, minute, second)})
 
 
 coll = database["observations"]

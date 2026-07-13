@@ -4,7 +4,10 @@ import Connection from "../pages/Connection";
 import Layout from "../components/Layout";
 import AccountCreation from "../pages/AccountCreation";
 import Observation from "../pages/Observation";
+import DetailedView from "../pages/DetailedView";
 
+
+// https://reactrouter.com/start/declarative/url-values
 function App() {
   return (
     <Layout>
@@ -13,6 +16,7 @@ function App() {
         <Route path="/connection" element={<Connection />} />
         <Route path="/compte" element={<AccountCreation />} />
         <Route path="/observation" element={<Observation />} />
+        <Route path="/view/:location" element={<DetailedView />} />
       </Routes>
     </Layout>
   )
