@@ -10,13 +10,12 @@ import {
     UserLoginSchema
 } from "../models/User.js";
 
-const router = express.Router();
+const userRouter = express.Router();
 
-router.post(
+userRouter.post(
     "/register",
-    validate(UserRegisterSchema),
+    [validate(UserRegisterSchema)],
     async (req, res) => {
-
         try {
 
             const alreadyExists = await User.findOne({
@@ -41,11 +40,6 @@ router.post(
 
             await user.save();
 
-            // Cree et assigne un jeton JWT au nouvel utilisateur
-            const token = generateToken(user);
-
-            return res.status(201).json({ token, user });
-
         }
         catch (e) {
 
@@ -59,7 +53,7 @@ router.post(
     }
 );
 
-router.post(
+userRouter.post(
     "/login",
     validate(UserLoginSchema),
     async (req, res) => {
@@ -107,4 +101,4 @@ router.post(
     }
 );
 
-export default router;
+export default userRouter;

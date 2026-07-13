@@ -6,7 +6,7 @@ import devicesRouter from "./routes/devices.js";
 import locationsRouter from "./routes/locations.js";
 import ambianceRouter from "./routes/ambiance.js";
 import connectDB from "./data/db.js";
-import usersRouter from "./routes/users.js";
+import userRouter from "./routes/users.js";
 
 const app = express();
 app.use(express.json());
@@ -17,7 +17,7 @@ app.use("/observations", observationsRouter);
 app.use("/devices", devicesRouter);
 app.use("/locations", locationsRouter);
 app.use("/ambiance", ambianceRouter);
-app.use("/users", usersRouter);
+app.use("/users", userRouter);
 
 try {
     await connectDB();

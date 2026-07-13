@@ -1,14 +1,15 @@
 import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-
+import { postNewUser } from '../services/users';
 // https://react-bootstrap.netlify.app/docs/forms/overview/
 export default function AccountCreation() {
     const [type, setType] = useState("password")
     const [error, setError] = useState("")
+    const [success, setSuccess] = useState("")
 
     // Les hooks doivent etre appeles dans le composant, pas au niveau du module
-    function submitForm(event) {
+    async function submitForm(event) {
         event.preventDefault();
         const data = new FormData(event.target);
         if (data.get("password") !== data.get("passwordConfirmed")) {
@@ -16,7 +17,14 @@ export default function AccountCreation() {
             return;
         }
         setError("");
-        console.log(Object.fromEntries(data));
+        try {
+            const response = await postNewUser(Object.fromEntries(data.entries()));
+            
+            setSuccess("Le compte a été créé avec succès!")
+        } catch (e) {
+            setError(e.message)
+        }
+        
     }
 
     return (        // https://getbootstrap.com/docs/5.1/utilities/spacing/
@@ -49,6 +57,11 @@ export default function AccountCreation() {
         {error && (
     <p className="text-danger">
         {error}
+    </p>
+)}
+        {success && (
+    <p className="text-success">
+        {success}
     </p>
 )}
         <Button variant="primary" type="submit">

@@ -52,11 +52,11 @@ const UserRegisterSchema = {
         },
         password: {
             type: "string",
-            minLength: 6
+            minLength: 1
         },
         confirmedPassword: {
             type: "string",
-            minLength: 6
+            minLength: 1
         }
     },
     required: [
