@@ -9,7 +9,7 @@ database = client["IFT3225"]
 
 
 locations = [{
-    "location": "IGA Marché Tellier Sainte Dorothee",
+    "location": "iga marché tellier sainte dorothee",
     "lat": 45.525277982924315,
     "lon": -73.78364623818311
 }]
@@ -50,12 +50,12 @@ coll = database["measurements"]
 coll.drop()
 print("Génération des mesures")
 for idx, row in measurements.iterrows():
-    coll.insert_one({"type": row["type"], "value": row["value"], "location": row["location"], "timestamp": row["timestamp"]})
+    coll.insert_one({"type": row["type"], "value": row["value"], "location": row["location"].lower(), "timestamp": row["timestamp"]})
 
 
 coll = database["observations"]
 coll.drop()
 print("Génération des observations")
 for idx, row in observations.iterrows():
-    coll.insert_one({"location": row["location"], "vibe": row["vibe"], "proximity": row["proximity"], "notes": row["notes"]})
+    coll.insert_one({"location": row["location"].lower(), "vibe": row["vibe"], "proximity": row["proximity"], "notes": row["notes"]})
 
