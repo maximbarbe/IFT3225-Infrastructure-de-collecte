@@ -16,7 +16,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Map />} />
           <Route path="/connection" element={<Connection />} />
-          <Route path="/compte" element={<AccountCreation />} />
+          <Route path="/register" element={<AccountCreation />} />
           <Route path="/observation" element={<Observation />} />
           <Route path="/view/:location" element={<DetailedView />} />
         </Routes>

@@ -88,7 +88,7 @@ userRouter.post(
 
             // Cree et assigne un jeton JWT a l'utilisateur connecte
             const token = generateToken(user);
-
+            
             return res.status(200).json({ token, user });
 
         }

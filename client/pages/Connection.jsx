@@ -1,18 +1,38 @@
 import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
+import { useAppContext } from '../context/AppContext';
+import { loginUser } from '../services/users';
+import { useNavigate } from "react-router-dom";
 
-function submitForm(event) {
-    event.preventDefault();
-    event.stopPropagation();
-    const data = new FormData(event.target);
-    console.log(data.get("email"));
-}
 
 // https://react-bootstrap.netlify.app/docs/forms/overview/
 export default function Connection() {
-    
+    const [error, setError] = useState("")
     const [type, setType] = useState("password")
+    const [disabled, setDisabled] = useState(false)
+    const {user, setUser} = useAppContext();
+    const navigate = useNavigate();
+
+
+    async function submitForm(event) {
+        event.preventDefault();
+        
+        const data = new FormData(event.target);
+        console.log(data.get("email"));
+        try {
+            setDisabled(true);
+            const response = await loginUser(Object.fromEntries(data.entries()));
+            setUser({token: response.token, ...response.user})
+            setError("")      
+            navigate("/")  
+        } catch (e) {
+            setError(e.message)
+        } finally {
+            setDisabled(false)
+        }
+    }
+
 
 
     return (
@@ -31,7 +51,12 @@ export default function Connection() {
         <Form.Group className="mb-3" controlId="formBasicCheckbox">
             <Form.Check type="checkbox" label="Voir mot de passe" onClick={() => {setType(prev => (prev === "password" ? "text" : "password"))}}/>
         </Form.Group>
-        <Button variant="primary" type="submit">
+        {error && (
+        <p className="text-danger">
+            {error}
+        </p>)
+        }
+        <Button variant="primary" disabled={disabled} type="submit">
             Se connecter
         </Button>
     </Form>

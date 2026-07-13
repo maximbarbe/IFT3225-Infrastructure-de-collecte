@@ -12,6 +12,7 @@ export default function AccountCreation() {
     // Les hooks doivent etre appeles dans le composant, pas au niveau du module
     async function submitForm(event) {
         event.preventDefault();
+    
         const data = new FormData(event.target);
         if (data.get("password") !== data.get("passwordConfirmed")) {
             setError("Les mots de passe ne correspondent pas.");
@@ -20,9 +21,7 @@ export default function AccountCreation() {
         setError("");
         try {
             setDisabled(true);
-            console.log("hey")
             const response = await postNewUser(Object.fromEntries(data.entries()));
-            console.log("hey")
             setError("")
             setSuccess("Le compte a été créé avec succès!")
         } catch (e) {

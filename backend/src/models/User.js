@@ -27,6 +27,8 @@ userDbSchema.methods.toJSON = function() {
     user.id = user._id;
     delete user.__v;
     delete user._id;
+    delete user.password
+    delete user.id
     return user;
 };
 
