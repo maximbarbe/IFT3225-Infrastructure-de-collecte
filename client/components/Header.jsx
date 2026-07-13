@@ -5,11 +5,15 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import { Link } from 'react-router-dom';
+import { useAppContext } from '../context/AppContext';
 
 // https://react-bootstrap.netlify.app/docs/components/navbar/
 // https://stackoverflow.com/a/54843616
 export default function Header() {
+  const {user, setUser} = useAppContext();
+  
   return (
+    
     <Navbar collapseOnSelect expand="lg" className="bg-body-tertiary" sticky="top">
       <Container>
         <Navbar.Brand to="/">Infrastructure de collecte</Navbar.Brand>

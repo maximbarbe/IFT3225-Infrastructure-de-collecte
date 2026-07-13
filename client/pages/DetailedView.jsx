@@ -79,7 +79,7 @@ export default function DetailedView() {
                 {chart}
                 <div className="d-flex align-items-center justify-content-center flex-column mb-3 pt-5">
                     <h3>Vue détaillée par bloc de 15 minutes</h3>
-                    <table class="table">
+                    <table className="table">
                         <thead>
                             <tr>
                                 <th scope="col">#</th>
