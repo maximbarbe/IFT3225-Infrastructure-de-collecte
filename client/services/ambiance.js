@@ -8,3 +8,12 @@ export function getAmbiance(loc) {
 export function getQuietHours(loc) {
     return callApi(`/ambiance/${loc}/quiet-hours`, "GET", {"Content-Type": "application/json"});
 }
+
+export function getHistory(loc, window=null) {
+    if (window) {
+        return callApi(`/ambiance/${loc}/history?last=${window}`, "GET", {"Content-Type": "application/json"});
+    } else {
+        return callApi(`/ambiance/${loc}/history`, "GET", {"Content-Type": "application/json"});
+    }
+    
+}

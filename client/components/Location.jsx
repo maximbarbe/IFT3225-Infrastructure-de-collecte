@@ -15,7 +15,7 @@ export default function Location({ lat, lon, loc }) {
                     eventHandlers={{
                         mouseover: (e) => e.target.openPopup(),
                         mouseout: (e) => e.target.closePopup(),
-                        click: (e) => navigate("/login")
+                        click: (e) => navigate(`/view/${loc}`)
                     }}>
                 
                 <Popup>

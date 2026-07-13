@@ -57,7 +57,6 @@ for idx, row in measurements.iterrows():
     time = row["timestamp"].split("T")[1]
     year, month, date = map(int, date.split("-"))
     hour, minute, second = map(int, time[:-1].split(":"))
-    hour -= 4
     coll.insert_one({"type": row["type"], "value": row["value"], "location": row["location"].lower(), "timestamp": datetime(year, month, date, hour, minute, second)})
 
 
