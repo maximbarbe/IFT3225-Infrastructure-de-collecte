@@ -33,6 +33,7 @@ function parseWindow(value) {
 router.get("/:location", async (req, res) => {
     try {
         const location = req.params.location.toLowerCase();
+        
         const measurements = await Measurement.find({ location });
         const observations = await Observation.find({ location });
         
@@ -80,10 +81,21 @@ router.get("/:location", async (req, res) => {
 router.get("/:location/quiet-hours", async (req, res) => {
     try {
         const location = req.params.location.toLowerCase();
+        const windowMs = parseWindow(req.query.last);
+        const since = windowMs
+            ? new Date(Date.now() - windowMs)
+            : null;
 
         const byHour = await Measurement.aggregate([
             // 1. On ne garde que les mesures de ce lieu.
-            { $match: { location } },
+            {
+    $match: {
+        location,
+        ...(since && {
+            timestamp: { $gte: since }
+        })
+    }
+},
             // 2. On regroupe par heure locale (les timestamps sont en UTC,
             //    mais "heure calme" n'a de sens qu'en heure de Montreal)
             {
@@ -114,7 +126,7 @@ router.get("/:location/quiet-hours", async (req, res) => {
             sampleCount: h.sampleCount
         }));
 
-        return res.status(200).json({ location, hours });
+        return res.status(200).json({ location,  window: req.query.last || "all", hours });
     } catch (e) {
         return res.status(500).json({ 
             error: "SERVER_ERROR", 
