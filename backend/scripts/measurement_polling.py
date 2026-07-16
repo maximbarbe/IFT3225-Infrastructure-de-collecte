@@ -16,21 +16,31 @@ MEASUREMENT_TYPE = "audio"
 LOCATION = "IGA Marché Tellier Sainte Dorothee"
 SEUIL_ELEVE = 60
 SEUIL_BAS = 48
+LAT = 45.525277982924315
+LON = -73.78364623818311
 
 start_time = datetime.datetime.now()
 
 mes = []
 obs = []
+
+
+try:
+    res = requests.post(url=API_URL+f"/locations", headers={"x-api-key": f"{API_KEY}"}, json={"location": LOCATION, "lat": LAT, "lon": LON})
+    if res.status_code == 500:
+        print("Erreur du serveur lors de la création de la location")
+        exit(1)
+except:
+    print("Could not create location")
+    exit(1)
+
 while (start_time + datetime.timedelta(minutes=NO_MINUTES) > datetime.datetime.now()):
     # (Phyphox, 2024)
     # (jbshute, 2018)
-    try:
-        res = requests.post(url=API_URL+f"/locations", headers={"x-api-key": f"{API_KEY}"}, json={"location": LOCATION})
-    except:
-        print("Could not create location")
-        exit(1)
+
     try:
         res = requests.get(url=PHYPHOX_URL + f"control?cmd=set&buffer=calibration&value={CALIBRATION}")
+        time.sleep(1)
         if res.status_code != 200:
             print("Could not calibrate trial")
             exit(1)
@@ -120,8 +130,8 @@ while (start_time + datetime.timedelta(minutes=NO_MINUTES) > datetime.datetime.n
     time.sleep(2)
 
 df = pd.DataFrame(mes)
-df.to_csv(os.path.join(os.path.dirname(__file__), f"../src/data/measurements-3.csv"), index=False)
+df.to_csv(os.path.join(os.path.dirname(__file__), f"../src/data/measurements-4.csv"), index=False)
 
 
 df = pd.DataFrame(obs)
-df.to_csv(os.path.join(os.path.dirname(__file__), f"../src/data/observations-3.csv"), index=False)
+df.to_csv(os.path.join(os.path.dirname(__file__), f"../src/data/observations-4.csv"), index=False)

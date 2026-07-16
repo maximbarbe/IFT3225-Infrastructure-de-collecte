@@ -14,9 +14,9 @@ export default function DetailedView() {
 
     let { location } = useParams();
     const [disabled, setDisabled] = useState(false)
-    const quietHoursData = useApi(() => (getQuietHours(location)));
+    const quietHoursData = useApi(() => (getQuietHours(location, "2160h")));
     const historyData= useApi(() => (getHistory(location, "2160h")));
-    const ambianceData = useApi(() => getAmbiance(location))
+    const ambianceData = useApi(() => getAmbiance(location, "2160h"))
     const {user, setUser} = useAppContext();
     const [favorited, setFavorited] = useState(isInFavorites(location))
 

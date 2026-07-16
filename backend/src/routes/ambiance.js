@@ -33,14 +33,26 @@ function parseWindow(value) {
 router.get("/:location", async (req, res) => {
     try {
         const location = req.params.location.toLowerCase();
-        
-        const measurements = await Measurement.find({ location });
+        const windowMs = parseWindow(req.query.last);
+        const since = windowMs
+            ? new Date(Date.now() - windowMs)
+            : null;        
+        const measurements = await Measurement.aggregate([
+            // 1. On ne garde que les mesures de ce lieu.
+            {
+            $match: {
+                location,
+                ...(since && {
+                    timestamp: { $gte: since }
+                })
+    }
+}])   
         const observations = await Observation.find({ location });
         
         if (!measurements || !observations) {
             return res.status(404).json({ 
                 error: "NOT_FOUND",
-                message: "La location n'existe pas"
+                message: "Il n'y a pas de données pour ces locations."
              });
         }
         if (measurements.length === 0 && observations.length === 0) {
@@ -116,7 +128,6 @@ router.get("/:location/quiet-hours", async (req, res) => {
             },
             { $sort: { hour: 1 } }
         ]);
-
 
         // On ajoute la classification cote serveur (plus lisible que dans le pipeline).
         const hours = byHour.map(h => ({
