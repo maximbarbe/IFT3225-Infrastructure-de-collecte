@@ -41,6 +41,35 @@ router.get("/", async (req, res) => {
     }
 });
 
+
+router.get("/active", async (req, res) => {
+    
+    try {
+        const allObservations = await Observation.find({});
+        const locations = []
+        for (let obs of allObservations) {
+            locations.push(obs.location)
+        }
+        
+        
+        // https://stackoverflow.com/a/9229821
+        const allLocations = [...new Set(locations)]
+        let data = []
+        for (let l of allLocations) {
+            
+            const loc = await Location.findOne({location:l})
+            data.push({location:l, lat:loc.lat, lon:loc.lon})
+        }
+
+        return res.status(200).json(data);
+    } catch (e) {
+        return res.status(500).json({ 
+            error: "SERVER_ERROR", 
+            message: e.message
+         });
+    }
+})
+
 router.post("/", [authenticate(Device), validate(LocationPostSchema)], async (req, res) => {
     let loc1;
     let loc2;

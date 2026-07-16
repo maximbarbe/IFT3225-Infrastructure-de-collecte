@@ -2,13 +2,13 @@ import L from "leaflet"
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import Location from "../components/Location";
 import useApi from "../hooks/useApi";
-import { getLocations } from "../services/locations";
+import { getActiveLocations } from "../services/locations";
 
 import "leaflet/dist/leaflet.css";
 
 export default function Map() {
     // Recupere les locations directement depuis le backend
-    const { data , loading, error} = useApi(getLocations);
+    const { data , loading, error} = useApi(getActiveLocations);
     const locations = data || [];
     return (
     <MapContainer 
