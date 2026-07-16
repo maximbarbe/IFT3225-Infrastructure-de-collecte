@@ -30,7 +30,10 @@ export default function LocationCreation() {
         setError("");
         try {
             setDisabled(true);
-            const response = await postLocation(Object.fromEntries(data.entries()), user.token);
+            const loc = Object.fromEntries(data.entries())
+            loc.lat = Number(loc.lat)
+            loc.lon = Number(loc.lon)
+            const response = await postLocation(loc, user.token);
             setError("")
             setSuccess("La location a été créée avec succès!")
         } catch (e) {

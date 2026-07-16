@@ -25,6 +25,7 @@ locationDbSchema.methods.toJSON = function() {
 // (Ipizzinidev, 2022)
 const Location = mongoose.models.Location || mongoose.model("Location", locationDbSchema);
 
+// https://ajv.js.org/packages/ajv-errors.html#messages-for-keywords
 const LocationPostSchema = {
     type: "object",
     properties: {

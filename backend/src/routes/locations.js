@@ -70,7 +70,7 @@ router.get("/active", async (req, res) => {
     }
 })
 
-router.post("/", [authenticateToken], async (req, res) => {
+router.post("/", [authenticateToken, validate(LocationPostSchema)], async (req, res) => {
     let loc;
     try {
         loc = await Location.findOne({lat: req.body["lat"], lon: req.body["lon"]});
