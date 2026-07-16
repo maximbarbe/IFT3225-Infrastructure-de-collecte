@@ -63,6 +63,10 @@ for idx, row in measurements.iterrows():
 coll = database["observations"]
 coll.drop()
 print("Génération des observations")
-for idx, row in observations.iterrows():
-    coll.insert_one({"location": row["location"].lower(), "vibe": row["vibe"], "proximity": row["proximity"], "notes": row["notes"]})
+if ("userId" in observations.columns):
+    for idx, row in observations.iterrows():
+        coll.insert_one({"location": row["location"].lower(), "vibe": row["vibe"], "proximity": row["proximity"], "notes": row["notes"], "userId": row["userId"]})
+else:
+    for idx, row in observations.iterrows():
+        coll.insert_one({"location": row["location"].lower(), "vibe": row["vibe"], "proximity": row["proximity"], "notes": row["notes"], "userId": "0"})    
 

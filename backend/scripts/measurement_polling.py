@@ -103,7 +103,8 @@ while (start_time + datetime.timedelta(minutes=NO_MINUTES) > datetime.datetime.n
             "location": LOCATION,
             "vibe": vibe,
             "proximity": proximite,
-            "notes": f"Timestamp: {temps_collecte}, Db: {measurement}"
+            "notes": f"Timestamp: {temps_collecte}, Db: {measurement}",
+            "userId": "0"
         }
         obs.append(observation)
         try:
