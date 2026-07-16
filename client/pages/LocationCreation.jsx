@@ -15,7 +15,6 @@ export default function LocationCreation() {
 
 
     if (!user) {
-        console.log(user)
         //https://stackoverflow.com/a/78447971
         return <Navigate to="/connection" replace />
     }
@@ -26,7 +25,6 @@ export default function LocationCreation() {
         event.preventDefault();
     
         const data = new FormData(event.target);
-        console.log(data)
         setError("");
         try {
             setDisabled(true);

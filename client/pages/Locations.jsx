@@ -17,11 +17,9 @@ export default function Locations() {
     const {data, loading, error} = useApi(() => (getMyLocations(user.token)))
     const myLocations = data
     if (!user) {
-        console.log(user)
         //https://stackoverflow.com/a/78447971
         return <Navigate to="/connection" replace />
     }
-    console.log(myLocations)
     return (<div className="d-flex align-items-center justify-content-center flex-column mb-3 pt-5">
         {loading && <span className="spinner-border text-secondary" role="status">
                 </span>}

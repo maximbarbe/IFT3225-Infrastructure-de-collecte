@@ -86,7 +86,6 @@ router.post("/", [authenticateToken, validate(LocationPostSchema)], async (req, 
             message: "A location already exists at this latitude/longitude or a location already exists with this name."
         });
     }
-    console.log(req.body)
     const location = new Location({location: req.body["location"].toLowerCase(), lat: req.body["lat"], lon: req.body["lon"]});
     try {
         await location.save();

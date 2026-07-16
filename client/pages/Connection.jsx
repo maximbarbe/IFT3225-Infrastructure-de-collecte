@@ -19,7 +19,6 @@ export default function Connection() {
         event.preventDefault();
         
         const data = new FormData(event.target);
-        console.log(data.get("email"));
         try {
             setDisabled(true);
             const response = await loginUser(Object.fromEntries(data.entries()));
