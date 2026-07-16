@@ -16,6 +16,21 @@ ajv.addFormat("timestamp", {
     }
 });
 
+ajv.addFormat("lat", {
+    type: "number",
+    validate: (x) => {
+        return x >= -90 && x <= 90
+    }
+})
+
+ajv.addFormat("lon", {
+    type: "number",
+    validate: (x) => {
+        return x >= -180 && x <= 180
+    }
+})
+
+
 function validate(schema) {
 
     const validator = ajv.compile(schema);

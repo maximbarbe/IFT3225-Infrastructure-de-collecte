@@ -23,7 +23,7 @@ export default function Header() {
             <Nav.Link as={Link} to="/" className="btn btn-primary">Carte</Nav.Link>
             <Nav.Link as={Link} to="/favorites" className="btn btn-primary"> Mes favoris</Nav.Link>
             {user && <Nav.Link as={Link} to="/observation" className="btn btn-primary">Ajouter une observation</Nav.Link>}
-            
+            {user && <Nav.Link as={Link} to="/addLocation" className="btn btn-primary">Ajouter une location</Nav.Link>}
           </Nav>
           <Nav>
 

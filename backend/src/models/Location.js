@@ -33,10 +33,12 @@ const LocationPostSchema = {
             minLength: 1
         },
         lat: {
-            type: "number"
+            type: "number",
+            format: "lat"
         },
         lon: {
-            type: "number"
+            type: "number",
+            format: "lon"
         }
     },
     required: [

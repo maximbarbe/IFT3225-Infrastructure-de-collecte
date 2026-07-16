@@ -16,6 +16,12 @@ userRouter.post(
     "/register",
     [validate(UserRegisterSchema)],
     async (req, res) => {
+        if (req.body.password != req.body.confirmedPassword) {
+                return res.status(401).json({
+                    error: "INVALID_CREDENTIALS",
+                    message: "Les mots de passe ne correspondent pas."
+                });
+        }
         try {
 
             const alreadyExists = await User.findOne({

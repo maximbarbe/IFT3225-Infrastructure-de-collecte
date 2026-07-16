@@ -26,6 +26,7 @@ export default function Observation() {
         const data = new FormData(event.target);
         console.log(data)
         try {
+            setSuccess("")
             setDisabled(true);
             const response = await postObservation(Object.fromEntries(data.entries()), user.token)
             setError("")  
