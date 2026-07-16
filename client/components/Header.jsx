@@ -21,6 +21,7 @@ export default function Header() {
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="me-auto">
             <Nav.Link as={Link} to="/" className="btn btn-primary">Carte</Nav.Link>
+            <Nav.Link as={Link} to="/favorites" className="btn btn-primary"> Mes favoris</Nav.Link>
             {user && <Nav.Link as={Link} to="/observation" className="btn btn-primary">Ajouter une observation</Nav.Link>}
             
           </Nav>
@@ -28,7 +29,6 @@ export default function Header() {
 
             {!user && <Nav.Link as={Link} to="/connection" className="btn btn-primary">Se connecter</Nav.Link>}
             {!user && <Nav.Link as={Link} to="/register" className="btn btn-primary"> Créer un compte</Nav.Link>}
-            {user && <Nav.Link as={Link} to="/" className="btn btn-primary"> Mon compte</Nav.Link>}
             {user && <Nav.Link as={Link} to="/" className="btn btn-primary" onClick={() => setUser(null)}> Se déconnecter</Nav.Link>}
           </Nav>
         </Navbar.Collapse>

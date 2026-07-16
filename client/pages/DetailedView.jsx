@@ -3,15 +3,55 @@ import useApi from "../hooks/useApi";
 import { getAmbiance, getHistory, getQuietHours } from "../services/ambiance";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 import DetailedViewRow from "../components/TableRow";
+import { useAppContext } from '../context/AppContext';
+import Button from 'react-bootstrap/Button';
+import { useState } from 'react';
 // https://recharts.github.io/en-US/api/BarChart/
 //https://reactrouter.com/start/declarative/url-values
 // https://getbootstrap.com/docs/4.0/utilities/flex/
 // https://getbootstrap.com/docs/5.3/content/tables/
 export default function DetailedView() {
+
     let { location } = useParams();
+    const [disabled, setDisabled] = useState(false)
     const quietHoursData = useApi(() => (getQuietHours(location)));
     const historyData= useApi(() => (getHistory(location, "2160h")));
     const ambianceData = useApi(() => getAmbiance(location))
+    const {user, setUser} = useAppContext();
+    const [favorited, setFavorited] = useState(isInFavorites(location))
+
+    function addFavorite(location) {
+        if (localStorage.getItem("favorites") === null) {
+            localStorage.setItem("favorites", JSON.stringify([location]))
+        } else {
+            const favorites = JSON.parse(localStorage.getItem("favorites"))
+            favorites.push(location)
+            localStorage.setItem("favorites", JSON.stringify(favorites))
+        }
+        setFavorited(true)
+    }
+
+    function isInFavorites(location) {
+        if (localStorage.getItem("favorites") === null) {
+            return false;
+        }
+        const favorites = JSON.parse(localStorage.getItem("favorites"))
+        if (favorites.filter((f) => f === location).length !== 0) {
+            return true
+        }
+        return false
+    }
+
+    function removeFavorite(location) {
+        const favorites = JSON.parse(localStorage.getItem("favorites"))
+        localStorage.setItem("favorites", JSON.stringify(favorites.filter((f) => f !== location)))
+        setFavorited(false)
+    }
+
+
+    
+    
+
     let data = []
     let chart;
     if (quietHoursData.data) {
@@ -98,6 +138,9 @@ export default function DetailedView() {
                     
                     
                 </div>
+                
+                {!favorited && <Button variant="primary" disabled={disabled} onClick={() => addFavorite(location)}>Ajouter à mes favoris</Button>}
+                {favorited && <Button variant="danger" disabled={disabled} onClick={() => removeFavorite(location)}>Retirer de mes favoris</Button>}
             </div>    
                 
                 

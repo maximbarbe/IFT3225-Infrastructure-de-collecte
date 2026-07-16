@@ -89,11 +89,11 @@ router.get("/:location/quiet-hours", async (req, res) => {
         const byHour = await Measurement.aggregate([
             // 1. On ne garde que les mesures de ce lieu.
             {
-    $match: {
-        location,
-        ...(since && {
-            timestamp: { $gte: since }
-        })
+            $match: {
+                location,
+                ...(since && {
+                    timestamp: { $gte: since }
+                })
     }
 },
             // 2. On regroupe par heure locale (les timestamps sont en UTC,

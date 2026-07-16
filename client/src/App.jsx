@@ -6,6 +6,7 @@ import AccountCreation from "../pages/AccountCreation";
 import Observation from "../pages/Observation";
 import DetailedView from "../pages/DetailedView";
 import { Fournisseur } from "../context/Fournisseur";
+import Favorites from "../pages/Favorites";
 
 
 // https://reactrouter.com/start/declarative/url-values
@@ -19,6 +20,7 @@ function App() {
           <Route path="/register" element={<AccountCreation />} />
           <Route path="/observation" element={<Observation />} />
           <Route path="/view/:location" element={<DetailedView />} />
+          <Route path="/favorites" element={<Favorites />} />
         </Routes>
       </Layout>
     </Fournisseur>
