@@ -72,5 +72,17 @@ router.post("/", [authenticate(Device), validate(ObservationPostSchema)], async 
 });
 
 
+router.get("/", [authenticateToken], async (req, res) => {
+    try {
+        const myObs = await Observation.find({userId: req.user._id})
+        return res.status(200).json(myObs)
+    } catch (e) {
+        return res.status(500).json({ 
+            error: "SERVER_ERROR", 
+            message: e.message
+         });
+    }
+})
+
 
 export default router;

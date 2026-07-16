@@ -9,7 +9,7 @@ import { Fournisseur } from "../context/Fournisseur";
 import Favorites from "../pages/Favorites";
 import Locations from "../pages/Locations";
 import LocationCreation from "../pages/LocationCreation";
-
+import Contributions from "../pages/Contributions"
 
 // https://reactrouter.com/start/declarative/url-values
 function App() {
@@ -25,6 +25,7 @@ function App() {
           <Route path="/favorites" element={<Favorites />} />
           <Route path="/myLocations" element={<Locations />} />
           <Route path="/addLocation" element={<LocationCreation />} />
+          <Route path="/contributions" element={<Contributions />} />
         </Routes>
       </Layout>
     </Fournisseur>
