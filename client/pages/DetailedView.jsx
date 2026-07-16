@@ -49,7 +49,15 @@ export default function DetailedView() {
     }
 
 
-    
+    function getColorClass(data) {
+        if (data === "CALME") {
+            return 'text-success'
+        } else if (data === "MODÉRÉ") {
+            return 'text-warning'
+        } else {
+            return 'text-danger'
+        }
+    }
     
 
     let data = []
@@ -85,13 +93,7 @@ export default function DetailedView() {
     let cName;
 
     if (ambianceData.data) {
-        if (ambianceData.data.noiseLevel.toUpperCase() === "QUIET") {
-            cName = "text-success";
-        } else if (ambianceData.data.noiseLevel.toUpperCase() === "MODERATE") {
-            cName = "text-warning"
-        } else {
-            cName = "text-danger"
-        }
+        cName = getColorClass(ambianceData.data.noiseLevel.toUpperCase())
     }
 
     return (
@@ -131,7 +133,7 @@ export default function DetailedView() {
                         </thead>
                         <tbody>
                             {historyData.data.series.map((data, index) => (
-                                <DetailedViewRow key={index} index={index} bucketStart={data.bucketStart} averageNoise={data.averageNoise} noiseLevel={data.noiseLevel} sampleCount={data.sampleCount} />
+                                <DetailedViewRow key={index} index={index} bucketStart={data.bucketStart} averageNoise={data.averageNoise} noiseLevel={data.noiseLevel} sampleCount={data.sampleCount}/>
                             ))}
                         </tbody>
                     </table>

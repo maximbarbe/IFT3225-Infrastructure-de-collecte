@@ -5,7 +5,7 @@ export default function DetailedViewRow( {index, bucketStart, averageNoise, nois
             <th scope="row">{index + 1}</th>
             <td>{bucketStart}</td>
             <td>{averageNoise}</td>
-            <td>{noiseLevel}</td>
+            <td >{noiseLevel}</td>
             <td>{sampleCount}</td>
         </tr>
     )

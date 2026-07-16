@@ -13,9 +13,9 @@ const MODERATE_THRESHOLD = 60;
 // Traduit une moyenne de dB en categorie. Memes libelles que la route existante
 function classifyNoise(avgDb) {
     if (avgDb === null || avgDb === undefined) return "unknown";
-    if (avgDb < QUIET_THRESHOLD) return "quiet";
-    if (avgDb < MODERATE_THRESHOLD) return "moderate";
-    return "loud";
+    if (avgDb < QUIET_THRESHOLD) return "calme";
+    if (avgDb < MODERATE_THRESHOLD) return "modéré";
+    return "animé";
 }
 
 // Convertit une fenetre comme "3h", "30m", "1d" en millisecondes.
