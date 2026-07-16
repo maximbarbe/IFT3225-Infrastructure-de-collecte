@@ -1,12 +1,33 @@
 import express from "express";
 
 import validate from "../middleware/validate.js";
-import { authenticate } from "../middleware/auth.js";
+import { authenticate, authenticateToken } from "../middleware/auth.js";
 
 import { Location, LocationPostSchema } from "../models/Location.js";
 import { Device } from "../models/Device.js";
+import { Observation } from "../models/Observation.js";
 
 const router = express.Router();
+
+
+router.get("/", [authenticateToken], async (req, res) => {
+    try {
+        const myObservations = await Observation.find({userId: req.user._id});
+        const locations = []
+        for (let obs of myObservations) {
+            locations.push(obs.location)
+        }
+        // https://stackoverflow.com/a/9229821
+        const uniqueLocation = [...new Set(locations)]
+        return res.status(200).json(uniqueLocation);
+    } catch (e) {
+        return res.status(500).json({ 
+            error: "SERVER_ERROR", 
+            message: e.message
+         });
+    }
+}) 
+
 
 router.get("/", async (req, res) => {
     try {

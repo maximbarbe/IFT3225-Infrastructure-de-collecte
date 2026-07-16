@@ -4,3 +4,6 @@ import callApi from "./apiCaller";
 export function getLocations() {
     return callApi("/locations", "GET", { "Content-Type": "application/json" });
 }
+export async function getMyLocations(token) {
+    return callApi("/locations", "GET", { "Content-Type": "application/json", "Authorization": `Bearer ${token}`});
+}

@@ -18,7 +18,7 @@ export default function Observation() {
     if (!user) {
         console.log(user)
         //https://stackoverflow.com/a/78447971
-        return <Navigate to="/login" replace />
+        return <Navigate to="/connection" replace />
     }
     async function submitForm(event) {
         event.preventDefault();

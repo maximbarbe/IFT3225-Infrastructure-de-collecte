@@ -44,7 +44,7 @@ export default function Favorites() {
                     </thead>
                         <tbody>
                             {favorites.map((data, index) => (
-                                <tr>
+                                <tr key={index}>
                                     <th scope="row">{index + 1}</th>
                                     <td>{data}</td>
                                     <td><Button variant="danger" onClick={() => removeFavorite(favorites, data)}>Retirer</Button></td>

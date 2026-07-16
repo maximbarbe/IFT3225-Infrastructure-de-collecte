@@ -22,19 +22,22 @@ function generateToken(user) {
 
 // Tiré de la démo 4 et adapté à nos fins.
 const authenticateToken = async (req, res, next) => {
-        const authToken = req.header("Authorization").replace("Bearer ", "");
-        try {
-            
-            const decodedToken = jwt.verify(authToken, process.env.JWT_SECRET);
-            const user = await User.findOne({_id: decodedToken.id})
-            req.user = user;
-        } catch (e) {
-            return res.status(401).json({
-                error: "INVALID_TOKEN",
-                message: "Vous n'avez pas les permissions nécessaires"
-            })
-        }
-        next()
+    if (!req.header("Authorization")) {
+        return next("route")
+    }
+    const authToken = req.header("Authorization").replace("Bearer ", "");
+    try {
+        
+        const decodedToken = jwt.verify(authToken, process.env.JWT_SECRET);
+        const user = await User.findOne({_id: decodedToken.id})
+        req.user = user;
+    } catch (e) {
+        return res.status(401).json({
+            error: "INVALID_TOKEN",
+            message: "Vous n'avez pas les permissions nécessaires"
+        })
+    }
+    next()
         
 }
 

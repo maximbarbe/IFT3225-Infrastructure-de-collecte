@@ -31,9 +31,15 @@ router.post("/", [authenticateToken], async (req, res) => {
         await observation.save();
         return res.status(201).json(observation);
     } catch (e) {
-        return next("route");
+        return res.status(500).json({
+            error: "SERVER_ERROR",
+            message: e.message
+        });
     }   
-    return next("route");
+        return res.status(500).json({
+            error: "SERVER_ERROR",
+            message: e.message
+        });
 })
 
 
@@ -64,6 +70,7 @@ router.post("/", [authenticate(Device), validate(ObservationPostSchema)], async 
          });
     }   
 });
+
 
 
 export default router;
