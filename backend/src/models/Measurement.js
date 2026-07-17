@@ -17,10 +17,6 @@ const measurementDbSchema = new mongoose.Schema({
     timestamp: {
         type: Date,
         required: true
-    },
-    deviceId: {
-        type: String,
-        required: true
     }
 });
 

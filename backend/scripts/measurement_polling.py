@@ -13,11 +13,11 @@ NO_MINUTES = 20
 # À modifier
 CALIBRATION=100
 MEASUREMENT_TYPE = "audio"
-LOCATION = "IGA Marché Tellier Sainte Dorothee"
+LOCATION = "test"
 SEUIL_ELEVE = 60
 SEUIL_BAS = 48
-LAT = 45.525277982924315
-LON = -73.78364623818311
+LAT = 0
+LON = 0
 
 start_time = datetime.datetime.now()
 
