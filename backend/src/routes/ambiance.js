@@ -49,13 +49,13 @@ router.get("/:location", async (req, res) => {
 }])   
         const observations = await Observation.find({ location });
         
-        if (!measurements || !observations) {
+        if (!measurements) {
             return res.status(404).json({ 
                 error: "NOT_FOUND",
                 message: "Il n'y a pas de données pour ces locations."
              });
         }
-        if (measurements.length === 0 && observations.length === 0) {
+        if (measurements.length === 0) {
             return res.status(404).json({ 
                 error: "NOT_FOUND",
                 message: "Il n'y a pas de données pour ces locations."
@@ -66,7 +66,7 @@ router.get("/:location", async (req, res) => {
             ? measurements.reduce((sum, m) => sum + m.value, 0) / measurements.length
             : null;
 
-        const latestObservation = observations.length > 0
+        const latestObservation = (observations && observations.length > 0)
             ? observations[observations.length - 1]
             : null;
 
@@ -112,7 +112,7 @@ router.get("/:location/quiet-hours", async (req, res) => {
             //    mais "heure calme" n'a de sens qu'en heure de Montreal)
             {
                 $group: {
-                    _id: { $hour: { date: "$timestamp", timezone: "America/Montreal" } },
+                    _id: { $hour: { date: "$timestamp"} },
                     averageNoise: { $avg: "$value" },
                     sampleCount: { $sum: 1 }
                 }

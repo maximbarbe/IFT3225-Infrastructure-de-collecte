@@ -164,13 +164,13 @@ export default function DetailedView() {
                 <div className="d-flex align-items-center justify-content-center">
                     <h3>Classification d'ambiance courante: <span className={cName}>{ambianceData.data.noiseLevel.toUpperCase()}</span></h3>
                 </div>
-                <h4>Graphique montrant les niveaux sonores moyens pour les heures de la journée.</h4>
+                <h4>Graphique montrant les niveaux sonores moyens pour les heures de la journée (UTC).</h4>
                 {chart}
-                <h4>Graphique montrant l'historique par bloc de 15 minutes (Une vue tabulaire est plus bas).</h4>
+                <h4>Graphique montrant l'historique par bloc de 15 minutes (Une vue tabulaire est plus bas) (UTC).</h4>
                 {lineChart}
 
                 <div className="d-flex align-items-center justify-content-center flex-column mb-3 pt-5">
-                    <h3>Vue détaillée par bloc de 15 minutes</h3>
+                    <h3>Vue détaillée par bloc de 15 minutes (UTC)</h3>
                     <table className="table">
                         <thead>
                             <tr>
