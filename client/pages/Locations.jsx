@@ -11,8 +11,9 @@ export default function Locations() {
     const navigate = useNavigate();
     
     const {data, loading, error} = useApi(() => (getMyLocations(user.token)))
-    const myLocations = data
+
 // L'astuce pour la protection des routes provient de (user24854189, 2024)
+    const myLocations = data || []
     if (!user) {
         return <Navigate to="/connection" replace />
     }
@@ -21,9 +22,9 @@ export default function Locations() {
     return (<div className="d-flex align-items-center justify-content-center flex-column mb-3 pt-5">
         {loading && <span className="spinner-border text-secondary" role="status">
                 </span>}
-        {(!loading && myLocations.length === 0) &&
+        {(!loading &&!error && myLocations.length === 0) &&
         <h1>Vous n'avez contribué à aucune location! Ajoutez une observation pour commencer</h1>}
-        {(!loading && myLocations.length !== 0) &&
+        {(!loading &&!error&& myLocations.length !== 0) &&
             <div style={{width: "50%"}}>
                 <h1>Voici les locations auxquelles vous avez contribué:</h1>
                     <table className="table">
