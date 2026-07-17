@@ -2,7 +2,7 @@ import dotenv
 import os
 from pymongo import MongoClient
 import pandas as pd
-from datetime import datetime
+from datetime import datetime, timedelta
 
 
 
@@ -22,9 +22,7 @@ locations = [{
 coll = database["locations"]
 coll.drop()
 print("Debut generation des locations")
-for loc in locations:
-    if coll.find_one({"location": loc["location"]}) is None:
-        coll.insert_one({"location": loc["location"], "lat": loc["lat"], "lon": loc["lon"]})
+coll.insert_many(locations)
 print("Fin generation des locations")
 
 # --- Devices
@@ -52,21 +50,60 @@ observations = pd.concat([obs1, obs2, obs3], ignore_index=True)
 coll = database["measurements"]
 coll.drop()
 print("Génération des mesures")
+
+temp = []
+
 for idx, row in measurements.iterrows():
     date = row["timestamp"].split("T")[0]
     time = row["timestamp"].split("T")[1]
     year, month, date = map(int, date.split("-"))
     hour, minute, second = map(int, time[:-1].split(":"))
-    coll.insert_one({"type": row["type"], "value": row["value"], "location": row["location"].lower(), "timestamp": datetime(year, month, date, hour, minute, second)})
+    
+    temp.append({"type": row["type"], "value": row["value"], "location": row["location"].lower(), "timestamp": datetime(year, month, date, hour, minute, second)})
 
+coll.insert_many(temp)
 
 coll = database["observations"]
 coll.drop()
 print("Génération des observations")
+temp = []
 if ("userId" in observations.columns):
     for idx, row in observations.iterrows():
-        coll.insert_one({"location": row["location"].lower(), "vibe": row["vibe"], "proximity": row["proximity"], "notes": row["notes"], "userId": row["userId"]})
+        temp.append({"location": row["location"].lower(), "vibe": row["vibe"], "proximity": row["proximity"], "notes": row["notes"], "userId": row["userId"]})
 else:
     for idx, row in observations.iterrows():
-        coll.insert_one({"location": row["location"].lower(), "vibe": row["vibe"], "proximity": row["proximity"], "notes": row["notes"], "userId": "0"})    
+        temp.append({"location": row["location"].lower(), "vibe": row["vibe"], "proximity": row["proximity"], "notes": row["notes"], "userId": "0"})    
+        
+coll.insert_many(temp)
 
+temp = []
+
+mes4 = pd.read_csv(os.path.join(os.path.dirname(__file__), "../src/data/measurements-4.csv"))
+mes5 = pd.read_csv(os.path.join(os.path.dirname(__file__), "../src/data/measurements-5.csv"))
+mes6 = pd.read_csv(os.path.join(os.path.dirname(__file__), "../src/data/measurements-6.csv"))
+mes7 = pd.read_csv(os.path.join(os.path.dirname(__file__), "../src/data/measurements-7.csv"))
+
+mes4_start = datetime(2026, 7, 17, 13, 23)
+mes5_start = datetime(2026, 7, 17, 15, 9)
+mes6_start = datetime(2026, 7, 17, 18, 9)
+mes7_start = datetime(2026, 7, 17, 19, 10)
+
+print("Génération des 4eme, 5eme, 6eme et 7eme mesures")
+coll = database["measurements"]
+for idx, row in mes4.iterrows():
+    if not pd.isna(row["Sound pressure level (dB)"]):
+        temp.append({"type": "audio", "value": row["Sound pressure level (dB)"], "location": "iga marché tellier sainte dorothee", "timestamp": mes4_start +timedelta(seconds=row["Time (s)"])})
+    
+for idx, row in mes5.iterrows():
+    if not pd.isna(row["Sound pressure level (dB)"]):
+        temp.append({"type": "audio", "value": row["Sound pressure level (dB)"], "location": "iga marché tellier sainte dorothee", "timestamp": mes5_start +timedelta(seconds=row["Time (s)"])})    
+    
+for idx, row in mes6.iterrows():
+    if not pd.isna(row["Sound pressure level (dB)"]):
+        temp.append({"type": "audio", "value": row["Sound pressure level (dB)"], "location": "iga marché tellier sainte dorothee", "timestamp": mes6_start +timedelta(seconds=row["Time (s)"])})       
+    
+for idx, row in mes7.iterrows():
+    if not pd.isna(row["Sound pressure level (dB)"]):
+        temp.append({"type": "audio", "value": row["Sound pressure level (dB)"], "location": "iga marché tellier sainte dorothee", "timestamp": mes7_start +timedelta(seconds=row["Time (s)"])})       
+    
+coll.insert_many(temp)
