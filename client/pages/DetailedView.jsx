@@ -143,6 +143,7 @@ export default function DetailedView() {
     }
     // Les tables sont basées sur la documentation officielle de bootstrap (Bootstrap, s.d.a)
     // Les classes pour le display flexbox et l'alignement sont tirées de la documentation officielle de bootstrap (Bootstrap, s.d.c)
+    // Le loading icon est tirée de la documentation officielle de bootstrap (Bootstrap, s.d.d)
     return (
         <div className="d-flex align-items-center justify-content-center flex-column mb-3 pt-5" style={{width: "100%"}}>
             <h1>Lieu: {location}</h1>

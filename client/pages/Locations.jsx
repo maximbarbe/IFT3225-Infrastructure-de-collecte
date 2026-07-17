@@ -19,6 +19,7 @@ export default function Locations() {
     }
         // Les tables sont basées sur la documentation officielle de bootstrap (Bootstrap, s.d.a)
     // Les classes pour le display flexbox et l'alignement sont tirées de la documentation officielle de bootstrap (Bootstrap, s.d.c)
+    // Le loading icon est tirée de la documentation officielle de bootstrap (Bootstrap, s.d.d)
     return (<div className="d-flex align-items-center justify-content-center flex-column mb-3 pt-5">
         {loading && <span className="spinner-border text-secondary" role="status">
                 </span>}
