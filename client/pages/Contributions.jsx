@@ -14,7 +14,7 @@ export default function Contributions() {
     const navigate = useNavigate();
     
     const {data, loading, error} = useApi(() => (getMyObservations(user.token)))
-    const myObservations = data
+    const myObservations = data || []
     // L'astuce pour la protection des routes provient de (user24854189, 2024)
     if (!user) {
         return <Navigate to="/connection" replace />
@@ -25,9 +25,9 @@ export default function Contributions() {
     return (<div className="d-flex align-items-center justify-content-center flex-column mb-3 pt-5">
         {loading && <span className="spinner-border text-secondary" role="status">
                 </span>}
-        {(!loading && myObservations.length === 0) &&
+        {(!loading && !error && myObservations.length === 0) &&
         <h1>Vous n'avez fait aucune observation! Ajoutez une observation pour commencer</h1>}
-        {(!loading && myObservations.length !== 0) &&
+        {(!loading && !error && myObservations.length !== 0) &&
             <div style={{width: "50%"}}>
                 <h1>Voici vos observations:</h1>
                     <table className="table">
