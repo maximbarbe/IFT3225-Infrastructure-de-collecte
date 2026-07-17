@@ -5,8 +5,8 @@ import { authenticate, authenticateToken } from "../middleware/auth.js";
 
 import { Location, LocationPostSchema } from "../models/Location.js";
 import { Device } from "../models/Device.js";
+import { Measurement } from "../models/Measurement.js";
 import { Observation } from "../models/Observation.js";
-
 const router = express.Router();
 
 
@@ -45,9 +45,9 @@ router.get("/", async (req, res) => {
 router.get("/active", async (req, res) => {
     
     try {
-        const allObservations = await Observation.find({});
+        const allMeasurements = await Measurement.find({});
         const locations = []
-        for (let obs of allObservations) {
+        for (let obs of allMeasurements) {
             locations.push(obs.location)
         }
         
