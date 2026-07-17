@@ -1,19 +1,17 @@
-import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
-import Form from 'react-bootstrap/Form';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
-import NavDropdown from 'react-bootstrap/NavDropdown';
 import { Link } from 'react-router-dom';
 import { useAppContext } from '../context/AppContext';
 
-// https://react-bootstrap.netlify.app/docs/components/navbar/
-// https://stackoverflow.com/a/54843616
+
 export default function Header() {
   const {user, setUser} = useAppContext();
   
   return (
-    
+    // Cet extrait a été tiré de https://react-bootstrap.netlify.app/docs/components/navbar/ et adapté à nos fins.
+    // (React Bootstrap, s.d.)
+    // L'astuce pour Nav.Link as {Link} a été pris de (SrThompson, 2019)
     <Navbar collapseOnSelect expand="lg" className="bg-body-tertiary" sticky="top">
       <Container>
         <Navbar.Brand to="/">Infrastructure de collecte</Navbar.Brand>

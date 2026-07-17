@@ -2,11 +2,11 @@ import { Marker, Popup } from "react-leaflet";
 import useApi from "../hooks/useApi";
 import { getAmbiance } from "../services/ambiance";
 import { useNavigate } from "react-router-dom";
-// Va devoir changer la description pour passer un objet pour faire un popup
+
 export default function Location({ lat, lon, loc }) {
-    // https://react-leaflet.js.org/docs/start-setup/
-    // https://stackoverflow.com/a/71428345
-    // https://stackoverflow.com/a/50645395
+    // L'utilisation de React Leaflet a été faite avec la documentation (React Leaflet, s.d.)
+    // L'astuce pour les event handlers sur les markers provient de (Disco, 2022)
+    // L'astuce pour useNavigate provient de (aravind_reddy, 2018)
     const navigate = useNavigate();
     const {data, loading, error} = useApi(() => (getAmbiance(loc)))
     if (data) {

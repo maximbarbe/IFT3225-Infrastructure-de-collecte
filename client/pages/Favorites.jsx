@@ -1,13 +1,8 @@
 import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
-import { useAppContext } from '../context/AppContext';
-import { useNavigate } from "react-router-dom";
-import { Navigate } from 'react-router-dom';
 import { postObservation } from '../services/observation';
 
-// https://getbootstrap.com/docs/4.0/utilities/flex/
-// https://getbootstrap.com/docs/5.3/content/tables/
+
 export default function Favorites() {
 
     function getFavorites() {
@@ -28,7 +23,8 @@ export default function Favorites() {
 
     
 
-
+    // Les tables sont basées sur la documentation officielle de bootstrap (Bootstrap, s.d.a)
+    // Les classes pour le display flexbox et l'alignement sont tirées de la documentation officielle de bootstrap (Bootstrap, s.d.c)
     return (<div className="d-flex align-items-center justify-content-center flex-column mb-3 pt-5">
         {(favorites.length === 0) &&
         <h1>Vous n'avez aucune location favori!</h1>}

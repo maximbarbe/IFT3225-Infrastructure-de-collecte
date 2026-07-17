@@ -1,5 +1,6 @@
 import { useEffect,useState } from "react";
 
+// Cette fonction a été tirée de la démo 7.
 export default function useApi(apiFunction, param) {
 
     const [data, setData] = useState(null);

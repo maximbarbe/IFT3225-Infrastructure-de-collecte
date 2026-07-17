@@ -11,7 +11,7 @@ import Locations from "../pages/Locations";
 import LocationCreation from "../pages/LocationCreation";
 import Contributions from "../pages/Contributions"
 
-// https://reactrouter.com/start/declarative/url-values
+// // L'astuce pour accéder aux paramètres dans le URL provient de (ReactRouter, s.d.)
 function App() {
   return (
     <Fournisseur>

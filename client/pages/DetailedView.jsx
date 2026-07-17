@@ -6,14 +6,11 @@ import DetailedViewRow from "../components/TableRow";
 import { useAppContext } from '../context/AppContext';
 import Button from 'react-bootstrap/Button';
 import { useState } from 'react';
-// https://recharts.github.io/en-US/api/BarChart/
-//https://reactrouter.com/start/declarative/url-values
-// https://getbootstrap.com/docs/4.0/utilities/flex/
-// https://getbootstrap.com/docs/5.3/content/tables/
-// https://stackoverflow.com/questions/58926241/how-to-properly-style-recharts-in-react-issue-centering-and-controlling-size
-// https://recharts.github.io/en-US/examples/SimpleLineChart/
+
+
 export default function DetailedView() {
 
+    // L'astuce pour accéder aux paramètres dans le URL provient de (ReactRouter, s.d.)
     let { location } = useParams();
     const [disabled, setDisabled] = useState(false)
     const quietHoursData = useApi(() => (getQuietHours(location, "2160h")));
@@ -72,6 +69,7 @@ export default function DetailedView() {
         for (let i = 0; i < hours.length; i++) {
             data[hours[i].hour] = {...data[hours[i].hour], "decibels (dB)":hours[i].averageNoise}
         }
+    // Le code pour le bar chart a été tiré de (Recharts, s.d.a) et adapté à nos fins.
     chart = <BarChart
       style={{ width: '100%', maxWidth: '700px', maxHeight: '70vh', aspectRatio: 1.618 }}
       responsive
@@ -99,6 +97,9 @@ export default function DetailedView() {
         }
     }
 
+    // Le code pour le line chart a été tiré de (Recharts, s.d.b) et adapté à nos fins
+    // Le fix pour le bug que la ligne n'apparaissait pas provient du code écrit dans ce post.
+    // Il s'agit du stroke="#000000" qui a fix le problème. (LoF10, 2019)
     const lineChart =         <LineChart
       style={{ width: '100%', maxWidth: '700px', height: '100%', maxHeight: '70vh', aspectRatio: 1.618 }}
       responsive
@@ -140,7 +141,8 @@ export default function DetailedView() {
     if (ambianceData.data) {
         cName = getColorClass(ambianceData.data.noiseLevel.toUpperCase())
     }
-
+    // Les tables sont basées sur la documentation officielle de bootstrap (Bootstrap, s.d.a)
+    // Les classes pour le display flexbox et l'alignement sont tirées de la documentation officielle de bootstrap (Bootstrap, s.d.c)
     return (
         <div className="d-flex align-items-center justify-content-center flex-column mb-3 pt-5" style={{width: "100%"}}>
             <h1>Lieu: {location}</h1>

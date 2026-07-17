@@ -2,7 +2,7 @@ import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import { postNewUser } from '../services/users';
-// https://react-bootstrap.netlify.app/docs/forms/overview/
+
 export default function AccountCreation() {
     const [type, setType] = useState("password")
     const [error, setError] = useState("")
@@ -32,9 +32,10 @@ export default function AccountCreation() {
         }
         
     }
-
-    return (        // https://getbootstrap.com/docs/5.1/utilities/spacing/
-        // https://react-bootstrap.netlify.app/docs/forms/validation
+    // Les formulaires ont été construits à l'aide des exemples dans la documentation de bootstrap et react bootstrap.
+    // (React Boostrap, s.d.b) et (React Bootstrap, s.d.c)
+    // Le padding a été fait à l'aide de la documentation de bootstrap (Bootstrap, s.d.b)
+    return (        
     <Form className="mx-auto w-50 pt-5" onSubmit={submitForm}>
         <Form.Group className="mb-3" name = "test"controlId="formBasicFirstName">
             <Form.Label>Prénom</Form.Label>

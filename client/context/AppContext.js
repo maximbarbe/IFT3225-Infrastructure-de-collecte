@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { AppContext } from "./Fournisseur";
 
-// https://cours-udem-ift3225.netlify.app/guides/tuto-react-3/
+// Cette fonction a été tirée du cours: https://cours-udem-ift3225.netlify.app/guides/tuto-react-3/
 export function useAppContext() {
     const context = useContext(AppContext);
     if (context === null) {

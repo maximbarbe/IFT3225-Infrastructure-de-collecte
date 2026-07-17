@@ -1,14 +1,10 @@
-import { useState } from 'react';
-import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
 import { useAppContext } from '../context/AppContext';
 import { useNavigate } from "react-router-dom";
 import { Navigate } from 'react-router-dom';
 import useApi from '../hooks/useApi';
 import { getMyLocations } from '../services/locations';
 
-// https://getbootstrap.com/docs/4.0/utilities/flex/
-// https://getbootstrap.com/docs/5.3/content/tables/
+// L'astuce pour useNavigate provient de (aravind_reddy, 2018)
 export default function Locations() {
 
     const {user, setUser} = useAppContext();
@@ -16,10 +12,12 @@ export default function Locations() {
     
     const {data, loading, error} = useApi(() => (getMyLocations(user.token)))
     const myLocations = data
+// L'astuce pour la protection des routes provient de (user24854189, 2024)
     if (!user) {
-        //https://stackoverflow.com/a/78447971
         return <Navigate to="/connection" replace />
     }
+        // Les tables sont basées sur la documentation officielle de bootstrap (Bootstrap, s.d.a)
+    // Les classes pour le display flexbox et l'alignement sont tirées de la documentation officielle de bootstrap (Bootstrap, s.d.c)
     return (<div className="d-flex align-items-center justify-content-center flex-column mb-3 pt-5">
         {loading && <span className="spinner-border text-secondary" role="status">
                 </span>}

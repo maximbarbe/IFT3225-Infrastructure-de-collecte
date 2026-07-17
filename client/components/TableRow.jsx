@@ -1,4 +1,4 @@
-// https://getbootstrap.com/docs/5.3/content/tables/
+// Les tables sont basées sur la documentation officielle de bootstrap (Bootstrap, s.d.a)
 export default function DetailedViewRow( {index, bucketStart, averageNoise, noiseLevel, sampleCount} ) {
     return (
         <tr>
