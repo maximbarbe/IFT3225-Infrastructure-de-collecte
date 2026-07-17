@@ -1,7 +1,7 @@
 import {useParams} from "react-router-dom";
 import useApi from "../hooks/useApi";
 import { getAmbiance, getHistory, getQuietHours } from "../services/ambiance";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, LineChart, Line } from 'recharts';
 import DetailedViewRow from "../components/TableRow";
 import { useAppContext } from '../context/AppContext';
 import Button from 'react-bootstrap/Button';
@@ -10,6 +10,8 @@ import { useState } from 'react';
 //https://reactrouter.com/start/declarative/url-values
 // https://getbootstrap.com/docs/4.0/utilities/flex/
 // https://getbootstrap.com/docs/5.3/content/tables/
+// https://stackoverflow.com/questions/58926241/how-to-properly-style-recharts-in-react-issue-centering-and-controlling-size
+// https://recharts.github.io/en-US/examples/SimpleLineChart/
 export default function DetailedView() {
 
     let { location } = useParams();
@@ -89,7 +91,50 @@ export default function DetailedView() {
       <Bar dataKey="decibels (dB)" fill="#8884d8" activeBar={{ fill: 'pink', stroke: 'blue' }} radius={[10, 10, 0, 0]} />
     </BarChart>;
     }
-    
+    const historicalGraphData = []
+
+    if (historyData.data) {
+        for (let dataPoint of historyData.data.series) {
+            historicalGraphData.push({"name": dataPoint.bucketStart, "decibels (dB)": dataPoint.averageNoise})
+        }
+    }
+
+    const lineChart =         <LineChart
+      style={{ width: '100%', maxWidth: '700px', height: '100%', maxHeight: '70vh', aspectRatio: 1.618 }}
+      responsive
+      data={historicalGraphData}
+      margin={{
+        top: 5,
+        right: 0,
+        left: 0,
+        bottom: 5,
+      }}
+    >
+      <CartesianGrid strokeDasharray="3 3" />
+      <XAxis dataKey="name" stroke="var(--color-text-3)" tick={false}/>
+      <YAxis width="auto" stroke="var(--color-text-3)" />
+      <Tooltip
+        cursor={{
+          stroke: 'var(--color-border-2)',
+        }}
+        contentStyle={{
+          backgroundColor: 'var(--color-surface-raised)',
+          borderColor: 'var(--color-border-2)',
+        }}
+      />
+      <Legend />
+      <Line
+        type="monotone"
+        dataKey="decibels (dB)"
+        stroke="#000000"
+        dot={{
+          fill: '#000000',
+        }}
+        activeDot={{ r: 8, stroke: 'var(--color-surface-base)' }}
+      />
+    </LineChart>
+
+
     let cName;
 
     if (ambianceData.data) {
@@ -119,6 +164,9 @@ export default function DetailedView() {
                 </div>
                 <h4>Graphique montrant les niveaux sonores moyens pour les heures de la journée.</h4>
                 {chart}
+                <h4>Graphique montrant l'historique par bloc de 15 minutes (Une vue tabulaire est plus bas).</h4>
+                {lineChart}
+
                 <div className="d-flex align-items-center justify-content-center flex-column mb-3 pt-5">
                     <h3>Vue détaillée par bloc de 15 minutes</h3>
                     <table className="table">
