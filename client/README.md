@@ -17,6 +17,20 @@ Voici les instructions pour configurer l'application:
 - Configurer le backend selon les instructions dans le <code>README.md</code> du dossier <code>/backend</code>. Cette partie est très importante puisque les instructions ont changées depuis la phase 1 et l'accès aux données dans l'application cliente dépend du bon fonctionnement de l'API. Il est donc important de bien suivre les instructions dans ce <code>README.md</code>.
 - Créer un fichier <code>.env</code> et y mettre une ligne <code>BACKEND_URL=\<url du backend\></code> tel que montré dans le fichier <code>.env.example</code>
 
+Voici les instructions du <code>README</code> tirées de la phase 1 pour la configuration du backend:
+    <ol>
+        <li>Clone le repo</li>
+        <li>Être dans le dossier <code>~/backend</code> et éxécuter la commande <code>npm install</code></li>
+        <li>À la source du dossier <code>~/backend</code>, créer un fichier <code>.env</code> et y ajouter les lignes <code>ATLAS_URI</code> et <code>JWT_SECRET</code> tel que montré dans <code>.env.example</code></li>
+        <li>Éxécuter la commande <code>npm start</code></li>
+        <h3>Les prochaines étapes sont pour les scripts bridge et pour populer la base de donnée.</h3>
+        <li>Éxécuter la commande <code>python -m venv venv</code></li>
+        <li>Activer l'environnement virtuel avec le script <code>Activate</code> dans <code>./venv/scripts</code></li>
+        <li>Revenir à la source et effectuer <code>pip install -r requirements.txt</code></li>
+      <li>Peupler la base de données avec des données de démonstration : <code>python scripts/db_fill.py</code></li>
+    </ol> 
+
+
 
 
 

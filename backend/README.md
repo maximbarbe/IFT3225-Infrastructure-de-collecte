@@ -18,8 +18,8 @@ Voici les prérequis nécessaires pour lancer le projet:
 <p>
     <ol>
         <li>Clone le repo</li>
-        <li>Éxécuter la commande <code>npm install</code></li>
-        <li>À la source du projet, créer un fichier <code>.env</code> et y ajouter une ligne <code>ATLAS_URI</code> tel que montré dans <code>.env.example</code></li>
+        <li>Être dans le dossier <code>~/backend</code> et éxécuter la commande <code>npm install</code></li>
+        <li>À la source du dossier <code>~/backend</code>, créer un fichier <code>.env</code> et y ajouter les lignes <code>ATLAS_URI</code> et <code>JWT_SECRET</code> tel que montré dans <code>.env.example</code></li>
         <li>Éxécuter la commande <code>npm start</code></li>
         <h3>Les prochaines étapes sont pour les scripts bridge et pour populer la base de donnée.</h3>
         <li>Éxécuter la commande <code>python -m venv venv</code></li>
