@@ -11,11 +11,18 @@ client = MongoClient(os.getenv("ATLAS_URI"))
 database = client["IFT3225"]
 
 
-locations = [{
-    "location": "iga marché tellier sainte dorothee",
-    "lat": 45.525277982924315,
-    "lon": -73.78364623818311
-}]
+locations = [
+    {
+        "location": "iga marché tellier sainte dorothee",
+        "lat": 45.525277982924315,
+        "lon": -73.78364623818311
+    },
+    {
+        "location": "tim hortons smartcentres laval",
+        "lat": 45.52817899540404,
+        "lon": -73.78266045091988 
+    }
+             ]
 
 
 # --- Clés
@@ -82,13 +89,18 @@ mes4 = pd.read_csv(os.path.join(os.path.dirname(__file__), "../src/data/measurem
 mes5 = pd.read_csv(os.path.join(os.path.dirname(__file__), "../src/data/measurements-5.csv"))
 mes6 = pd.read_csv(os.path.join(os.path.dirname(__file__), "../src/data/measurements-6.csv"))
 mes7 = pd.read_csv(os.path.join(os.path.dirname(__file__), "../src/data/measurements-7.csv"))
+mes8 = pd.read_csv(os.path.join(os.path.dirname(__file__), "../src/data/measurements-8.csv"))
+mes9 = pd.read_csv(os.path.join(os.path.dirname(__file__), "../src/data/measurements-9.csv"))
 
+# Les dates ici sont en UTC
 mes4_start = datetime(2026, 7, 17, 13, 23)
 mes5_start = datetime(2026, 7, 17, 15, 9)
 mes6_start = datetime(2026, 7, 17, 18, 9)
 mes7_start = datetime(2026, 7, 17, 19, 10)
+mes8_start = datetime(2026, 7, 18, 2, 19)
+mes9_start = datetime(2026, 7, 18, 10, 42)
 
-print("Génération des 4eme, 5eme, 6eme et 7eme mesures")
+print("Génération des 4eme, 5eme, 6eme, 7eme, 8eme et 9eme mesures")
 coll = database["measurements"]
 for idx, row in mes4.iterrows():
     if not pd.isna(row["Sound pressure level (dB)"]):
@@ -105,5 +117,13 @@ for idx, row in mes6.iterrows():
 for idx, row in mes7.iterrows():
     if not pd.isna(row["Sound pressure level (dB)"]):
         temp.append({"type": "audio", "value": row["Sound pressure level (dB)"], "location": "iga marché tellier sainte dorothee", "timestamp": mes7_start +timedelta(seconds=row["Time (s)"])})       
+        
+for idx, row in mes8.iterrows():
+    if not pd.isna(row["Sound pressure level (dB)"]):
+        temp.append({"type": "audio", "value": row["Sound pressure level (dB)"], "location": "tim hortons smartcentres laval", "timestamp": mes8_start +timedelta(seconds=row["Time (s)"])})   
+            
+for idx, row in mes9.iterrows():
+    if not pd.isna(row["Sound pressure level (dB)"]):
+        temp.append({"type": "audio", "value": row["Sound pressure level (dB)"], "location": "tim hortons smartcentres laval", "timestamp": mes9_start +timedelta(seconds=row["Time (s)"])})       
     
 coll.insert_many(temp)

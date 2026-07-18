@@ -45,7 +45,20 @@ router.get("/", async (req, res) => {
 router.get("/active", async (req, res) => {
     
     try {
-        const allMeasurements = await Measurement.find({});
+
+        const windowMs = 3600000 * 2160;
+        const since = new Date(Date.now() - windowMs);        
+        const allMeasurements = await Measurement.aggregate([
+                    // 1. On ne garde que les mesures qui sont plus récentes que 90 jours
+                    {
+                    $match: {
+                        ...(since && {
+                            timestamp: { $gte: since }
+                        })
+            }
+        }])  
+        // Window de 90 jours
+
         const locations = []
         for (let obs of allMeasurements) {
             locations.push(obs.location)
