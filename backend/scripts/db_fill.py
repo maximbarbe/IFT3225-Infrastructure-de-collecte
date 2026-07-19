@@ -20,7 +20,12 @@ locations = [
     {
         "location": "tim hortons smartcentres laval",
         "lat": 45.52817899540404,
-        "lon": -73.78266045091988 
+        "lon": -73.78266045091988
+    },
+    {
+        "location": "parc de la petite-italie",
+        "lat": 45.5354,
+        "lon": -73.6144
     }
              ]
 
@@ -91,6 +96,9 @@ mes6 = pd.read_csv(os.path.join(os.path.dirname(__file__), "../src/data/measurem
 mes7 = pd.read_csv(os.path.join(os.path.dirname(__file__), "../src/data/measurements-7.csv"))
 mes8 = pd.read_csv(os.path.join(os.path.dirname(__file__), "../src/data/measurements-8.csv"))
 mes9 = pd.read_csv(os.path.join(os.path.dirname(__file__), "../src/data/measurements-9.csv"))
+mes10 = pd.read_csv(os.path.join(os.path.dirname(__file__), "../src/data/measurements-10.csv"))
+mes11 = pd.read_csv(os.path.join(os.path.dirname(__file__), "../src/data/measurements-11.csv"))
+mes12 = pd.read_csv(os.path.join(os.path.dirname(__file__), "../src/data/measurements-12.csv"))
 
 # Les dates ici sont en UTC
 mes4_start = datetime(2026, 7, 17, 13, 23)
@@ -99,8 +107,12 @@ mes6_start = datetime(2026, 7, 17, 18, 9)
 mes7_start = datetime(2026, 7, 17, 19, 10)
 mes8_start = datetime(2026, 7, 18, 2, 19)
 mes9_start = datetime(2026, 7, 18, 10, 42)
+# Enregistrements du parc de la petite-italie (heures locales EDT converties en UTC, +4h)
+mes10_start = datetime(2026, 7, 19, 3, 23)
+mes11_start = datetime(2026, 7, 17, 0, 42)
+mes12_start = datetime(2026, 7, 16, 19, 8)
 
-print("Génération des 4eme, 5eme, 6eme, 7eme, 8eme et 9eme mesures")
+print("Génération des 4eme, 5eme, 6eme, 7eme, 8eme, 9eme, 10eme, 11eme et 12eme mesures")
 coll = database["measurements"]
 for idx, row in mes4.iterrows():
     if not pd.isna(row["Sound pressure level (dB)"]):
@@ -124,6 +136,18 @@ for idx, row in mes8.iterrows():
             
 for idx, row in mes9.iterrows():
     if not pd.isna(row["Sound pressure level (dB)"]):
-        temp.append({"type": "audio", "value": row["Sound pressure level (dB)"], "location": "tim hortons smartcentres laval", "timestamp": mes9_start +timedelta(seconds=row["Time (s)"])})       
+        temp.append({"type": "audio", "value": row["Sound pressure level (dB)"], "location": "tim hortons smartcentres laval", "timestamp": mes9_start +timedelta(seconds=row["Time (s)"])})
+
+for idx, row in mes10.iterrows():
+    if not pd.isna(row["Sound pressure level (dB)"]):
+        temp.append({"type": "audio", "value": row["Sound pressure level (dB)"], "location": "parc de la petite-italie", "timestamp": mes10_start +timedelta(seconds=row["Time (s)"])})
+
+for idx, row in mes11.iterrows():
+    if not pd.isna(row["Sound pressure level (dB)"]):
+        temp.append({"type": "audio", "value": row["Sound pressure level (dB)"], "location": "parc de la petite-italie", "timestamp": mes11_start +timedelta(seconds=row["Time (s)"])})
+
+for idx, row in mes12.iterrows():
+    if not pd.isna(row["Sound pressure level (dB)"]):
+        temp.append({"type": "audio", "value": row["Sound pressure level (dB)"], "location": "parc de la petite-italie", "timestamp": mes12_start +timedelta(seconds=row["Time (s)"])})       
     
 coll.insert_many(temp)
