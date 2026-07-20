@@ -99,7 +99,8 @@ mes9 = pd.read_csv(os.path.join(os.path.dirname(__file__), "../src/data/measurem
 mes10 = pd.read_csv(os.path.join(os.path.dirname(__file__), "../src/data/measurements-10.csv"))
 mes11 = pd.read_csv(os.path.join(os.path.dirname(__file__), "../src/data/measurements-11.csv"))
 mes12 = pd.read_csv(os.path.join(os.path.dirname(__file__), "../src/data/measurements-12.csv"))
-
+mes13 = pd.read_csv(os.path.join(os.path.dirname(__file__), "../src/data/measurements-13.csv"))
+mes14 = pd.read_csv(os.path.join(os.path.dirname(__file__), "../src/data/measurements-14.csv"))
 # Les dates ici sont en UTC
 mes4_start = datetime(2026, 7, 17, 13, 23)
 mes5_start = datetime(2026, 7, 17, 15, 9)
@@ -112,7 +113,11 @@ mes10_start = datetime(2026, 7, 19, 3, 23)
 mes11_start = datetime(2026, 7, 17, 0, 42)
 mes12_start = datetime(2026, 7, 16, 19, 8)
 
-print("Génération des 4eme, 5eme, 6eme, 7eme, 8eme, 9eme, 10eme, 11eme et 12eme mesures")
+
+mes13_start = datetime(2026, 7, 18, 17, 4)
+mes14_start = datetime(2026, 7, 20, 17, 9)
+
+print("Génération des 4eme, 5eme, 6eme, 7eme, 8eme, 9eme, 10eme, 11eme, 12eme, 13eme et 14eme mesures")
 coll = database["measurements"]
 for idx, row in mes4.iterrows():
     if not pd.isna(row["Sound pressure level (dB)"]):
@@ -149,5 +154,14 @@ for idx, row in mes11.iterrows():
 for idx, row in mes12.iterrows():
     if not pd.isna(row["Sound pressure level (dB)"]):
         temp.append({"type": "audio", "value": row["Sound pressure level (dB)"], "location": "parc de la petite-italie", "timestamp": mes12_start +timedelta(seconds=row["Time (s)"])})       
+    
+for idx, row in mes13.iterrows():
+    if not pd.isna(row["Sound pressure level (dB)"]):
+        temp.append({"type": "audio", "value": row["Sound pressure level (dB)"], "location": "tim hortons smartcentres laval", "timestamp": mes13_start +timedelta(seconds=row["Time (s)"])})    
+    
+    
+for idx, row in mes14.iterrows():
+    if not pd.isna(row["Sound pressure level (dB)"]):
+        temp.append({"type": "audio", "value": row["Sound pressure level (dB)"], "location": "tim hortons smartcentres laval", "timestamp": mes14_start +timedelta(seconds=row["Time (s)"])})      
     
 coll.insert_many(temp)

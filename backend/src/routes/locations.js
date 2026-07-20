@@ -48,8 +48,8 @@ router.get("/active", async (req, res) => {
 
         const windowMs = 3600000 * 2160;
         const since = new Date(Date.now() - windowMs);        
-        // https://oneuptime.com/blog/post/2026-03-31-mongodb-distinct-unique-values/view
-        // https://mongoosejs.com/docs/tutorials/lean.html
+        // (nawazdhandala, 2026)
+        // (mongoose, s.d.)
         const allLocations = await Measurement.distinct("location", {
             timestamp: { $gte: since }
         }).lean();
