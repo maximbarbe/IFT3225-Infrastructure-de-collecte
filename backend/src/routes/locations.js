@@ -17,7 +17,7 @@ router.get("/", [authenticateToken], async (req, res) => {
         for (let obs of myObservations) {
             locations.push(obs.location)
         }
-        // https://stackoverflow.com/a/9229821
+        // // (Jonca33, 2017)
         const uniqueLocation = [...new Set(locations)]
         return res.status(200).json(uniqueLocation);
     } catch (e) {
@@ -48,31 +48,17 @@ router.get("/active", async (req, res) => {
 
         const windowMs = 3600000 * 2160;
         const since = new Date(Date.now() - windowMs);        
-        const allMeasurements = await Measurement.aggregate([
-                    // 1. On ne garde que les mesures qui sont plus récentes que 90 jours
-                    {
-                    $match: {
-                        ...(since && {
-                            timestamp: { $gte: since }
-                        })
-            }
-        }])  
+        // https://oneuptime.com/blog/post/2026-03-31-mongodb-distinct-unique-values/view
+        // https://mongoosejs.com/docs/tutorials/lean.html
+        const allLocations = await Measurement.distinct("location", {
+            timestamp: { $gte: since }
+        }).lean();
         // Window de 90 jours
 
-        const locations = []
-        for (let obs of allMeasurements) {
-            locations.push(obs.location)
-        }
-        
-        
-        // https://stackoverflow.com/a/9229821
-        const allLocations = [...new Set(locations)]
-        let data = []
-        for (let l of allLocations) {
-            
-            const loc = await Location.findOne({location:l})
-            data.push({location:l, lat:loc.lat, lon:loc.lon})
-        }
+        const data = await Location.find(
+        { location: { $in: allLocations } }
+        ).lean();
+
 
         return res.status(200).json(data);
     } catch (e) {

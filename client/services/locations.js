@@ -11,3 +11,5 @@ export async function getMyLocations(token) {
 export async function postLocation(location, token) {
     return callApi("/locations", "POST", { "Content-Type": "application/json", "Authorization": `Bearer ${token}`}, JSON.stringify({...location}));
 }
+
+

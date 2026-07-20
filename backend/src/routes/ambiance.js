@@ -87,6 +87,48 @@ router.get("/:location", async (req, res) => {
     }
 });
 
+
+router.get("/:location/classification", async (req, res) => {
+    try {
+        const location = req.params.location.toLowerCase();
+        const windowMs = parseWindow(req.query.last);
+        const since = windowMs
+            ? new Date(Date.now() - windowMs)
+            : null;        
+        const measurements = await Measurement.aggregate([
+            // 1. On ne garde que les mesures de ce lieu.
+            {
+            $match: {
+                location,
+                ...(since && {
+                    timestamp: { $gte: since }
+                })
+    }
+}])   
+        
+        if (!measurements) {
+            return res.status(404).json({ 
+                error: "NOT_FOUND",
+                message: "Il n'y a pas de données pour ces locations."
+             });
+        }
+
+        const averageNoise = measurements.length > 0
+            ? measurements.reduce((sum, m) => sum + m.value, 0) / measurements.length
+            : null;
+
+
+        return res.status(200).json({
+            noiseLevel: classifyNoise(averageNoise),
+        });
+    } catch (e) {
+        return res.status(500).json({ 
+            error: "SERVER ERROR",
+            message: e.message
+        });
+    }
+})
+
 // GET /ambiance/:location/quiet-hours
 // Question concrete: a quelles heures ce lieu est-il typiquement calme ?
 // Vue derivee: on n'ecrit rien, on agrege les mesures brutes a la volee

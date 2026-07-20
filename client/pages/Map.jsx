@@ -32,12 +32,13 @@ export default function Map() {
                 attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
-            {!error && !loading && locations.map((loc, index) => (
+            {locations.map((loc, index) => (
                 <Location key={index} lat={loc.lat} lon={loc.lon} loc={loc.location} />
             ))}
         
 
 
         </MapContainer>}
+        {error && <h1>Il y a eu un erreur lors du chargement de la carte.</h1>}
     </>)
 }
