@@ -158,7 +158,7 @@ export default function DetailedView() {
                 <h1 className="text-danger">History data error: {historyData.error.message}</h1>
             }
             {(ambianceData.error) &&
-                <h1 className="text-danger">History data error: {historyData.error.message}</h1>
+                <h1 className="text-danger">History data error: {ambianceData.error.message}</h1>
             }
             {(!quietHoursData.error && !historyData.error && !ambianceData.error && !quietHoursData.loading && !historyData.loading && !ambianceData.loading) && 
             <div className="d-flex align-items-center justify-content-center flex-column mb-3 pt-5">

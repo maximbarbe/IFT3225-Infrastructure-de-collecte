@@ -9,7 +9,6 @@ export default function Location({ lat, lon, loc }) {
     // L'astuce pour useNavigate provient de (aravind_reddy, 2018)
     const navigate = useNavigate();
     const {data, loading, error} = useApi(() => (getAmbiance(loc, "2160h")))
-    console.log(error)
     return(<>
         {(!loading &&!error) && <Marker position={[lat, lon]}
                 eventHandlers={{
