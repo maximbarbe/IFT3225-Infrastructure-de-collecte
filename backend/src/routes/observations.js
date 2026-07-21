@@ -7,7 +7,6 @@ import {authenticate, authenticateToken} from "../middleware/auth.js";
 
 const router = express.Router();
 
-// https://expressjs.com/en/guide/routing/#route-handlers
 
 router.post("/", [authenticateToken], async (req, res) => {
     let location;
