@@ -1,5 +1,5 @@
 import express from "express";
-
+import cors from "cors";
 import measurementsRouter from "./routes/measurements.js";
 import observationsRouter from "./routes/observations.js";
 import devicesRouter from "./routes/devices.js";
@@ -10,6 +10,11 @@ import userRouter from "./routes/users.js";
 
 const app = express();
 app.use(express.json());
+
+//https://medium.com/@valentinemaillard1/implementing-cors-in-your-node-express-app-1bdffc4eaa48
+app.use(cors({
+  origin: ["http://localhost:5173/", "https://frontend-ae5x.onrender.com/"]
+}));
 
 
 app.use("/measurements", measurementsRouter);
