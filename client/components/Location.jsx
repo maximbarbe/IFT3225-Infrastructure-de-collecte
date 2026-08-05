@@ -3,13 +3,22 @@ import useApi from "../hooks/useApi";
 import { getAmbiance } from "../services/ambiance";
 import { useNavigate } from "react-router-dom";
 import L from 'leaflet';
+import icon from 'leaflet/dist/images/marker-icon.png';
+import iconShadow from 'leaflet/dist/images/marker-shadow.png';
+
 export default function Location({ lat, lon, loc }) {
     // L'utilisation de React Leaflet a été faite avec la documentation (React Leaflet, s.d.)
     // L'astuce pour les event handlers sur les markers provient de (Disco, 2022)
     // L'astuce pour useNavigate provient de (aravind_reddy, 2018)
 
-    // https://stackoverflow.com/a/67133111
-    const icon = L.icon({ iconUrl: "../images/marker-icon.png" });
+    // https://stackoverflow.com/a/51222271
+
+    const DefaultIcon = L.icon({
+        iconUrl: icon,
+        shadowUrl: iconShadow
+    });
+
+    L.Marker.prototype.options.icon = DefaultIcon;
 
 
     const navigate = useNavigate();
@@ -20,8 +29,7 @@ export default function Location({ lat, lon, loc }) {
                     mouseover: (e) => e.target.openPopup(),
                     mouseout: (e) => e.target.closePopup(),
                     click: (e) => navigate(`/view/${loc}`)
-                }}
-                icon = {icon}>
+                }}>
             
             <Popup>
                 Lieu: {loc} <br></br>
@@ -34,8 +42,7 @@ export default function Location({ lat, lon, loc }) {
                     mouseover: (e) => e.target.openPopup(),
                     mouseout: (e) => e.target.closePopup(),
                     click: (e) => navigate(`/view/${loc}`)
-                }}
-                icon = {icon}>
+                }}>
             
             <Popup>
                 Lieu: {loc} <br></br>
@@ -47,8 +54,7 @@ export default function Location({ lat, lon, loc }) {
                     mouseover: (e) => e.target.openPopup(),
                     mouseout: (e) => e.target.closePopup(),
                     click: (e) => navigate(`/view/${loc}`)
-                }}
-                icon = {icon}>
+                }}>
             
             <Popup>
                 Lieu: {loc} <br></br>
