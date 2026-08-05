@@ -9,7 +9,7 @@ export default function Location({ lat, lon, loc }) {
     // L'astuce pour useNavigate provient de (aravind_reddy, 2018)
 
     // https://stackoverflow.com/a/67133111
-    const icon = L.icon({ iconUrl: "/images/marker-icon.png" });
+    const icon = L.icon({ iconUrl: "../images/marker-icon.png" });
 
 
     const navigate = useNavigate();
