@@ -12,8 +12,10 @@ const app = express();
 
 
 //https://medium.com/@valentinemaillard1/implementing-cors-in-your-node-express-app-1bdffc4eaa48
+// https://expressjs.com/fr/resources/middleware/cors/
 app.use(cors({
-  origin: ["http://localhost:5173/", "https://frontend-ae5x.onrender.com/"]
+  origin: ["http://localhost:5173/", "https://frontend-ae5x.onrender.com/"],
+  credentials: true
 }));
 
 
