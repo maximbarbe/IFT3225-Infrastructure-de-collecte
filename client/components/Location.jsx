@@ -2,7 +2,7 @@ import { Marker, Popup } from "react-leaflet";
 import useApi from "../hooks/useApi";
 import { getAmbiance } from "../services/ambiance";
 import { useNavigate } from "react-router-dom";
-
+import L from 'leaflet';
 export default function Location({ lat, lon, loc }) {
     // L'utilisation de React Leaflet a été faite avec la documentation (React Leaflet, s.d.)
     // L'astuce pour les event handlers sur les markers provient de (Disco, 2022)
