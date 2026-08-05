@@ -21,7 +21,7 @@ export default function Location({ lat, lon, loc }) {
                     mouseout: (e) => e.target.closePopup(),
                     click: (e) => navigate(`/view/${loc}`)
                 }}
-                icon = {{icon}}>
+                icon = {icon}>
             
             <Popup>
                 Lieu: {loc} <br></br>
@@ -35,7 +35,7 @@ export default function Location({ lat, lon, loc }) {
                     mouseout: (e) => e.target.closePopup(),
                     click: (e) => navigate(`/view/${loc}`)
                 }}
-                icon = {{icon}}>
+                icon = {icon}>
             
             <Popup>
                 Lieu: {loc} <br></br>
@@ -48,7 +48,7 @@ export default function Location({ lat, lon, loc }) {
                     mouseout: (e) => e.target.closePopup(),
                     click: (e) => navigate(`/view/${loc}`)
                 }}
-                icon = {{icon}}>
+                icon = {icon}>
             
             <Popup>
                 Lieu: {loc} <br></br>
