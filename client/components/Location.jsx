@@ -29,7 +29,8 @@ export default function Location({ lat, lon, loc }) {
                     mouseover: (e) => e.target.openPopup(),
                     mouseout: (e) => e.target.closePopup(),
                     click: (e) => navigate(`/view/${loc}`)
-                }}>
+                }}
+                icon={DefaultIcon}>
             
             <Popup>
                 Lieu: {loc} <br></br>
