@@ -7,6 +7,11 @@ export default function Location({ lat, lon, loc }) {
     // L'utilisation de React Leaflet a été faite avec la documentation (React Leaflet, s.d.)
     // L'astuce pour les event handlers sur les markers provient de (Disco, 2022)
     // L'astuce pour useNavigate provient de (aravind_reddy, 2018)
+
+    // https://stackoverflow.com/a/67133111
+    const icon = L.icon({ iconUrl: "/images/marker-icon.png" });
+
+
     const navigate = useNavigate();
     const {data, loading, error} = useApi(() => (getAmbiance(loc, "2160h")))
     return(<>
@@ -15,7 +20,8 @@ export default function Location({ lat, lon, loc }) {
                     mouseover: (e) => e.target.openPopup(),
                     mouseout: (e) => e.target.closePopup(),
                     click: (e) => navigate(`/view/${loc}`)
-                }}>
+                },
+                icon={icon}}>
             
             <Popup>
                 Lieu: {loc} <br></br>
@@ -28,7 +34,8 @@ export default function Location({ lat, lon, loc }) {
                     mouseover: (e) => e.target.openPopup(),
                     mouseout: (e) => e.target.closePopup(),
                     click: (e) => navigate(`/view/${loc}`)
-                }}>
+                },
+                icon={icon}}>
             
             <Popup>
                 Lieu: {loc} <br></br>
@@ -40,7 +47,8 @@ export default function Location({ lat, lon, loc }) {
                     mouseover: (e) => e.target.openPopup(),
                     mouseout: (e) => e.target.closePopup(),
                     click: (e) => navigate(`/view/${loc}`)
-                }}>
+                },
+                icon={icon}}>
             
             <Popup>
                 Lieu: {loc} <br></br>
