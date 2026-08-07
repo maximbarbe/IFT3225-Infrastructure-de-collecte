@@ -10,7 +10,8 @@ export default function Locations() {
     const {user, setUser} = useAppContext();
     const navigate = useNavigate();
     
-    const {data, loading, error} = useApi(() => (getMyLocations(user.token)))
+    // Dépendance explicite sur le jeton: changer de compte recharge la liste.
+    const {data, loading, error} = useApi(() => (getMyLocations(user.token)), user?.token, [user?.token])
 
 // L'astuce pour la protection des routes provient de (user24854189, 2024)
     const myLocations = data || []

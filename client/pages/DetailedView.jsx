@@ -3,9 +3,8 @@ import useApi from "../hooks/useApi";
 import { getAmbiance, getHistory, getQuietHours } from "../services/ambiance";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, LineChart, Line } from 'recharts';
 import DetailedViewRow from "../components/TableRow";
-import { useAppContext } from '../context/AppContext';
 import Button from 'react-bootstrap/Button';
-import { useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 
 export default function DetailedView() {
@@ -13,13 +12,22 @@ export default function DetailedView() {
     // L'astuce pour accéder aux paramètres dans le URL provient de (ReactRouter, s.d.)
     let { location } = useParams();
     const [disabled, setDisabled] = useState(false)
-    const quietHoursData = useApi(() => (getQuietHours(location, "2160h")));
-    const historyData= useApi(() => (getHistory(location, "2160h")));
-    const ambianceData = useApi(() => getAmbiance(location, "2160h"))
-    const {user, setUser} = useAppContext();
-    const [favorited, setFavorited] = useState(isInFavorites(location))
 
-    function addFavorite(location) {
+    // `location` est passée en dépendance: sans elle, naviguer d'un lieu à
+    // l'autre garderait les données du lieu précédent (voir hooks/useApi.jsx).
+    const quietHoursData = useApi(() => (getQuietHours(location, "2160h")), location, [location]);
+    const historyData = useApi(() => (getHistory(location, "2160h")), location, [location]);
+    const ambianceData = useApi(() => getAmbiance(location, "2160h"), location, [location]);
+
+    const [favorited, setFavorited] = useState(() => isInFavorites(location))
+
+    // Le composant n'est pas remonté quand on passe d'un lieu à l'autre:
+    // il faut resynchroniser l'état « favori » explicitement.
+    useEffect(() => {
+        setFavorited(isInFavorites(location));
+    }, [location])
+
+    const addFavorite = useCallback((location) => {
         if (localStorage.getItem("favorites") === null) {
             localStorage.setItem("favorites", JSON.stringify([location]))
         } else {
@@ -28,7 +36,7 @@ export default function DetailedView() {
             localStorage.setItem("favorites", JSON.stringify(favorites))
         }
         setFavorited(true)
-    }
+    }, [])
 
     function isInFavorites(location) {
         if (localStorage.getItem("favorites") === null) {
@@ -41,11 +49,11 @@ export default function DetailedView() {
         return false
     }
 
-    function removeFavorite(location) {
+    const removeFavorite = useCallback((location) => {
         const favorites = JSON.parse(localStorage.getItem("favorites"))
         localStorage.setItem("favorites", JSON.stringify(favorites.filter((f) => f !== location)))
         setFavorited(false)
-    }
+    }, [])
 
 
     function getColorClass(data) {
@@ -57,83 +65,101 @@ export default function DetailedView() {
             return 'text-danger'
         }
     }
-    
 
-    let data = []
-    let chart;
-    if (quietHoursData.data) {
+    // Les trois blocs ci-dessous transforment la réponse de l'API en séries
+    // pour Recharts. C'est du travail proportionnel au nombre de points, et il
+    // était refait à chaque rendu (chaque clic sur « favoris » le relançait).
+    // useMemo le lie aux données plutôt qu'au rendu.
+    const quietHoursSeries = useMemo(() => {
+        if (!quietHoursData.data) return null;
+
+        const data = [];
         for (let i = 0; i < 24; i++) {
-            data.push({name: `Hour ${i}`})
+            data.push({ name: `Hour ${i}` })
         }
         const hours = quietHoursData.data.hours
         for (let i = 0; i < hours.length; i++) {
-            data[hours[i].hour] = {...data[hours[i].hour], "decibels (dB)":hours[i].averageNoise}
+            data[hours[i].hour] = { ...data[hours[i].hour], "decibels (dB)": hours[i].averageNoise }
         }
-    // Le code pour le bar chart a été tiré de (Recharts, s.d.a) et adapté à nos fins.
-    chart = <BarChart
-      style={{ width: '100%', maxWidth: '700px', maxHeight: '70vh', aspectRatio: 1.618 }}
-      responsive
-      data={data}
-      margin={{
-        top: 5,
-        right: 0,
-        left: 0,
-        bottom: 5,
-      }}
-    >
-      <CartesianGrid strokeDasharray="3 3" />
-      <XAxis dataKey="name" />
-      <YAxis width="auto" />
-      <Tooltip />
-      <Legend />
-      <Bar dataKey="decibels (dB)" fill="#8884d8" activeBar={{ fill: 'pink', stroke: 'blue' }} radius={[10, 10, 0, 0]} />
-    </BarChart>;
-    }
-    const historicalGraphData = []
+        return data;
+    }, [quietHoursData.data]);
 
-    if (historyData.data) {
-        for (let dataPoint of historyData.data.series) {
-            historicalGraphData.push({"name": dataPoint.bucketStart, "decibels (dB)": dataPoint.averageNoise})
-        }
-    }
+    const historicalGraphData = useMemo(() => {
+        if (!historyData.data) return [];
+        return historyData.data.series.map((dataPoint) => ({
+            "name": dataPoint.bucketStart,
+            "decibels (dB)": dataPoint.averageNoise
+        }));
+    }, [historyData.data]);
+
+    // Le bar chart et le line chart sont des arbres React entiers: on les
+    // reconstruit seulement quand leurs données changent.
+    // Le code pour le bar chart a été tiré de (Recharts, s.d.a) et adapté à nos fins.
+    const chart = useMemo(() => {
+        if (!quietHoursSeries) return null;
+        return (
+            <BarChart
+                style={{ width: '100%', maxWidth: '700px', maxHeight: '70vh', aspectRatio: 1.618 }}
+                responsive
+                data={quietHoursSeries}
+                margin={{ top: 5, right: 0, left: 0, bottom: 5 }}
+            >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="name" />
+                <YAxis width="auto" />
+                <Tooltip />
+                <Legend />
+                <Bar dataKey="decibels (dB)" fill="#8884d8" activeBar={{ fill: 'pink', stroke: 'blue' }} radius={[10, 10, 0, 0]} />
+            </BarChart>
+        );
+    }, [quietHoursSeries]);
 
     // Le code pour le line chart a été tiré de (Recharts, s.d.b) et adapté à nos fins
     // Le fix pour le bug que la ligne n'apparaissait pas provient du code écrit dans ce post.
     // Il s'agit du stroke="#000000" qui a fix le problème. (LoF10, 2019)
-    const lineChart =         <LineChart
-      style={{ width: '100%', maxWidth: '700px', height: '100%', maxHeight: '70vh', aspectRatio: 1.618 }}
-      responsive
-      data={historicalGraphData}
-      margin={{
-        top: 5,
-        right: 0,
-        left: 0,
-        bottom: 5,
-      }}
-    >
-      <CartesianGrid strokeDasharray="3 3" />
-      <XAxis dataKey="name" stroke="var(--color-text-3)" tick={false}/>
-      <YAxis width="auto" stroke="var(--color-text-3)" />
-      <Tooltip
-        cursor={{
-          stroke: 'var(--color-border-2)',
-        }}
-        contentStyle={{
-          backgroundColor: 'var(--color-surface-raised)',
-          borderColor: 'var(--color-border-2)',
-        }}
-      />
-      <Legend />
-      <Line
-        type="monotone"
-        dataKey="decibels (dB)"
-        stroke="#000000"
-        dot={{
-          fill: '#000000',
-        }}
-        activeDot={{ r: 8, stroke: 'var(--color-surface-base)' }}
-      />
-    </LineChart>
+    const lineChart = useMemo(() => (
+        <LineChart
+            style={{ width: '100%', maxWidth: '700px', height: '100%', maxHeight: '70vh', aspectRatio: 1.618 }}
+            responsive
+            data={historicalGraphData}
+            margin={{ top: 5, right: 0, left: 0, bottom: 5 }}
+        >
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="name" stroke="var(--color-text-3)" tick={false} />
+            <YAxis width="auto" stroke="var(--color-text-3)" />
+            <Tooltip
+                cursor={{ stroke: 'var(--color-border-2)' }}
+                contentStyle={{
+                    backgroundColor: 'var(--color-surface-raised)',
+                    borderColor: 'var(--color-border-2)',
+                }}
+            />
+            <Legend />
+            <Line
+                type="monotone"
+                dataKey="decibels (dB)"
+                stroke="#000000"
+                dot={{ fill: '#000000' }}
+                activeDot={{ r: 8, stroke: 'var(--color-surface-base)' }}
+            />
+        </LineChart>
+    ), [historicalGraphData]);
+
+    // Le tableau peut contenir des centaines de lignes: mémoïsé lui aussi, et
+    // chaque ligne est un composant mémoïsé (voir components/TableRow.jsx).
+    const tableRows = useMemo(() => {
+        if (!historyData.data) return null;
+        return historyData.data.series.map((data, index) => (
+            <DetailedViewRow
+                key={data.bucketStart ?? index}
+                index={index}
+                bucketStart={data.bucketStart}
+                averageNoise={data.averageNoise}
+                noiseLevel={data.noiseLevel}
+                sampleCount={data.sampleCount}
+            />
+        ));
+    }, [historyData.data]);
 
 
     let cName;
@@ -160,7 +186,7 @@ export default function DetailedView() {
             {(ambianceData.error) &&
                 <h1 className="text-danger">History data error: {ambianceData.error.message}</h1>
             }
-            {(!quietHoursData.error && !historyData.error && !ambianceData.error && !quietHoursData.loading && !historyData.loading && !ambianceData.loading) && 
+            {(!quietHoursData.error && !historyData.error && !ambianceData.error && !quietHoursData.loading && !historyData.loading && !ambianceData.loading) &&
             <div className="d-flex align-items-center justify-content-center flex-column mb-3 pt-5">
                 <div className="d-flex align-items-center justify-content-center">
                     <h3>Classification d'ambiance courante: <span className={cName}>{ambianceData.data.noiseLevel.toUpperCase()}</span></h3>
@@ -183,20 +209,18 @@ export default function DetailedView() {
                             </tr>
                         </thead>
                         <tbody>
-                            {historyData.data.series.map((data, index) => (
-                                <DetailedViewRow key={index} index={index} bucketStart={data.bucketStart} averageNoise={data.averageNoise} noiseLevel={data.noiseLevel} sampleCount={data.sampleCount}/>
-                            ))}
+                            {tableRows}
                         </tbody>
                     </table>
-                    
-                    
+
+
                 </div>
-                
+
                 {!favorited && <Button variant="primary" disabled={disabled} onClick={() => addFavorite(location)}>Ajouter à mes favoris</Button>}
                 {favorited && <Button variant="danger" disabled={disabled} onClick={() => removeFavorite(location)}>Retirer de mes favoris</Button>}
-            </div>    
-                
-                
+            </div>
+
+
 
             }
 

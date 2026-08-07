@@ -3,11 +3,19 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import { Link } from 'react-router-dom';
 import { useAppContext } from '../context/AppContext';
+import { clearCache } from '../services/cache';
 
 
 export default function Header() {
   const {user, setUser} = useAppContext();
-  
+
+  // À la déconnexion, on vide le cache client: rien de la session précédente
+  // ne doit rester lisible pour la personne suivante sur le même poste.
+  function logout() {
+    clearCache();
+    setUser(null);
+  }
+
   return (
     // Cet extrait a été tiré de https://react-bootstrap.netlify.app/docs/components/navbar/ et adapté à nos fins.
     // (React Bootstrap, s.d.)
@@ -29,7 +37,7 @@ export default function Header() {
             {!user && <Nav.Link as={Link} to="/register" className="btn btn-primary"> Créer un compte</Nav.Link>}
             {user && <Nav.Link as={Link} to="/contributions" className="btn btn-primary">Mes contributions</Nav.Link>}
             {user && <Nav.Link as={Link} to="/myLocations" className="btn btn-primary">Mes lieux</Nav.Link>}
-            {user && <Nav.Link as={Link} to="/" className="btn btn-primary" onClick={() => setUser(null)}> Se déconnecter</Nav.Link>}
+            {user && <Nav.Link as={Link} to="/" className="btn btn-primary" onClick={logout}> Se déconnecter</Nav.Link>}
           </Nav>
         </Navbar.Collapse>
       </Container>

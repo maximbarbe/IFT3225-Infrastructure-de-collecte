@@ -13,7 +13,8 @@ export default function Contributions() {
     // L'astuce pour useNavigate provient de (aravind_reddy, 2018)
     const navigate = useNavigate();
     
-    const {data, loading, error} = useApi(() => (getMyObservations(user.token)))
+    // Dépendance explicite sur le jeton: changer de compte recharge la liste.
+    const {data, loading, error} = useApi(() => (getMyObservations(user.token)), user?.token, [user?.token])
     const myObservations = data || []
     // L'astuce pour la protection des routes provient de (user24854189, 2024)
     if (!user) {

@@ -19,7 +19,7 @@ Voici les prérequis nécessaires pour lancer le projet:
     <ol>
         <li>Clone le repo</li>
         <li>Être dans le dossier <code>~/backend</code> et éxécuter la commande <code>npm install</code></li>
-        <li>À la source du dossier <code>~/backend</code>, créer un fichier <code>.env</code> et y ajouter les lignes <code>ATLAS_URI</code> et <code>JWT_SECRET</code> tel que montré dans <code>.env.example</code></li>
+        <li>À la source du dossier <code>~/backend</code>, créer un fichier <code>.env</code> et y ajouter les lignes <code>ATLAS_URI</code> et <code>JWT_SECRET</code> tel que montré dans <code>.env.example</code>. La ligne <code>REDIS_URL</code> est facultative&nbsp;: voir la section Cache</li>
         <li>Éxécuter la commande <code>npm start</code></li>
         <h3>Les prochaines étapes sont pour les scripts bridge et pour populer la base de donnée.</h3>
         <li>Éxécuter la commande <code>python -m venv venv</code></li>
@@ -43,7 +43,19 @@ Voici les prérequis nécessaires pour lancer le projet:
 | `GET` | `/ambiance/:location` | - | `200` + `{location, averageNoise, noiseLevel, vibe, proximity, measurementsCount, observationsCount}` | Non | Retourne les informations générales d'un lieu, niveau sonore moyen + dernière observation
 
 Les [] signifient que la partie est facultative.
+<h2>Cache</h2>
+<p>Les routes de lecture publiques (<code>/ambiance/*</code>, <code>/locations</code>, <code>/locations/active</code>) sont mises en cache côté serveur. Le cache utilise Redis si la variable d'environnement <code>REDIS_URL</code> est définie, et un cache en mémoire sinon. Aucune configuration n'est obligatoire : sans <code>REDIS_URL</code>, l'API démarre et fonctionne normalement.</p>
+<p>Au démarrage, le serveur journalise <code>[cache] Backend actif: redis</code> ou <code>[cache] Backend actif: memory</code>. Chaque réponse cacheable porte un en-tête <code>X-Cache: HIT</code> ou <code>MISS</code>.</p>
+<p>Les réponses authentifiées (en-tête <code>Authorization</code> ou <code>x-api-key</code>), les routes <code>/users</code> et <code>/devices</code>, et toute réponse dont le statut n'est pas <code>200</code> ne sont jamais mises en cache. La stratégie complète est décrite dans <code>RAPPORT.md</code>, à la racine du dépôt.</p>
+<p>Pour mesurer l'effet du cache sur un déploiement&nbsp;:</p>
+<pre><code>node scripts/bench_cache.mjs [url_de_base]</code></pre>
+
 <h2>Tests</h2>
+<h3>Tests unitaires</h3>
+<p>La logique métier est isolée dans <code>src/services/</code>&nbsp;: ce sont des fonctions pures, sans Express ni Mongoose, donc testables sans serveur ni base de données. Les tests utilisent le lanceur intégré à Node (<code>node:test</code>), aucune dépendance supplémentaire n'est requise.</p>
+<pre><code>npm test</code></pre>
+<p>128 tests répartis en 9 fichiers dans <code>tests/unit/</code>. Ils s'exécutent en moins d'une seconde et ne nécessitent ni <code>.env</code>, ni MongoDB, ni Redis.</p>
+<h3>Tests de bout en bout</h3>
 <p>
 Une collection Postman (<code>postman_collection.json</code>) est disponible à la source du projet. Elle contient une séquence complète qui exerce tous les endpoints de bout en bout.
 </p>
