@@ -3,7 +3,7 @@
 // Aucun serveur Express n'est demarre et aucune connexion MongoDB n'est ouverte:
 // le service ne manipule que des objets JavaScript.
 
-import test from "node:test";
+import { test } from "vitest";
 import assert from "node:assert/strict";
 
 import {

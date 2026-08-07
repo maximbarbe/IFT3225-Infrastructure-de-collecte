@@ -3,7 +3,7 @@
 // Aucun serveur Redis n'est demarre: le client est injecte, donc tout le
 // contrat (serialisation, TTL, suppression par prefixe) se verifie en memoire.
 
-import test from "node:test";
+import { test } from "vitest";
 import assert from "node:assert/strict";
 
 import { createRedisStore } from "../../src/cache/redisStore.js";

@@ -1,6 +1,6 @@
 // Tests des normalisations partagees.
 
-import test from "node:test";
+import { test } from "vitest";
 import assert from "node:assert/strict";
 
 import { normalizeLocationName, normalizeEmail } from "../../src/services/textService.js";

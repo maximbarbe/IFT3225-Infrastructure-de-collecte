@@ -1,6 +1,6 @@
 // Tests du service des lieux. Fonctions pures: ni Express, ni Mongoose.
 
-import test from "node:test";
+import { test } from "vitest";
 import assert from "node:assert/strict";
 
 import {

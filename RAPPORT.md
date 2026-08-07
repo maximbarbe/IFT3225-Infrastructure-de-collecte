@@ -45,22 +45,36 @@ npm test
 
 (depuis `backend/`. Équivaut à `node --test --test-reporter=spec`.)
 
-Le lanceur est celui intégré à Node (`node:test`) : **aucune dépendance de test
-n'a été ajoutée**. Les tests s'exécutent même avec un `node_modules` vide, ce
-qui est la preuve concrète que la logique métier est bien isolée de l'accès aux
-données.
+Le lanceur est **Vitest**, ajouté en `devDependencies` (il n'est donc pas
+installé en production par `npm ci --omit=dev`). `npm run test:watch` relance la
+suite à chaque modification.
+
+Les tests n'importent **que** les modules de `src/services/` et
+`src/cache/*Store.js` : aucun ne remonte jusqu'à Express, Mongoose ou `redis`.
+C'est la preuve concrète que la logique métier est bien isolée de l'accès aux
+données — aucun test n'a besoin d'un serveur, d'une base ou d'un fichier `.env`.
+
+Les assertions utilisent `node:assert/strict`, que Vitest exécute tel quel.
 
 ### 1.3 Résultat mesuré
 
 ```
-ℹ tests 128
-ℹ suites 0
-ℹ pass 128
-ℹ fail 0
-ℹ duration_ms 363.6999
+ ✓ tests/unit/memoryStore.test.js         (9 tests)
+ ✓ tests/unit/userService.test.js        (14 tests)
+ ✓ tests/unit/observationService.test.js  (9 tests)
+ ✓ tests/unit/ambianceService.test.js    (33 tests)
+ ✓ tests/unit/measurementService.test.js  (9 tests)
+ ✓ tests/unit/locationService.test.js    (15 tests)
+ ✓ tests/unit/textService.test.js         (7 tests)
+ ✓ tests/unit/redisStore.test.js         (10 tests)
+ ✓ tests/unit/cacheService.test.js       (22 tests)
+
+ Test Files  9 passed (9)
+      Tests  128 passed (128)
+   Duration  877ms
 ```
 
-**128 tests, 0 échec, ~0,36 s.** Répartition (minimum de 3 cas par service,
+**128 tests, 0 échec, ~0,9 s.** Répartition (minimum de 3 cas par service,
 largement dépassé) :
 
 | Fichier de test | Cas | Ce qui est couvert |
@@ -358,7 +372,8 @@ RAPPORT.md
 **Modifiés**
 
 ```
-backend/package.json            script "test", dépendance redis
+backend/package.json            scripts "test"/"test:watch", dépendances
+                                redis et vitest (devDependency)
 backend/.env.example            REDIS_URL
 backend/src/app.js              init du cache, ETag, no-store par défaut
 backend/src/routes/*.js         délégation aux services, cache, invalidation

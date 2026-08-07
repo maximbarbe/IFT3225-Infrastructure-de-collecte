@@ -2,7 +2,7 @@
 //
 // L'horloge est injectee, donc l'expiration est verifiee sans attendre.
 
-import test from "node:test";
+import { test } from "vitest";
 import assert from "node:assert/strict";
 
 import { createMemoryStore } from "../../src/cache/memoryStore.js";

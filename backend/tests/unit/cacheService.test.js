@@ -3,7 +3,7 @@
 // Ce sont les tests les plus importants du lot: une regle relachee ici
 // signifierait servir la reponse d'un utilisateur a un autre.
 
-import test from "node:test";
+import { test } from "vitest";
 import assert from "node:assert/strict";
 
 import {

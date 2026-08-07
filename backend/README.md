@@ -52,7 +52,8 @@ Les [] signifient que la partie est facultative.
 
 <h2>Tests</h2>
 <h3>Tests unitaires</h3>
-<p>La logique métier est isolée dans <code>src/services/</code>&nbsp;: ce sont des fonctions pures, sans Express ni Mongoose, donc testables sans serveur ni base de données. Les tests utilisent le lanceur intégré à Node (<code>node:test</code>), aucune dépendance supplémentaire n'est requise.</p>
+<p>La logique métier est isolée dans <code>src/services/</code>&nbsp;: ce sont des fonctions pures, sans Express ni Mongoose, donc testables sans serveur ni base de données. Les tests utilisent <strong>Vitest</strong> (en <code>devDependencies</code>) et <code>node:assert/strict</code> pour les assertions. Aucun test n'a besoin d'un <code>.env</code>, de MongoDB ni de Redis.</p>
+<p><code>npm run test:watch</code> relance la suite à chaque modification.</p>
 <pre><code>npm test</code></pre>
 <p>128 tests répartis en 9 fichiers dans <code>tests/unit/</code>. Ils s'exécutent en moins d'une seconde et ne nécessitent ni <code>.env</code>, ni MongoDB, ni Redis.</p>
 <h3>Tests de bout en bout</h3>

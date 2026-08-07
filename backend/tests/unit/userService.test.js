@@ -3,7 +3,7 @@
 // bcrypt n'est jamais appele ici: le hash est une donnee injectee, ce qui rend
 // ces tests instantanes et independants de la configuration du serveur.
 
-import test from "node:test";
+import { test } from "vitest";
 import assert from "node:assert/strict";
 
 import {

@@ -1,7 +1,8 @@
 {
   "scripts": {
     "start": "node index.js",
-    "test": "node --test --test-reporter=spec"
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "type": "module",
   "dependencies": {
@@ -14,5 +15,8 @@
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.6.3",
     "redis": "^5.10.0"
+  },
+  "devDependencies": {
+    "vitest": "^3.2.4"
   }
 }
