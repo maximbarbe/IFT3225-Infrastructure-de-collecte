@@ -70,16 +70,18 @@ router.get("/active", async (req, res) => {
 })
 
 router.post("/", [authenticateToken, validate(LocationPostSchema)], async (req, res) => {
-    let loc;
+    let loc1;
+    let loc2;
     try {
-        loc = await Location.findOne({lat: req.body["lat"], lon: req.body["lon"]});
+        loc1 = await Location.findOne({lat: req.body["lat"], lon: req.body["lon"]});
+        loc2 = await Location.findOne({location: req.body["location"].toLowerCase()});
     } catch (e) {
         return res.status(500).json({
             error: "SERVER_ERROR",
             message: e.message
         });
     }
-    if (loc) {
+    if (loc1 || loc2) {
         return res.status(400).json({
             error: "INVALID_REQUEST",
             message: "A location already exists at this latitude/longitude or a location already exists with this name."

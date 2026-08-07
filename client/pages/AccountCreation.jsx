@@ -2,6 +2,9 @@ import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import { postNewUser } from '../services/users';
+import { submitForm } from '../services/formSubmission';
+
+
 
 export default function AccountCreation() {
     const [type, setType] = useState("password")
@@ -10,33 +13,36 @@ export default function AccountCreation() {
     const [success, setSuccess] = useState("")
 
     // Les hooks doivent etre appeles dans le composant, pas au niveau du module
-    async function submitForm(event) {
-        event.preventDefault();
-    
-        const data = new FormData(event.target);
+
+
+    function passwordMatch(data) {
         if (data.get("password") !== data.get("passwordConfirmed")) {
             setError("Les mots de passe ne correspondent pas.");
-            return;
+            return false;
         }
-        setError("");
-        try {
-            setDisabled(true);
-            const response = await postNewUser(Object.fromEntries(data.entries()));
-            setError("")
-            setSuccess("Le compte a été créé avec succès!")
-        } catch (e) {
-            setSuccess("")
-            setError(e.message)
-        } finally {
-            setDisabled(false)
-        }
-        
+        return true
     }
+
+    async function submitCallback(data) {
+        setDisabled(true);
+        const response = await postNewUser(Object.fromEntries(data.entries()));
+        setError("")
+        setSuccess("Le compte a été créé avec succès!")        
+    }
+
+    const errorCallback = (error) => {
+        setSuccess("")
+        setError(error.message)
+    }
+    const cleanupCallback = () => setDisabled(false);
+
+
+
     // Les formulaires ont été construits à l'aide des exemples dans la documentation de bootstrap et react bootstrap.
     // (React Boostrap, s.d.b) et (React Bootstrap, s.d.c)
     // Le padding a été fait à l'aide de la documentation de bootstrap (Bootstrap, s.d.b)
     return (        
-    <Form className="mx-auto w-50 pt-5" onSubmit={submitForm}>
+    <Form className="mx-auto w-50 pt-5" onSubmit={(e) => {submitForm(e, submitCallback, errorCallback, cleanupCallback, [passwordMatch])}}>
         <Form.Group className="mb-3" name = "test"controlId="formBasicFirstName">
             <Form.Label>Prénom</Form.Label>
             <Form.Control type="text" name="firstName" placeholder="Prénom" />

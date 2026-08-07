@@ -4,7 +4,7 @@ import Form from 'react-bootstrap/Form';
 import { useAppContext } from '../context/AppContext';
 import { loginUser } from '../services/users';
 import { useNavigate } from "react-router-dom";
-
+import { submitForm } from '../services/formSubmission';
 
 // L'astuce pour useNavigate provient de (aravind_reddy, 2018)
 export default function Connection() {
@@ -15,22 +15,18 @@ export default function Connection() {
     const navigate = useNavigate();
 
 
-    async function submitForm(event) {
-        event.preventDefault();
-        
-        const data = new FormData(event.target);
-        try {
-            setDisabled(true);
-            const response = await loginUser(Object.fromEntries(data.entries()));
-            setUser({token: response.token, ...response.user})
-            setError("")      
-            navigate("/")  
-        } catch (e) {
-            setError(e.message)
-        } finally {
-            setDisabled(false)
-        }
+    async function submitCallback(data) {
+        setDisabled(true);
+        const response = await loginUser(Object.fromEntries(data.entries()));
+        setUser({token: response.token, ...response.user})
+        setError("")      
+        navigate("/")  
     }
+    const errorCallback = (error) => {
+        setError(error.message)
+    };
+    const cleanupCallback = () => setDisabled(false);
+
 
 
 
@@ -38,7 +34,7 @@ export default function Connection() {
     // Les formulaires ont été construits à l'aide des exemples dans la documentation de bootstrap et react bootstrap.
     // (React Boostrap, s.d.b) et (React Bootstrap, s.d.c)
     // Le padding a été fait à l'aide de la documentation de bootstrap (Bootstrap, s.d.b)
-    <Form className="mx-auto w-50 pt-5" onSubmit={submitForm}>
+    <Form className="mx-auto w-50 pt-5" onSubmit={(e) => {submitForm(e, submitCallback, errorCallback, cleanupCallback)}}>
         <Form.Group className="mb-3" controlId="formBasicEmail">
             <Form.Label>Adresse courriel</Form.Label>
             <Form.Control type="email" name="email" placeholder="Adresse Courriel" />

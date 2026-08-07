@@ -1,15 +1,15 @@
 import useApi from "../hooks/useApi";
 import { getAmbiance } from "../services/ambiance";
-import { useNavigate } from "react-router-dom";
 import CustomMarker from "./CustomMarker";
-import { Marker, Popup } from "react-leaflet";
+
+
+
 export default function Location({ lat, lon, loc }) {
     // L'utilisation de React Leaflet a été faite avec la documentation (React Leaflet, s.d.)
-    // L'astuce pour les event handlers sur les markers provient de (Disco, 2022)
-    // L'astuce pour useNavigate provient de (aravind_reddy, 2018)
 
 
-    const navigate = useNavigate();
+
+
     const {data, loading, error} = useApi(() => (getAmbiance(loc, "2160h")))
     return(<>
         {(!loading &&!error) && <CustomMarker lat={lat} lon={lon} loc={loc} msg={`Classification ambiante: ${data.noiseLevel.toUpperCase()}`}/>}

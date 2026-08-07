@@ -4,7 +4,7 @@ import Form from 'react-bootstrap/Form';
 import { useAppContext } from '../context/AppContext';
 import { Navigate } from 'react-router-dom';
 import { postObservation } from '../services/observation';
-
+import { submitForm } from '../services/formSubmission';
 
 export default function Observation() {
     const [error, setError] = useState("")
@@ -16,30 +16,28 @@ export default function Observation() {
     if (!user) {
         return <Navigate to="/connection" replace />
     }
-    async function submitForm(event) {
-        event.preventDefault();
-        
-        const data = new FormData(event.target);
-        try {
-            setSuccess("")
-            setDisabled(true);
-            const response = await postObservation(Object.fromEntries(data.entries()), user.token)
-            setError("")  
-            setSuccess("L'observation a bien été envoyée!") 
-        } catch (e) {
-            setError(e.message)
-        } finally {
-            setDisabled(false)
-        }
+
+
+
+    async function submitCallback(data) {
+
+        setSuccess("")
+        setDisabled(true);
+        const response = await postObservation(Object.fromEntries(data.entries()), user.token)
+        setError("")  
+        setSuccess("L'observation a bien été envoyée!") 
     }
+    const errorCallback = (error) => {
+        setSuccess("")
+        setError(error.message)
+    };
+    const cleanupCallback = () => setDisabled(false);
     
-
-
     return (
     // Les formulaires ont été construits à l'aide des exemples dans la documentation de bootstrap et react bootstrap.
     // (React Boostrap, s.d.b) et (React Bootstrap, s.d.c)
     // Le padding a été fait à l'aide de la documentation de bootstrap (Bootstrap, s.d.b)
-    <Form className="mx-auto w-50 pt-5" onSubmit={submitForm}>
+    <Form className="mx-auto w-50 pt-5" onSubmit={(e) => {submitForm(e, submitCallback, errorCallback, cleanupCallback)}}>
         <Form.Group className="mb-3" controlId="formBasicLocation">
             <Form.Label>Nom de la location</Form.Label>
             <Form.Control type="text" name="location" placeholder="Location" />
