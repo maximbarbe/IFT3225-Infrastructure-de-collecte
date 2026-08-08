@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { Navigate } from 'react-router-dom';
 import useApi from '../hooks/useApi';
 import { getMyObservations } from '../services/observation';
+import Table from '../components/Table';
 
 
 export default function Contributions() {
@@ -20,6 +21,15 @@ export default function Contributions() {
         return <Navigate to="/connection" replace />
     }
 
+    const buildRow = (data, index) => (
+        <>
+            <td><a className="btn text-primary" onClick={() => navigate(`/view/${data.location}`)}>{data.location}</a></td>
+            <td>{data.proximity}</td>
+            <td>{data.vibe}</td>
+            <td>{data.notes || "No notes"}</td>
+        </>
+    )
+
     // Les tables sont basées sur la documentation officielle de bootstrap (Bootstrap, s.d.a)
     // Les classes pour le display flexbox et l'alignement sont tirées de la documentation officielle de bootstrap (Bootstrap, s.d.c)
     // Le loading icon est tirée de la documentation officielle de bootstrap (Bootstrap, s.d.d)
@@ -32,29 +42,8 @@ export default function Contributions() {
         {(!loading && !error && myObservations.length !== 0) &&
             <div style={{width: "50%"}}>
                 <h1>Voici vos observations:</h1>
-                    <table className="table">
-                    <thead>
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Location</th>
-                            <th scope="col">Proximité</th>
-                            <th scope="col">Vibe</th>
-                            <th scope="col">Notes</th>
-                        </tr>
-                    </thead>
-                        <tbody>
-                            {myObservations.map((data, index) => (
-                                <tr key={index}>
-                                    <th scope="row">{index + 1}</th>
-                                    <td><a className="btn text-primary" onClick={() => navigate(`/view/${data.location}`)}>{data.location}</a></td>
-                                    <td>{data.proximity}</td>
-                                    <td>{data.vibe}</td>
-                                    <td>{data.notes || "No notes"}</td>
-                                </tr>
-
-                            ))}
-                        </tbody>
-                </table>
+                <Table columns={["Location", "Proximité", "Vibe", "Notes"]} data={myObservations} buildRow={buildRow}/>
+                    
             </div>
         }
     </div>

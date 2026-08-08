@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Navigate } from 'react-router-dom';
 import useApi from '../hooks/useApi';
 import { getMyLocations } from '../services/locations';
+import Table from '../components/Table';
 
 // L'astuce pour useNavigate provient de (aravind_reddy, 2018)
 export default function Locations() {
@@ -17,6 +18,13 @@ export default function Locations() {
     if (!user) {
         return <Navigate to="/connection" replace />
     }
+
+    const buildRow = (data, index) => (
+        <>
+            <td><a className="btn text-primary" onClick={() => navigate(`/view/${data}`)}>{data}</a></td>
+        </>
+    )
+
         // Les tables sont basées sur la documentation officielle de bootstrap (Bootstrap, s.d.a)
     // Les classes pour le display flexbox et l'alignement sont tirées de la documentation officielle de bootstrap (Bootstrap, s.d.c)
     // Le loading icon est tirée de la documentation officielle de bootstrap (Bootstrap, s.d.d)
@@ -28,23 +36,8 @@ export default function Locations() {
         {(!loading &&!error&& myLocations.length !== 0) &&
             <div style={{width: "50%"}}>
                 <h1>Voici les locations auxquelles vous avez contribué:</h1>
-                    <table className="table">
-                    <thead>
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Location</th>
-                        </tr>
-                    </thead>
-                        <tbody>
-                            {myLocations.map((data, index) => (
-                                <tr key={index}>
-                                    <th scope="row">{index + 1}</th>
-                                    <td><a className="btn text-primary" onClick={() => navigate(`/view/${data}`)}>{data}</a></td>
-                                </tr>
-
-                            ))}
-                        </tbody>
-                </table>
+                <Table columns={["Location"]} data={myLocations} buildRow={buildRow}/>
+                    
             </div>
         }
     </div>

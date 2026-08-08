@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import { postObservation } from '../services/observation';
-
+import Table from '../components/Table';
 
 export default function Favorites() {
 
@@ -21,7 +21,13 @@ export default function Favorites() {
 
     const [favorites, setFavorites] = useState(getFavorites())
 
-    
+    const buildRow = (data, index) => {
+        return (<>
+                    <td>{data}</td>
+                    <td><Button variant="danger" onClick={() => removeFavorite(favorites, data)}>Retirer</Button></td>
+                </>
+        )
+    }
 
     // Les tables sont basées sur la documentation officielle de bootstrap (Bootstrap, s.d.a)
     // Les classes pour le display flexbox et l'alignement sont tirées de la documentation officielle de bootstrap (Bootstrap, s.d.c)
@@ -30,25 +36,7 @@ export default function Favorites() {
         <h1>Vous n'avez aucune location favori!</h1>}
         {(favorites.length !== 0) &&
                 <div style={{width: "50%"}}>
-                    <table className="table">
-                    <thead>
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Location</th>
-                            <th scope="col">Action</th>
-                        </tr>
-                    </thead>
-                        <tbody>
-                            {favorites.map((data, index) => (
-                                <tr key={index}>
-                                    <th scope="row">{index + 1}</th>
-                                    <td>{data}</td>
-                                    <td><Button variant="danger" onClick={() => removeFavorite(favorites, data)}>Retirer</Button></td>
-                                </tr>
-
-                            ))}
-                        </tbody>
-                </table>
+                    <Table columns={["Location", "Action"]} data={favorites} buildRow={buildRow}/>
                 </div>
 
         }

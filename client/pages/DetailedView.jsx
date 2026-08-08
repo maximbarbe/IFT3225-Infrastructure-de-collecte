@@ -2,10 +2,10 @@ import {useParams} from "react-router-dom";
 import useApi from "../hooks/useApi";
 import { getAmbiance, getHistory, getQuietHours } from "../services/ambiance";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, LineChart, Line } from 'recharts';
-import DetailedViewRow from "../components/TableRow";
 import { useAppContext } from '../context/AppContext';
 import Button from 'react-bootstrap/Button';
 import { useState } from 'react';
+import Table from "../components/Table";
 
 
 export default function DetailedView() {
@@ -141,7 +141,17 @@ export default function DetailedView() {
     if (ambianceData.data) {
         cName = getColorClass(ambianceData.data.noiseLevel.toUpperCase())
     }
-    // Les tables sont basées sur la documentation officielle de bootstrap (Bootstrap, s.d.a)
+   
+    const buildRow = (data, index) => (
+        <>
+            <td>{data.bucketStart}</td>
+            <td>{data.averageNoise}</td>
+            <td >{data.noiseLevel}</td>
+            <td>{data.sampleCount}</td>
+        </>
+    )
+    
+
     // Les classes pour le display flexbox et l'alignement sont tirées de la documentation officielle de bootstrap (Bootstrap, s.d.c)
     // Le loading icon est tirée de la documentation officielle de bootstrap (Bootstrap, s.d.d)
     return (
@@ -172,24 +182,7 @@ export default function DetailedView() {
 
                 <div className="d-flex align-items-center justify-content-center flex-column mb-3 pt-5">
                     <h3>Vue détaillée par bloc de 15 minutes (UTC)</h3>
-                    <table className="table">
-                        <thead>
-                            <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">Début du bucket</th>
-                                <th scope="col">Décibels moyens</th>
-                                <th scope="col">Niveau de bruit</th>
-                                <th scope="col">Nombre d'échantillons</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {historyData.data.series.map((data, index) => (
-                                <DetailedViewRow key={index} index={index} bucketStart={data.bucketStart} averageNoise={data.averageNoise} noiseLevel={data.noiseLevel} sampleCount={data.sampleCount}/>
-                            ))}
-                        </tbody>
-                    </table>
-                    
-                    
+                    <Table columns={["Début du bucket", "Décibels moyens", "Niveau de bruit", "Nombre d'échantillons"]} data={historyData.data.series} buildRow={buildRow}/>
                 </div>
                 
                 {!favorited && <Button variant="primary" disabled={disabled} onClick={() => addFavorite(location)}>Ajouter à mes favoris</Button>}
