@@ -5,66 +5,91 @@ const observationDbSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+
     proximity: {
         type: String,
         required: true
     },
+
     vibe: {
         type: String,
         required: true
     },
+
     notes: {
         type: String,
         required: true
     },
+
     userId: {
         type: String,
         required: true
+    },
+
+    // Date de création automatique de l'observation.
+    // Elle permet notamment d'afficher les observations les plus récentes.
+    createdAt: {
+        type: Date,
+        default: Date.now,
+        required: true
     }
-    
 });
 
 observationDbSchema.methods.toJSON = function() {
     const observation = this.toObject();
+
     delete observation.__v;
     delete observation._id;
+
     return observation;
-}
+};
 
 // (Ipizzinidev, 2022)
-const Observation = mongoose.models.Observation || mongoose.model("Observation", observationDbSchema);
+const Observation =
+    mongoose.models.Observation ||
+    mongoose.model("Observation", observationDbSchema);
 
 const ObservationPostSchema = {
     type: "object",
+
     properties: {
         location: {
             type: "string",
             minLength: 1
         },
+
         proximity: {
             type: "string",
             minLength: 1
         },
+
         vibe: {
             type: "string",
             minLength: 1
         },
+
         notes: {
             type: "string"
         },
+
         userId: {
             type: "string",
             minLength: 1
         }
     },
+
     required: [
         "location",
         "proximity",
         "vibe",
         "userId"
     ],
+
     additionalProperties: false
 };
 
+export {
+    Observation,
+    ObservationPostSchema
+};
 
-export {Observation, ObservationPostSchema};
