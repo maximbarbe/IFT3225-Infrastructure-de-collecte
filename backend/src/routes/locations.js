@@ -7,18 +7,27 @@ import { Location, LocationPostSchema } from "../models/Location.js";
 import { Device } from "../models/Device.js";
 import { Measurement } from "../models/Measurement.js";
 import { Observation } from "../models/Observation.js";
+import { redisDelete, redisGet, redisSet } from "../services/redisHelpers.js";
 const router = express.Router();
 
 
 router.get("/", [authenticateToken], async (req, res) => {
+
+    const cachedLocations =  await redisGet(`${req.user._id}/locations`)
+    if (cachedLocations) {
+        return res.status(200).json(cachedLocations)
+    }
     try {
         const myObservations = await Observation.find({userId: req.user._id});
         const locations = []
         for (let obs of myObservations) {
             locations.push(obs.location)
         }
-        // // (Jonca33, 2017)
+        // (Jonca33, 2017)
         const uniqueLocation = [...new Set(locations)]
+
+        await redisSet(`${req.user._id}/locations`, uniqueLocation)
+
         return res.status(200).json(uniqueLocation);
     } catch (e) {
         return res.status(500).json({ 
@@ -30,8 +39,15 @@ router.get("/", [authenticateToken], async (req, res) => {
 
 
 router.get("/", async (req, res) => {
+    const cachedLocations =  await redisGet("/locations")
+    if (cachedLocations) {
+        return res.status(200).json(cachedLocations)
+    }
     try {
         const allLocations = await Location.find({});
+
+        await redisSet("/locations", allLocations)
+
         return res.status(200).json(allLocations);
     } catch (e) {
         return res.status(500).json({ 
@@ -45,7 +61,10 @@ router.get("/", async (req, res) => {
 router.get("/active", async (req, res) => {
     
     try {
-
+        const cachedLocations =  await redisGet("/locations/active")
+        if (cachedLocations) {
+            return res.status(200).json(cachedLocations)
+        }
         const windowMs = 3600000 * 2160;
         const since = new Date(Date.now() - windowMs);        
         // (nawazdhandala, 2026)
@@ -59,7 +78,7 @@ router.get("/active", async (req, res) => {
         { location: { $in: allLocations } }
         ).lean();
 
-
+        await redisSet("/locations/active", data)
         return res.status(200).json(data);
     } catch (e) {
         return res.status(500).json({ 
@@ -90,6 +109,8 @@ router.post("/", [authenticateToken, validate(LocationPostSchema)], async (req, 
     const location = new Location({location: req.body["location"].toLowerCase(), lat: req.body["lat"], lon: req.body["lon"]});
     try {
         await location.save();
+        await redisDelete("/locations")
+        await redisDelete(`${req.user._id}/locations`)
         return res.status(201).json({location: req.body["location"].toLowerCase(), lat: req.body["lat"], lon: req.body["lon"]});
     } catch (e) {
         return res.status(500).json({ 
@@ -122,6 +143,7 @@ router.post("/", [authenticate(Device), validate(LocationPostSchema)], async (re
     const location = new Location({location: req.body["location"].toLowerCase(), lat: req.body["lat"], lon: req.body["lon"]});
     try {
         await location.save();
+        await redisDelete("/locations")
         return res.status(201).json({location: req.body["location"].toLowerCase(), lat: req.body["lat"], lon: req.body["lon"]});
     } catch (e) {
         return res.status(500).json({ 

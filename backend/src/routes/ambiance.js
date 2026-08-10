@@ -1,8 +1,8 @@
 import express from "express";
 import { Measurement } from "../models/Measurement.js";
 import { Observation } from "../models/Observation.js";
-
-
+import redisClient from "../services/redisConnect.js";
+import {redisSet, redisGet} from "../services/redisHelpers.js"
 const router = express.Router();
 
 // Seuils de classification du niveau sonore en decibels dB
@@ -31,6 +31,8 @@ function parseWindow(value) {
 // GET /ambiance/:location
 // Vue d'ensemble actuelle: niveau sonore moyen + derniere observation
 router.get("/:location", async (req, res) => {
+    const locationData = await redisGet(`GET /ambiance/${req.params.location.toLowerCase()}`)
+    if (locationData) {return res.status(200).json(locationData)}
     try {
         const location = req.params.location.toLowerCase();
         const windowMs = parseWindow(req.query.last);
@@ -70,7 +72,7 @@ router.get("/:location", async (req, res) => {
             ? observations[observations.length - 1]
             : null;
 
-        return res.status(200).json({
+        const payload = {
             location,
             averageNoise,
             noiseLevel: classifyNoise(averageNoise),
@@ -78,7 +80,10 @@ router.get("/:location", async (req, res) => {
             proximity: latestObservation?.proximity ?? null,
             measurementsCount: measurements.length,
             observationsCount: observations.length
-        });
+        }
+        await redisSet(`GET /ambiance/${location}`, payload)
+
+        return res.status(200).json(payload);
     } catch (e) {
         return res.status(500).json({ 
             error: "SERVER ERROR",
@@ -94,6 +99,12 @@ router.get("/:location", async (req, res) => {
 // Question concrete: a quelles heures ce lieu est-il typiquement calme ?
 // Vue derivee: on n'ecrit rien, on agrege les mesures brutes a la volee
 router.get("/:location/quiet-hours", async (req, res) => {
+
+    const locationData = await redisGet(`GET /ambiance/${req.params.location.toLowerCase()}/quiet-hours`)
+    if (locationData) {
+        return res.status(200).json(locationData)
+    }
+
     try {
         const location = req.params.location.toLowerCase();
         const windowMs = parseWindow(req.query.last);
@@ -140,7 +151,10 @@ router.get("/:location/quiet-hours", async (req, res) => {
             sampleCount: h.sampleCount
         }));
 
-        return res.status(200).json({ location,  window: req.query.last || "all", hours });
+        const payload = { location,  window: req.query.last || "all", hours }
+
+        await redisSet(`GET /ambiance/${location}/quiet-hours`, payload)
+        return res.status(200).json(payload);
     } catch (e) {
         return res.status(500).json({ 
             error: "SERVER_ERROR", 
@@ -153,6 +167,8 @@ router.get("/:location/quiet-hours", async (req, res) => {
 // Question concrete: comment l'ambiance a-t-elle evolue recemment ?
 // On decoupe le temps en tranches egales et on moyenne le dB par tranche.
 router.get("/:location/history", async (req, res) => {
+
+
     try {
         const location = req.params.location.toLowerCase();
 
@@ -160,6 +176,12 @@ router.get("/:location/history", async (req, res) => {
         const windowMs = parseWindow(req.query.last) ?? (3 * 60 * 60 * 1000);
         const since = new Date(Date.now() - windowMs);
         const bucketMinutes = 15; // taille des tranches
+
+        const locationData = await redisGet(`GET /ambiance/${location}/history?last=${windowMs / (60 * 60 * 1000)}h`)
+        if (locationData) {
+            return res.status(200).json(locationData)
+        }
+        
 
         const buckets = await Measurement.aggregate([
             // 1. Ce lieu, et seulement les mesures depuis "since".
@@ -192,7 +214,9 @@ router.get("/:location/history", async (req, res) => {
             sampleCount: b.sampleCount
         }));
 
-        return res.status(200).json({ location, window: req.query.last || "3h", bucketMinutes, series });
+        const payload = { location, window: req.query.last || "3h", bucketMinutes, series }
+        await redisSet(`GET /ambiance/${location}/history?last=${windowMs / (60 * 60 * 1000)}h`, payload)
+        return res.status(200).json(payload);
     } catch (e) {
         return res.status(500).json({ 
             error: "SERVER_ERROR", 

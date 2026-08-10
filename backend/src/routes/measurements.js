@@ -6,6 +6,7 @@ import { authenticate } from "../middleware/auth.js";
 import {Measurement, MeasurementPostSchema} from "../models/Measurement.js";
 import {Device} from "../models/Device.js";
 import {Location} from "../models/Location.js";
+import { redisDelete } from "../services/redisHelpers.js";
 
 const router = express.Router();
 
@@ -30,6 +31,7 @@ router.post("/", [authenticate(Device), validate(MeasurementPostSchema)], async 
     const measurement = new Measurement({...req.body, timestamp: time, location:req.body["location"].toLowerCase()});
     try {
         await measurement.save();
+        await redisDelete(`GET /ambiance/${location}*`)
         return res.status(201).json(measurement);
     } catch (e) {
         return res.status(500).json({ 

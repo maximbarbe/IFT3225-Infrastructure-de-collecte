@@ -3,6 +3,7 @@ import { Device, DevicePostSchema } from "../models/Device.js";
 import { Location } from "../models/Location.js";
 import { generateAPIKey } from "../middleware/auth.js";
 import validate from "../middleware/validate.js";
+import { redisGet, redisSet } from "../services/redisHelpers.js";
 
 
 const router = express.Router();
@@ -42,8 +43,13 @@ router.post("/", validate(DevicePostSchema), async (req, res) => {
 });
 
 router.get("/", async (req, res) => {
+    const devices = await redisGet("/devices");
+    if (devices) {
+        return res.status(200).json(devices)
+    }
     try {
         const allDevices = await Device.find({});
+        await redisSet("/devices", devices)
         return res.status(200).json(allDevices);
     } catch (e) {
         return res.status(500).json({ 

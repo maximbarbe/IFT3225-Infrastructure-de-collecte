@@ -4,6 +4,7 @@ import {Observation, ObservationPostSchema} from "../models/Observation.js";
 import {Device} from "../models/Device.js";
 import {Location} from "../models/Location.js";
 import {authenticate, authenticateToken} from "../middleware/auth.js";
+import { redisDelete } from '../services/redisHelpers.js';
 
 const router = express.Router();
 
@@ -28,6 +29,8 @@ router.post("/", [authenticateToken], async (req, res) => {
     const observation = new Observation({...req.body, location: req.body["location"].toLowerCase(), notes: req.body["notes"] || "No notes.", userId: req.user._id});
     try {
         await observation.save();
+        await redisDelete(`GET /ambiance/${req.body["location"].toLowerCase()}`)
+        await redisDelete(`${req.user._id}/observations`)
         return res.status(201).json(observation);
     } catch (e) {
         return res.status(500).json({
@@ -61,6 +64,8 @@ router.post("/", [authenticate(Device), validate(ObservationPostSchema)], async 
     const observation = new Observation({...req.body, location: req.body["location"].toLowerCase(), notes: req.body["notes"] || "No notes."});
     try {
         await observation.save();
+        await redisDelete(`GET /ambiance/${req.body["location"].toLowerCase()}`)
+        await redisDelete(`${req.user._id}/observations`)
         return res.status(201).json(observation);
     } catch (e) {
         return res.status(500).json({ 
@@ -72,8 +77,12 @@ router.post("/", [authenticate(Device), validate(ObservationPostSchema)], async 
 
 
 router.get("/", [authenticateToken], async (req, res) => {
+    
     try {
+        const cachedObservations = await redisGet(`${req.user._id}/observations`)
+        if (cachedObservations) {return res.status(200).json(cachedObservations)}
         const myObs = await Observation.find({userId: req.user._id})
+        await redisSet(`${req.user._id}/observations`, JSON.stringify(myObs))
         return res.status(200).json(myObs)
     } catch (e) {
         return res.status(500).json({ 

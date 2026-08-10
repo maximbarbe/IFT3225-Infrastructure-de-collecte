@@ -7,7 +7,7 @@ import locationsRouter from "./routes/locations.js";
 import ambianceRouter from "./routes/ambiance.js";
 import connectDB from "./data/db.js";
 import userRouter from "./routes/users.js";
-import connectRedis from "./services/redisConnect.js";
+import redisClient from "./services/redisConnect.js";
 const app = express();
 
 
@@ -37,13 +37,8 @@ try {
 }
 
 try {
-    await connectRedis();
+    await redisClient.connect();
 } catch (e) {
-    if (e instanceof AggregateError) {
-        for (let error of e.errors) {
-            console.log(error)
-        }
-    }
     throw new Error(`Erreur lors de la connection à Redis: ${e}`);
 }
 
