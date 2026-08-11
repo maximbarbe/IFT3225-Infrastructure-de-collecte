@@ -61,7 +61,6 @@ router.get("/", async (req, res) => {
 router.get("/active", async (req, res) => {
     try {
         const cachedLocations =  await redisGet("/locations/active")
-        console.log(cachedLocations || "NULL")
         if (cachedLocations) {
             return res.status(200).json(cachedLocations)
         }

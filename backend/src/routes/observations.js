@@ -4,7 +4,7 @@ import {Observation, ObservationPostSchema} from "../models/Observation.js";
 import {Device} from "../models/Device.js";
 import {Location} from "../models/Location.js";
 import {authenticate, authenticateToken} from "../middleware/auth.js";
-import { redisDelete } from '../services/redisHelpers.js';
+import { redisDelete, redisGet, redisSet } from '../services/redisHelpers.js';
 
 const router = express.Router();
 
