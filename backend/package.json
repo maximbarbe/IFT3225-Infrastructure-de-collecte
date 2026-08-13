@@ -1,6 +1,7 @@
 {
   "scripts": {
     "start": "node index.js"
+    "test": "vitest run"
   },
   "type": "module",
   "dependencies": {
@@ -13,5 +14,8 @@
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.6.3",
     "redis": "^6.2.0"
+  },
+  "devDependencies": {
+    "vitest": "^3.2.4"
   }
 }
