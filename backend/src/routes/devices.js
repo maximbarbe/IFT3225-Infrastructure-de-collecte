@@ -49,7 +49,7 @@ router.get("/", async (req, res) => {
     }
     try {
         const allDevices = await Device.find({});
-        await redisSet("/devices", devices)
+        await redisSet("/devices", allDevices)
         return res.status(200).json(allDevices);
     } catch (e) {
         return res.status(500).json({ 
