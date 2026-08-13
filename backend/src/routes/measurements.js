@@ -31,7 +31,7 @@ router.post("/", [authenticate(Device), validate(MeasurementPostSchema)], async 
     const measurement = new Measurement({...req.body, timestamp: time, location:req.body["location"].toLowerCase()});
     try {
         await measurement.save();
-        await redisDelete(`GET /ambiance/${location}*`)
+        await redisDelete(`GET /ambiance/${req.body["location"].toLowerCase()}*`)
         return res.status(201).json(measurement);
     } catch (e) {
         return res.status(500).json({ 
