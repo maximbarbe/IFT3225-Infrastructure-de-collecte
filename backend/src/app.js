@@ -39,7 +39,7 @@ try {
 try {
     await redisClient.connect();
 } catch (e) {
-    throw new Error(`Erreur lors de la connection à Redis: ${e}`);
+    console.log("Erreur lors de la connection à Redis, l'application va procéder sans le cache.")
 }
 
 app.use((req, res) => {
