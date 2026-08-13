@@ -31,6 +31,7 @@ router.post("/", [authenticateToken], async (req, res) => {
         await observation.save();
         await redisDelete(`GET /ambiance/${req.body["location"].toLowerCase()}`)
         await redisDelete(`${req.user._id}/observations`)
+        await redisDelete(`GET /observations/${req.body["location"].toLowerCase()}*`)
         return res.status(201).json(observation);
     } catch (e) {
         return res.status(500).json({

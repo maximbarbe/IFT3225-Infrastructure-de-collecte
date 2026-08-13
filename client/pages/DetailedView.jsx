@@ -163,13 +163,21 @@ export default function DetailedView() {
         </>
     )
 
+    const getDate = (strRep) => {
+        try {
+            return `${new Date(strRep).toLocaleDateString("fr-ca")} / ${new Date(strRep).toLocaleTimeString("en-US")}`
+        } catch (e) {
+            return "n/a"
+        }
+    }
+
     const buildObservationRow = (data, index) => (
         <>
             <td>{data.location}</td>
             <td>{data.proximity}</td>
             <td>{data.vibe}</td>
             <td>{data.notes}</td>
-            <td>{`${new Date(data.createdAt).toLocaleDateString("fr-ca")} / ${new Date(data.createdAt).toLocaleTimeString("en-US")}` || "n/a"}</td>
+            <td>{getDate(data.createdAt)}</td>
         </>
     )
     
@@ -195,7 +203,7 @@ export default function DetailedView() {
             {(recentObservationsData.error) &&
                 <h1 className="text-danger">Recent observations error: {recentObservationsData.error.message}</h1>
             }
-            {(!quietHoursData.error && !historyData.error && !ambianceData.error && !quietHoursData.loading && !historyData.loading && !ambianceData.loading) && 
+            {(!quietHoursData.error && !historyData.error && !ambianceData.error && !quietHoursData.loading && !historyData.loading && !ambianceData.loading && ! recentObservationsData.loading && !recentObservationsData.error) && 
             <div className="d-flex align-items-center justify-content-center flex-column mb-3 pt-5">
                 <div className="d-flex align-items-center justify-content-center">
                     <h3>Classification d'ambiance courante: <span className={cName}>{ambianceData.data.noiseLevel.toUpperCase()}</span></h3>
