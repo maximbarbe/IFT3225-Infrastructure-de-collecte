@@ -97,7 +97,7 @@ export default function DetailedView() {
         </BarChart>;
         }
         return chart
-    }, [quietHoursData]) 
+    }, [quietHoursData.data]) 
     
     const lineChart = useMemo(() => {
         const historicalGraphData = []
