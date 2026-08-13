@@ -4,7 +4,7 @@ import icon from 'leaflet/dist/images/marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
 import { useNavigate } from "react-router-dom";
 
-export default function CustomMarker({lat, lon, loc, msg, textType=null}) {
+export default function CustomMarker({lat, lon, loc, msg, clickFunction, textType=null}) {
 
     // https://stackoverflow.com/a/51222271
     // L'astuce pour les event handlers sur les markers provient de (Disco, 2022)
@@ -23,7 +23,7 @@ export default function CustomMarker({lat, lon, loc, msg, textType=null}) {
                 eventHandlers={{
                     mouseover: (e) => e.target.openPopup(),
                     mouseout: (e) => e.target.closePopup(),
-                    click: (e) => navigate(`/view/${loc}`)
+                    click: (e) => clickFunction(e)
                 }}
                 icon={DefaultIcon}>
             
