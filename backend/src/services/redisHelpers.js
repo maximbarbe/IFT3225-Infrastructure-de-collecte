@@ -27,10 +27,10 @@ async function redisDelete(pattern) {
             MATCH: pattern
 
         })) {
+            
             await redisClient.del(key);
         }
     } catch (e) {
-        console.log(e)
     }
 }
 
