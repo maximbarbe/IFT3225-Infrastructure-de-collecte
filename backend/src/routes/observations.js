@@ -66,7 +66,6 @@ router.post("/", [authenticate(Device), validate(ObservationPostSchema)], async 
     try {
         await observation.save();
         await redisDelete(`GET /ambiance/${req.body["location"].toLowerCase()}`)
-        await redisDelete(`${req.user._id}/observations`)
         await redisDelete(`GET /observations/${req.body["location"].toLowerCase()}*`)
         return res.status(201).json(observation);
     } catch (e) {
@@ -84,7 +83,7 @@ router.get("/", [authenticateToken], async (req, res) => {
         const cachedObservations = await redisGet(`${req.user._id}/observations`)
         if (cachedObservations) {return res.status(200).json(cachedObservations)}
         const myObs = await Observation.find({userId: req.user._id})
-        await redisSet(`${req.user._id}/observations`, JSON.stringify(myObs))
+        await redisSet(`${req.user._id}/observations`, myObs)
         return res.status(200).json(myObs)
     } catch (e) {
         return res.status(500).json({ 
