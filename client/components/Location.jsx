@@ -1,14 +1,14 @@
 import useApi from "../hooks/useApi";
 import { getAmbiance } from "../services/ambiance";
 import CustomMarker from "./CustomMarker";
-
+import { useNavigate } from "react-router-dom";
 
 
 export default function Location({ lat, lon, loc }) {
     // L'utilisation de React Leaflet a été faite avec la documentation (React Leaflet, s.d.)
 
 
-
+    const navigate = useNavigate();
 
     const {data, loading, error} = useApi(() => (getAmbiance(loc, "2160h")))
     return(<>
