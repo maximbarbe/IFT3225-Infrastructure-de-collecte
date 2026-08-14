@@ -225,8 +225,7 @@ export default function DetailedView() {
                 
 
                 
-                {!favorited && <Button variant="primary" disabled={disabled} onClick={() => addFavorite(location)}>Ajouter à mes favoris</Button>}
-                {favorited && <Button variant="danger" disabled={disabled} onClick={() => removeFavorite(location)}>Retirer de mes favoris</Button>}
+                
             </div>    
                 
                 
@@ -238,7 +237,8 @@ export default function DetailedView() {
                     <Table columns={["Location", "Proximité de la plus proche source de bruit humain", "Vibe général de l'endroit", "Notes supplémentaires", "Date de l'observation"]} data={recentObservationsData.data} buildRow={buildObservationRow}/>
                 </div>
                 }
-
+            {!favorited && <Button variant="primary" disabled={disabled} onClick={() => addFavorite(location)}>Ajouter à mes favoris</Button>}
+            {favorited && <Button variant="danger" disabled={disabled} onClick={() => removeFavorite(location)}>Retirer de mes favoris</Button>}
         </div>
     )
 }
