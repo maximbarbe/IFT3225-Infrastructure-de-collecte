@@ -5,6 +5,11 @@ import {Device} from "../models/Device.js";
 import {Location} from "../models/Location.js";
 import {authenticate, authenticateToken} from "../middleware/auth.js";
 import { redisDelete, redisGet, redisSet } from '../services/redisHelpers.js';
+import {
+    normalizeObservationLocation,
+    prepareObservation,
+    getLatestObservations
+} from "../services/observationService.js";
 
 const router = express.Router();
 
@@ -26,7 +31,9 @@ router.post("/", [authenticateToken], async (req, res) => {
         });
     }
     
-    const observation = new Observation({...req.body, location: req.body["location"].toLowerCase(), notes: req.body["notes"] || "No notes.", userId: req.user._id});
+   const observation = new Observation(
+    prepareObservation(req.body, req.user._id)
+);
     try {
         await observation.save();
         await redisDelete(`GET /ambiance/${req.body["location"].toLowerCase()}`)
@@ -62,7 +69,10 @@ router.post("/", [authenticate(Device), validate(ObservationPostSchema)], async 
             message: "La location n'existe pas, veuillez la créer en utilisant /locations."
         });
     }
-    const observation = new Observation({...req.body, location: req.body["location"].toLowerCase(), notes: req.body["notes"] || "No notes."});
+    
+    const observation = new Observation(
+    prepareObservation(req.body, req.user._id)
+);
     try {
         await observation.save();
         await redisDelete(`GET /ambiance/${req.body["location"].toLowerCase()}`)
@@ -94,35 +104,44 @@ router.get("/", [authenticateToken], async (req, res) => {
 })
 
 router.get("/:location", async (req, res) => {
-    const location = req.params["location"].toLowerCase();
+    const location = normalizeObservationLocation(req.params.location);
 
-    let limit = Number.parseInt(req.query.limit, 10)
+    let limit = Number.parseInt(req.query.limit, 10);
+
     if (Number.isNaN(limit) || limit <= 0) {
-        limit = 5
+        limit = 5;
     }
 
     try {
-        const cachedObservations = await redisGet(`GET /observations/${location}?limit=${limit}`)
-        if (cachedObservations) {
-            return res.status(200).json(cachedObservations)
-        }
+        const cachedObservations = await redisGet(
+            `GET /observations/${location}?limit=${limit}`
+        );
 
+        if (cachedObservations) {
+            return res.status(200).json(cachedObservations);
+        }
     } catch (e) {}
+
     try {
-        const obs = await Observation.aggregate([
-                    { $match: {location}},
-                    { $sort: { createdAt: -1 } },
-                    { $limit: 5}
-                ]);
-        await redisSet(`GET /observations/${location}?limit=${limit}`, obs);
-        return res.status(200).json(obs)
+        const observations = await Observation.find({ location }).lean();
+
+        const latestObservations = getLatestObservations(
+            observations,
+            limit
+        );
+
+        await redisSet(
+            `GET /observations/${location}?limit=${limit}`,
+            latestObservations
+        );
+
+        return res.status(200).json(latestObservations);
     } catch (e) {
         return res.status(500).json({
-            error: "SERVOR_ERROR",
+            error: "SERVER_ERROR",
             message: e.message
-        })
+        });
     }
-
-})
+});
 
 export default router;
