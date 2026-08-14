@@ -9,6 +9,7 @@ Voici les prérequis nécessaires pour lancer le projet:
     <li>MongoDB</li>
     <li>Phyphox</li>
     <li>Python</li>
+    <li>Docker (Optionnel, nous l'avons utilisé pour lancer Redis, mais l'application fonctionne sans le cache)</li>
 </ul>
 <h2>
    Installation et lancement
@@ -17,9 +18,10 @@ Voici les prérequis nécessaires pour lancer le projet:
  Les étapes suivantes vont vous guider pour l'installation et le lancement de l'application:
 <p>
     <ol>
+        <li>(Optionnel) Éxécuter la commande <code>docker run -d --name redis -p 6379:6379 redis:latest</code> pour lancer le container de Redis localement sur le port 6379</li>
         <li>Clone le repo</li>
         <li>Être dans le dossier <code>~/backend</code> et éxécuter la commande <code>npm install</code></li>
-        <li>À la source du dossier <code>~/backend</code>, créer un fichier <code>.env</code> et y ajouter les lignes <code>ATLAS_URI</code> et <code>JWT_SECRET</code> tel que montré dans <code>.env.example</code></li>
+        <li>À la source du dossier <code>~/backend</code>, créer un fichier <code>.env</code> et y ajouter les lignes <code>ATLAS_URI</code>, <code>JWT_SECRET</code> et <code>REDIS_URL</code> tel que montré dans <code>.env.example</code></li>
         <li>Éxécuter la commande <code>npm start</code></li>
         <h3>Les prochaines étapes sont pour les scripts bridge et pour populer la base de donnée.</h3>
         <li>Éxécuter la commande <code>python -m venv venv</code></li>
