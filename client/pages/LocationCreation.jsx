@@ -47,11 +47,11 @@ export default function LocationCreation() {
         </Form.Group>
         <Form.Group className="mb-3" controlId="formBasicLatitude">
             <Form.Label>Latitude</Form.Label>
-            <Form.Control type="number" name="lat" placeholder="Latitude" />
+            <Form.Control type="number" step="0.01" name="lat" placeholder="Latitude" />
         </Form.Group>        
         <Form.Group className="mb-3" controlId="formBasicLongitude">
             <Form.Label>Longitude</Form.Label>
-            <Form.Control type="number" name="lon" placeholder="Longitude" />
+            <Form.Control type="number" step="0.01" name="lon" placeholder="Longitude" />
         </Form.Group>
 
         {error && (

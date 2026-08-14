@@ -197,18 +197,18 @@ export default function DetailedView() {
                 </span>
             }
             {(quietHoursData.error) &&
-                <h1 className="text-danger">Quiet hours error: {quietHoursData.error.message}</h1>
+                <h1 className="text-danger">Il n'y pas de données sur les quiet hours.</h1>
             }
             {(historyData.error) &&
-                <h1 className="text-danger">History data error: {historyData.error.message}</h1>
+                <h1 className="text-danger">Il n'y a pas de données historiques.</h1>
             }
             {(ambianceData.error) &&
-                <h1 className="text-danger">Ambiance data error: {ambianceData.error.message}</h1>
+                <h1 className="text-danger">Il n'y a pas de données sur l'ambiance.</h1>
             }
             {(recentObservationsData.error) &&
-                <h1 className="text-danger">Recent observations error: {recentObservationsData.error.message}</h1>
+                <h1 className="text-danger">Il n'y a pas d'observations.</h1>
             }
-            {(!quietHoursData.error && !historyData.error && !ambianceData.error && !quietHoursData.loading && !historyData.loading && !ambianceData.loading && ! recentObservationsData.loading && !recentObservationsData.error) && 
+            {(!quietHoursData.error && !historyData.error && !ambianceData.error && !quietHoursData.loading && !historyData.loading && !ambianceData.loading) && 
             <div className="d-flex align-items-center justify-content-center flex-column mb-3 pt-5">
                 <div className="d-flex align-items-center justify-content-center">
                     <h3>Classification d'ambiance courante: <span className={cName}>{ambianceData.data.noiseLevel.toUpperCase()}</span></h3>
@@ -223,11 +223,8 @@ export default function DetailedView() {
                     <Table columns={["Début du bucket", "Décibels moyens", "Niveau de bruit", "Nombre d'échantillons"]} data={historyData.data.series} buildRow={buildRow}/>
                 </div>
                 
-                <div className="d-flex align-items-center justify-content-center flex-column mb-3 pt-5">
-                    <h3>Les 5 observations les plus récentes</h3>
-                    <Table columns={["Location", "Proximité de la plus proche source de bruit humain", "Vibe général de l'endroit", "Notes supplémentaires", "Date de l'observation"]} data={recentObservationsData.data} buildRow={buildObservationRow}/>
-                </div>
 
+                
                 {!favorited && <Button variant="primary" disabled={disabled} onClick={() => addFavorite(location)}>Ajouter à mes favoris</Button>}
                 {favorited && <Button variant="danger" disabled={disabled} onClick={() => removeFavorite(location)}>Retirer de mes favoris</Button>}
             </div>    
@@ -235,6 +232,12 @@ export default function DetailedView() {
                 
 
             }
+            {! recentObservationsData.loading && !recentObservationsData.error &&
+                <div className="d-flex align-items-center justify-content-center flex-column mb-3 pt-5">
+                    <h3>Les 5 observations les plus récentes</h3>
+                    <Table columns={["Location", "Proximité de la plus proche source de bruit humain", "Vibe général de l'endroit", "Notes supplémentaires", "Date de l'observation"]} data={recentObservationsData.data} buildRow={buildObservationRow}/>
+                </div>
+                }
 
         </div>
     )
