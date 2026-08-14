@@ -165,7 +165,12 @@ export default function DetailedView() {
 
     const getDate = (strRep) => {
         try {
-            return `${new Date(strRep).toLocaleDateString("fr-ca")} / ${new Date(strRep).toLocaleTimeString("en-US")}`
+            const date = new Date(strRep)
+            // https://www.geeksforgeeks.org/javascript/how-to-check-a-date-is-valid-or-not-using-javascript/
+            if (isNaN(date.getTime())) {
+                return "n/a"
+            }
+            return `${date.toLocaleDateString("fr-ca")} / ${date.toLocaleTimeString("en-US")}`
         } catch (e) {
             return "n/a"
         }
