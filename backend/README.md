@@ -47,6 +47,9 @@ Voici les prérequis nécessaires pour lancer le projet:
 Les [] signifient que la partie est facultative.
 <h2>Tests</h2>
 <p>
+Pour lancer les tests unitaires, après avoir fait la commande <code>npm install</code>, il suffit d'éxécuter la commande <code>npm test</code>.
+</p>
+<p>
 Une collection Postman (<code>postman_collection.json</code>) est disponible à la source du projet. Elle contient une séquence complète qui exerce tous les endpoints de bout en bout.
 </p>
 <p>
