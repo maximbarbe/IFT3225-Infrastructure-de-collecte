@@ -1,32 +1,15 @@
 import express from "express";
 import { Measurement } from "../models/Measurement.js";
 import { Observation } from "../models/Observation.js";
-import redisClient from "../services/redisConnect.js";
-import {redisSet, redisGet} from "../services/redisHelpers.js"
+import { redisSet, redisGet } from "../services/redisHelpers.js";
+import {
+    classifyNoise,
+    parseWindow,
+    calculateAverageNoise
+} from "../services/ambianceService.js";
+
 const router = express.Router();
 
-// Seuils de classification du niveau sonore en decibels dB
-// Centralises ici pour que les trois routes utilisent les memes valeurs
-const QUIET_THRESHOLD = 48;
-const MODERATE_THRESHOLD = 60;
-
-// Traduit une moyenne de dB en categorie. Memes libelles que la route existante
-function classifyNoise(avgDb) {
-    if (avgDb === null || avgDb === undefined) return "unknown";
-    if (avgDb < QUIET_THRESHOLD) return "calme";
-    if (avgDb < MODERATE_THRESHOLD) return "modéré";
-    return "animé";
-}
-
-// Convertit une fenetre comme "3h", "30m", "1d" en millisecondes.
-// Renvoie null si le format est invalide.
-function parseWindow(value) {
-    if (!value) return null;
-    const match = String(value).match(/^(\d+)\s*([smhd])$/);
-    if (!match) return null;
-    const factors = { s: 1000, m: 60000, h: 3600000, d: 86400000 };
-    return parseInt(match[1], 10) * factors[match[2]];
-}
 
 // GET /ambiance/:location
 // Vue d'ensemble actuelle: niveau sonore moyen + derniere observation
@@ -64,10 +47,7 @@ router.get("/:location", async (req, res) => {
              });
         }
 
-        const averageNoise = measurements.length > 0
-            ? measurements.reduce((sum, m) => sum + m.value, 0) / measurements.length
-            : null;
-
+        const averageNoise = calculateAverageNoise(measurements);
         const latestObservation = (observations && observations.length > 0)
             ? observations[observations.length - 1]
             : null;
