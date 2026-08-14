@@ -26,7 +26,7 @@ export default function Favorites() {
 
     const buildRow = (data, index) => {
         return (<>
-                    <td><a className="btn text-primary" onClick={() => navigate(`/view/${data}}`)}>{data}</a></td>
+                    <td><a className="btn text-primary" onClick={() => navigate(`/view/${data}`)}>{data}</a></td>
                     <td><Button variant="danger" onClick={() => removeFavorite(favorites, data)}>Retirer</Button></td>
                 </>
         )
