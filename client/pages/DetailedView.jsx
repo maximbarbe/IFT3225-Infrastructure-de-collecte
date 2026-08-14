@@ -220,7 +220,7 @@ export default function DetailedView() {
                 
                 <div className="d-flex align-items-center justify-content-center flex-column mb-3 pt-5">
                     <h3>Les 5 observations les plus récentes</h3>
-                    <Table columns={["Location", "Proximité", "Vibe", "Notes", "Date"]} data={recentObservationsData.data} buildRow={buildObservationRow}/>
+                    <Table columns={["Location", "Proximité de la plus proche source de bruit humain", "Vibe général de l'endroit", "Notes supplémentaires", "Date de l'observation"]} data={recentObservationsData.data} buildRow={buildObservationRow}/>
                 </div>
 
                 {!favorited && <Button variant="primary" disabled={disabled} onClick={() => addFavorite(location)}>Ajouter à mes favoris</Button>}
