@@ -2,9 +2,10 @@ import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import { postObservation } from '../services/observation';
 import Table from '../components/Table';
-
+import { useNavigate } from 'react-router-dom';
 export default function Favorites() {
 
+    // L'astuce pour useNavigate provient de (aravind_reddy, 2018)
     function getFavorites() {
         const favorites = JSON.parse(localStorage.getItem("favorites"))
         if (favorites === null) {
@@ -21,9 +22,11 @@ export default function Favorites() {
 
     const [favorites, setFavorites] = useState(getFavorites())
 
+    const navigate = useNavigate();
+
     const buildRow = (data, index) => {
         return (<>
-                    <td>{data}</td>
+                    <td><span variant="primary" onClick={() => navigate(`/view/${data}`)}>{data}</span></td>
                     <td><Button variant="danger" onClick={() => removeFavorite(favorites, data)}>Retirer</Button></td>
                 </>
         )
