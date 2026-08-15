@@ -1,23 +1,9 @@
 import { describe, expect, test } from "vitest";
 import {
-    normalizeObservationLocation,
     prepareObservation,
     getLatestObservations
 } from "../src/services/observationService.js";
 
-describe("normalizeObservationLocation", () => {
-    test("convertit une location en minuscules", () => {
-        expect(normalizeObservationLocation("Montreal")).toBe("montreal");
-    });
-
-    test("conserve une location déjà en minuscules", () => {
-        expect(normalizeObservationLocation("montreal")).toBe("montreal");
-    });
-
-    test("convertit correctement une location contenant des majuscules", () => {
-        expect(normalizeObservationLocation("PARC JARRY")).toBe("parc jarry");
-    });
-});
 
 describe("prepareObservation", () => {
     test("normalise la location", () => {

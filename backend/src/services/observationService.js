@@ -1,11 +1,9 @@
-function normalizeObservationLocation(location) {
-    return location.toLowerCase();
-}
+import { normalizeLocation } from "./locationService";
 
 function prepareObservation(data, userId) {
     return {
         ...data,
-        location: normalizeObservationLocation(data.location),
+        location: normalizeLocation(data.location),
         notes: data.notes || "No notes.",
         userId
     };
@@ -26,7 +24,6 @@ function getLatestObservations(observations, limit = 5) {
 }
 
 export {
-    normalizeObservationLocation,
     prepareObservation,
     getLatestObservations
 };

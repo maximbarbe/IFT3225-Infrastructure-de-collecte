@@ -1,8 +1,7 @@
 import { describe, expect, test } from "vitest";
 import {
     normalizeLocation,
-    getUniqueLocations,
-    locationExists
+    getUniqueLocations
 } from "../src/services/locationService.js";
 
 describe("normalizeLocation", () => {
@@ -64,22 +63,3 @@ describe("getUniqueLocations", () => {
     });
 });
 
-describe("locationExists", () => {
-    test("retourne true si la location existe", () => {
-        expect(
-            locationExists(["montreal", "laval"], "montreal")
-        ).toBe(true);
-    });
-
-    test("retourne true même avec des majuscules", () => {
-        expect(
-            locationExists(["montreal", "laval"], "MONTREAL")
-        ).toBe(true);
-    });
-
-    test("retourne false si la location n'existe pas", () => {
-        expect(
-            locationExists(["montreal", "laval"], "longueuil")
-        ).toBe(false);
-    });
-});

@@ -6,10 +6,10 @@ import {Location} from "../models/Location.js";
 import {authenticate, authenticateToken} from "../middleware/auth.js";
 import { redisDelete, redisGet, redisSet } from '../services/redisHelpers.js';
 import {
-    normalizeObservationLocation,
     prepareObservation,
     getLatestObservations
 } from "../services/observationService.js";
+import { normalizeLocation } from '../services/locationService.js';
 
 const router = express.Router();
 
@@ -104,7 +104,7 @@ router.get("/", [authenticateToken], async (req, res) => {
 })
 
 router.get("/:location", async (req, res) => {
-    const location = normalizeObservationLocation(req.params.location);
+    const location = normalizeLocation(req.params.location);
 
     let limit = Number.parseInt(req.query.limit, 10);
 

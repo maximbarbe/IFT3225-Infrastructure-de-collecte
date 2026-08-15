@@ -8,6 +8,7 @@ import { Device } from "../models/Device.js";
 import { Measurement } from "../models/Measurement.js";
 import { Observation } from "../models/Observation.js";
 import { redisDelete, redisGet, redisSet } from "../services/redisHelpers.js";
+import { getUniqueLocations, normalizeLocation } from "../services/locationService.js";
 const router = express.Router();
 
 
@@ -19,12 +20,9 @@ router.get("/", [authenticateToken], async (req, res) => {
     }
     try {
         const myObservations = await Observation.find({userId: req.user._id});
-        const locations = []
-        for (let obs of myObservations) {
-            locations.push(obs.location)
-        }
-        // (Jonca33, 2017)
-        const uniqueLocation = [...new Set(locations)]
+
+        
+        const uniqueLocation = getUniqueLocations(myObservations)
 
         await redisSet(`${req.user._id}/locations`, uniqueLocation)
 
@@ -90,9 +88,10 @@ router.get("/active", async (req, res) => {
 router.post("/", [authenticateToken, validate(LocationPostSchema)], async (req, res) => {
     let loc1;
     let loc2;
+    const normalizedLocation = normalizeLocation(req.body["location"])
     try {
         loc1 = await Location.findOne({lat: req.body["lat"], lon: req.body["lon"]});
-        loc2 = await Location.findOne({location: req.body["location"].toLowerCase()});
+        loc2 = await Location.findOne({location: normalizedLocation});
     } catch (e) {
         return res.status(500).json({
             error: "SERVER_ERROR",
@@ -105,12 +104,12 @@ router.post("/", [authenticateToken, validate(LocationPostSchema)], async (req, 
             message: "A location already exists at this latitude/longitude or a location already exists with this name."
         });
     }
-    const location = new Location({location: req.body["location"].toLowerCase(), lat: req.body["lat"], lon: req.body["lon"]});
+    const location = new Location({location: normalizedLocation, lat: req.body["lat"], lon: req.body["lon"]});
     try {
         await location.save();
         await redisDelete("/locations")
         await redisDelete(`${req.user._id}/locations`)
-        return res.status(201).json({location: req.body["location"].toLowerCase(), lat: req.body["lat"], lon: req.body["lon"]});
+        return res.status(201).json({location: normalizedLocation, lat: req.body["lat"], lon: req.body["lon"]});
     } catch (e) {
         return res.status(500).json({ 
             error: "SERVER_ERROR", 
