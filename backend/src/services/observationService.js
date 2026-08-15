@@ -1,4 +1,4 @@
-import { normalizeLocation } from "./locationService";
+import { normalizeLocation } from "./locationService.js";
 
 function prepareObservation(data, userId) {
     return {
