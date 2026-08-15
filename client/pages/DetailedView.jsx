@@ -166,7 +166,7 @@ export default function DetailedView() {
     const getDate = (strRep) => {
         try {
             const date = new Date(strRep)
-            // https://www.geeksforgeeks.org/javascript/how-to-check-a-date-is-valid-or-not-using-javascript/
+            // (GeeksforGeeks, 2025)
             if (isNaN(date.getTime())) {
                 return "n/a"
             }

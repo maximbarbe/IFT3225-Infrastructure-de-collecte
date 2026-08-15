@@ -19,7 +19,7 @@ async function redisGet(url) {
     } catch (e) {}
     return null;
 }
-// https://stackoverflow.com/a/73468860
+// (Karunakaran, 2022)
 async function redisDelete(pattern) {
     try {
         for await (const key of redisClient.scanIterator({

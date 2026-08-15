@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function CustomMarker({lat, lon, loc, msg, clickFunction, textType=null}) {
 
-    // https://stackoverflow.com/a/51222271
+    // L'astuce pour les marqueurs est tiré de (Tosic, 2018)
     // L'astuce pour les event handlers sur les markers provient de (Disco, 2022)
     // L'astuce pour useNavigate provient de (aravind_reddy, 2018)
     const DefaultIcon = L.icon({
