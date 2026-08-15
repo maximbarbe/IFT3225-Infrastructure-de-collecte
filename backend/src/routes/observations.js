@@ -71,7 +71,7 @@ router.post("/", [authenticate(Device), validate(ObservationPostSchema)], async 
     }
     
     const observation = new Observation(
-    prepareObservation(req.body, req.user._id)
+    prepareObservation(req.body, "0")
 );
     try {
         await observation.save();
